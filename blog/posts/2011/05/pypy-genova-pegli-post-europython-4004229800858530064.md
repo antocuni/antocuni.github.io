@@ -1,7 +1,6 @@
 ---
 date: 2011-05-23 20:45:00
 title: "PyPy Genova-Pegli Post-EuroPython Sprint June 27 - July 2 2011"
-author: "Antonio Cuni"
 categories:
   - Post
 

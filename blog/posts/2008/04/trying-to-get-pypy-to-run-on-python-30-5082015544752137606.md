@@ -1,7 +1,6 @@
 ---
 date: 2008-04-01 11:19:00
 title: "Trying to get PyPy to run on Python 3.0"
-author: "Antonio Cuni"
 categories:
   - Post
 

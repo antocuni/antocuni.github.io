@@ -1,7 +1,6 @@
 ---
 date: 2017-10-30 10:15:00
 title: "How to make your code 80 times faster"
-author: "Antonio Cuni"
 categories:
   - Post
 

@@ -1,7 +1,6 @@
 ---
 date: 2010-12-14 16:45:00
 title: "PyPy migrates to Mercurial"
-author: "Antonio Cuni"
 categories:
   - Post
 

@@ -1,7 +1,6 @@
 ---
 date: 2018-04-27 14:10:00
 title: "How to ignore the annoying Cython warnings in PyPy 6.0"
-author: "Antonio Cuni"
 categories:
   - Post
 

@@ -1,7 +1,6 @@
 ---
 date: 2008-01-19 10:50:00
 title: "Improve .NET Integration"
-author: "Antonio Cuni"
 categories:
   - Post
 

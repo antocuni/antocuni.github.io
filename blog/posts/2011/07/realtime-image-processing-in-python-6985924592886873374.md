@@ -1,7 +1,6 @@
 ---
 date: 2011-07-07 16:24:00
 title: "Realtime image processing in Python"
-author: "Antonio Cuni"
 categories:
   - Post
 

@@ -1,7 +1,6 @@
 ---
 date: 2010-08-17 10:51:00
 title: "EuroPython 2010 Videos available"
-author: "Antonio Cuni"
 categories:
   - Post
 
