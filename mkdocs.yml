@@ -1,0 +1,26 @@
+
+site_name: Antonio Cuni's blog
+site_url: https://antocuni.github.io/
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - search.highlight
+    - search.suggest
+
+plugins:
+  - blog:
+      blog_dir: .
+      post_url_format: "{date}/{slug}"
+      post_date_format: medium
+  - search
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - attr_list
+  - md_in_html
