@@ -1,6 +1,8 @@
-
 site_name: Antonio Cuni's blog
 site_url: https://antocuni.github.io/
+
+docs_dir: blog
+
 theme:
   name: material
   features:
@@ -15,6 +17,7 @@ plugins:
       blog_dir: .
       post_url_format: "{date}/{slug}"
       post_date_format: medium
+
   - search
 
 markdown_extensions:
