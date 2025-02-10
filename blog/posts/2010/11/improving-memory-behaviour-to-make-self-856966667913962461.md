@@ -4,7 +4,9 @@ title: "Improving Memory Behaviour to Make Self-Hosted PyPy Translations Practic
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2010/11/improving-memory-behaviour-to-make-self-856966667913962461.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2010/11/improving-memory-behaviour-to-make-self-856966667913962461.html).
+
 
 <html><body><p>In our <a class="reference external" href="/posts/2010/11/snake-which-bites-its-tail-pypy-jitting-5161284681004717142.html">previous blog post</a>, we talked about how fast PyPy can translate
 itself compared to CPython.  However, the price to pay for the 2x speedup was

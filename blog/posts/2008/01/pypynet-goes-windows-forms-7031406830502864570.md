@@ -4,7 +4,9 @@ title: "PyPy.NET goes Windows Forms"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2008/01/pypynet-goes-windows-forms-7031406830502864570.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2008/01/pypynet-goes-windows-forms-7031406830502864570.html).
+
 
 <html><body><a href="https://4.bp.blogspot.com/_4gR6Ggu8oHQ/R5J41OiHR7I/AAAAAAAAACo/u8jr08QiCmo/s1600-h/winform.png"><img alt="" border="0" id="BLOGGER_PHOTO_ID_5157317379122218930" src="https://4.bp.blogspot.com/_4gR6Ggu8oHQ/R5J41OiHR7I/AAAAAAAAACo/u8jr08QiCmo/s320/winform.png" style="float: right; margin: 0 0 10px 10px; cursor: pointer; cursor: hand;"></a>
 <p>After having spent the last few days on understanding PyPy's JIT,

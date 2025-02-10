@@ -4,7 +4,9 @@ title: "How to ignore the annoying Cython warnings in PyPy 6.0"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2018/04/how-to-ignore-annoying-cython-warnings-1007636731207810779.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2018/04/how-to-ignore-annoying-cython-warnings-1007636731207810779.html).
+
 
 <html><body><div>
 </div>

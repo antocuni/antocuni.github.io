@@ -4,7 +4,9 @@ title: "EuroPython 2010 Videos available"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2010/08/europython-2010-videos-available-8446190660370796142.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2010/08/europython-2010-videos-available-8446190660370796142.html).
+
 
 <html><body><p>Hi all,</p>
 <p>the videos of the talks from <a class="reference external" href="/posts/2010/07/europython-2010-report-7803731360759120212.html">EuroPython 2010</a> are now available on

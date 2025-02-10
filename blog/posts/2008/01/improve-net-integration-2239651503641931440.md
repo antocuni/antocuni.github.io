@@ -4,7 +4,9 @@ title: "Improve .NET Integration"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2008/01/improve-net-integration-2239651503641931440.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2008/01/improve-net-integration-2239651503641931440.html).
+
 
 <html><body><p>A while ago Amit Regmi, a student from Canada, started working on the
 <a class="reference" href="https://codespeak.net/viewvc/pypy/branch/clr-module-improvements/?pathrev=50773">clr module improvements</a> branch as a university project.</p>

@@ -8,7 +8,9 @@ categories:
   - speed
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2017/10/how-to-make-your-code-80-times-faster-1424098117108093942.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2017/10/how-to-make-your-code-80-times-faster-1424098117108093942.html).
+
 
 <html><body><div class="document" id="how-to-make-your-code-80-times-faster">
 I often hear people who are happy because PyPy makes their code 2 times faster

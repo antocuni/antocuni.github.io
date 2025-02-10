@@ -10,7 +10,9 @@ categories:
   - speed
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2017/10/cape-of-good-hope-for-pypy-hello-from-3656631725712879033.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2017/10/cape-of-good-hope-for-pypy-hello-from-3656631725712879033.html).
+
 
 <html><body>
 <div>

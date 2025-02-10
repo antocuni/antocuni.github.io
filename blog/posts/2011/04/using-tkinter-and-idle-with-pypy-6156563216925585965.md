@@ -4,7 +4,9 @@ title: "Using Tkinter and IDLE with PyPy"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2011/04/using-tkinter-and-idle-with-pypy-6156563216925585965.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2011/04/using-tkinter-and-idle-with-pypy-6156563216925585965.html).
+
 
 <html><body><p>We are pleased to announce that Tkinter, the GUI library based on TCL/TK, now
 works with PyPy.<br>

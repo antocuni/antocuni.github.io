@@ -8,7 +8,9 @@ categories:
   - cli
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2009/10/first-pypy-cli-jit-benchmarks-6698484455072589492.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2009/10/first-pypy-cli-jit-benchmarks-6698484455072589492.html).
+
 
 <html><body><p>As the readers of this blog <a class="reference external" href="/posts/2008/11/porting-jit-to-cli-part-1-8712941279840156635.html">already know</a>, I've been working on porting the
 JIT to CLI/.NET for the last months.  Now that it's finally possible to get a

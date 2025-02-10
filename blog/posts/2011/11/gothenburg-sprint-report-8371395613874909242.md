@@ -4,7 +4,9 @@ title: "Gothenburg sprint report"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2011/11/gothenburg-sprint-report-8371395613874909242.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2011/11/gothenburg-sprint-report-8371395613874909242.html).
+
 
 <html><body><p>In the past week, we have been busy hacking on PyPy at the Gothenburg sprint, the second of this 2011.  The sprint was hold at Laura's and Jacob's place, and here is a brief report of what happened.<br>
 <br>

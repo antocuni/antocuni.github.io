@@ -4,7 +4,9 @@ title: "PyPy Genova-Pegli Post-EuroPython Sprint June 27 - July 2 2011"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2011/05/pypy-genova-pegli-post-europython-4004229800858530064.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2011/05/pypy-genova-pegli-post-europython-4004229800858530064.html).
+
 
 <html><body><p>The next PyPy sprint will be in Genova-Pegli, Italy, the week after <a href="https://ep2011.europython.eu/">EuroPython</a>
 (which is in Florence, about 3h away by train). This is a fully public sprint:

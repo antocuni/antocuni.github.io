@@ -4,7 +4,9 @@ title: "HPy kick-off sprint report"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2019/12/hpy-kick-off-sprint-report-1840829336092490938.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2019/12/hpy-kick-off-sprint-report-1840829336092490938.html).
+
 
 <html><body><p>Recently Antonio, Armin and Ronan had a small internal sprint in the beautiful
 city of Gdańsk to kick-off the development of HPy. Here is a brief report of

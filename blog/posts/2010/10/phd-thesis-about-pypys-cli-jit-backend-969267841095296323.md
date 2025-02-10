@@ -4,7 +4,9 @@ title: "PhD Thesis about PyPy's CLI JIT Backend"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2010/10/phd-thesis-about-pypys-cli-jit-backend-969267841095296323.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2010/10/phd-thesis-about-pypys-cli-jit-backend-969267841095296323.html).
+
 
 <html><body><p>Hi all,</p>
 <p>few months ago I finished the PhD studies and now my <a class="reference external" href="https://codespeak.net/~antocuni/Cuni_PhD_Thesis.pdf">thesis</a> is available,

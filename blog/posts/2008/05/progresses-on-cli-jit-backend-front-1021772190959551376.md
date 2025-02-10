@@ -4,7 +4,9 @@ title: "Progresses on the CLI JIT backend front"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2008/05/progresses-on-cli-jit-backend-front-1021772190959551376.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2008/05/progresses-on-cli-jit-backend-front-1021772190959551376.html).
+
 
 <html><body><p>In the last months, I've actively worked on the CLI backend for PyPy's
 JIT generator, whose goal is to automatically generate JIT compilers

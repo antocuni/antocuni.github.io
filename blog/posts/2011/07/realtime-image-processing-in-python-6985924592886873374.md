@@ -4,7 +4,9 @@ title: "Realtime image processing in Python"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2011/07/realtime-image-processing-in-python-6985924592886873374.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2011/07/realtime-image-processing-in-python-6985924592886873374.html).
+
 
 <html><body><p>Image processing is notoriously a CPU intensive task.  To do it in realtime,
 you need to implement your algorithm in a fast language, hence trying to do it

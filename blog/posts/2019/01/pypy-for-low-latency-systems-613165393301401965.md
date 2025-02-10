@@ -7,7 +7,9 @@ categories:
   - sponsors
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2019/01/pypy-for-low-latency-systems-613165393301401965.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2019/01/pypy-for-low-latency-systems-613165393301401965.html).
+
 
 <html><body><h1 class="title">
 PyPy for low-latency systems</h1>

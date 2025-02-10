@@ -4,7 +4,9 @@ title: "A snake which bites its tail: PyPy JITting itself"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2010/11/snake-which-bites-its-tail-pypy-jitting-5161284681004717142.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2010/11/snake-which-bites-its-tail-pypy-jitting-5161284681004717142.html).
+
 
 <html><body><a href="https://2.bp.blogspot.com/_4gR6Ggu8oHQ/TNmLArIQa0I/AAAAAAAAAKk/S86e8w4lF6g/s1600/pypy.png"><img alt="" border="0" id="BLOGGER_PHOTO_ID_5537610060522351426" src="https://2.bp.blogspot.com/_4gR6Ggu8oHQ/TNmLArIQa0I/AAAAAAAAAKk/S86e8w4lF6g/s400/pypy.png" style="float: right; margin: 0 0 10px 10px; cursor: pointer; cursor: hand; width: 321px; height: 263px;"></a>
 

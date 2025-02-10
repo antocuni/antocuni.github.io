@@ -8,7 +8,9 @@ categories:
   - speed
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2018/09/inside-cpyext-why-emulating-cpython-c-8083064623681286567.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2018/09/inside-cpyext-why-emulating-cpython-c-8083064623681286567.html).
+
 
 <html><body><br>
 <div class="document" id="inside-cpyext-why-emulating-cpython-c-api-is-so-hard">

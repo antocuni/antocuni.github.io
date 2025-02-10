@@ -4,7 +4,9 @@ title: "Next sprint: Vilnius/Post EuroPython, 10-12th of July"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2008/06/next-sprint-vilniuspost-europython-10-3844544842675903586.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2008/06/next-sprint-vilniuspost-europython-10-3844544842675903586.html).
+
 
 <html><body><p>As happened in the last years, there will be a PyPy sprint just after
 <a class="reference" href="https://www.europython.org/">EuroPython</a>.  The sprint will take place in the same hotel as the

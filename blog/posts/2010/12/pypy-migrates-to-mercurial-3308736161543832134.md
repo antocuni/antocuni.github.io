@@ -4,7 +4,9 @@ title: "PyPy migrates to Mercurial"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2010/12/pypy-migrates-to-mercurial-3308736161543832134.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2010/12/pypy-migrates-to-mercurial-3308736161543832134.html).
+
 
 <html><body><p>The assiduous readers of this blog surely remember that during the last
 <a class="reference external" href="/posts/2010/10/dusseldorf-sprint-report-2010-371223200425847723.html">Düsseldorf sprint</a> in October, we started the process for migrating our main

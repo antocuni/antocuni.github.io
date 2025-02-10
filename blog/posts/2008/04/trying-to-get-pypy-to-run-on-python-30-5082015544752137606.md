@@ -4,7 +4,9 @@ title: "Trying to get PyPy to run on Python 3.0"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2008/04/trying-to-get-pypy-to-run-on-python-30-5082015544752137606.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2008/04/trying-to-get-pypy-to-run-on-python-30-5082015544752137606.html).
+
 
 <html><body><p>As you surely know, Python 3.0 is coming; recently, they released
 Python 3.0 alpha 3, and the final version is expected around

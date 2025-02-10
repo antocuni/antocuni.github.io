@@ -4,7 +4,9 @@ title: "Using virtualenv with PyPy"
 author: "Antonio Cuni"
 ---
 
-_Originally published on the [PyPy blog](https://pypy.org/posts/2010/08/using-virtualenv-with-pypy-7238942727709530503.html)._
+!!! note ""
+    Originally published on the [PyPy blog](https://pypy.org/posts/2010/08/using-virtualenv-with-pypy-7238942727709530503.html).
+
 
 <html><body><p>Thanks to the work that was recently done on the <a class="reference external" href="https://codespeak.net/pipermail/pypy-svn/2010-June/041686.html">sys-prefix</a> branch, it is
 now possible to use <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a> with PyPy.</p>
