@@ -10,7 +10,10 @@ author: "Antonio Cuni"
 
 <html><body><p>As you surely know, Python 3.0 is coming; recently, they released
 Python 3.0 alpha 3, and the final version is expected around
-September.</p>
+September.
+</p>
+<!-- more -->
+
 <p>As suggested by the migration guide (in the PEP 3000), we started by applying
 2to3 to our standard interpreter, which is written in RPython (though
 we should call it RPython 2.4 now, as opposed to RPython 3.0 -- see

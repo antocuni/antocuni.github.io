@@ -19,7 +19,10 @@ possible latency.  This work has been kindly sponsored by <a class="reference ex
 (which, by the way, is a very cool and geeky place where to <a class="reference external" href="https://www.gambitresearch.com/jobs.html">work</a>, in case you
 are interested).  Note also that this is a very specialized use case, so these
 features might not be useful for the average PyPy user, unless you have the
-same problems as described here.<br>
+same problems as described here.
+<br>
+<!-- more -->
+
 <br>
 The PyPy VM manages memory using a generational, moving Garbage Collector.
 Periodically, the GC scans the whole heap to find unreachable objects and

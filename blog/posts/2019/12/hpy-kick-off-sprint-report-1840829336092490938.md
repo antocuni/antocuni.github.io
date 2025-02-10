@@ -10,7 +10,10 @@ author: "Antonio Cuni"
 
 <html><body><p>Recently Antonio, Armin and Ronan had a small internal sprint in the beautiful
 city of Gdańsk to kick-off the development of HPy. Here is a brief report of
-what was accomplished during the sprint.</p>
+what was accomplished during the sprint.
+</p>
+<!-- more -->
+
 <div class="section" id="what-is-hpy">
 <h2>What is HPy?</h2>
 <p>The TL;DR answer is "a better way to write C extensions for Python".</p>

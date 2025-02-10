@@ -13,7 +13,10 @@ itself compared to CPython.  However, the price to pay for the 2x speedup was
 an huge amount of memory: actually, it was so huge that a standard <tt class="docutils literal"><span class="pre">-Ojit</span></tt>
 compilation could not be completed on 32-bit because it required more than the
 4 GB of RAM that are addressable on that platform.  On 64-bit, it consumed
-8.3 GB of RAM instead of the 2.3 GB needed by CPython.</p>
+8.3 GB of RAM instead of the 2.3 GB needed by CPython.
+</p>
+<!-- more -->
+
 <p>This behavior was mainly caused by the JIT, because at the time we wrote the
 blog post the generated assembler was kept alive forever, together with some
 big data structure needed to execute it.</p>

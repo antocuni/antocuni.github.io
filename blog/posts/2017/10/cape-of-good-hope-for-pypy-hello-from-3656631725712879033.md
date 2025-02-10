@@ -16,7 +16,10 @@ categories:
 
 <html><body>
 <div>
-<br></div>
+
+<br>
+<!-- more -->
+</div>
 Hello from the other side of the world (for most of you)!<br>
 <br>
 With the excuse of coming to <a class="reference external" href="https://za.pycon.org/">PyCon ZA</a> during the last two weeks Armin,

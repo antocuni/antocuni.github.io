@@ -12,7 +12,10 @@ author: "Antonio Cuni"
 <p>After having spent the last few days on understanding PyPy's JIT,
 today I went back hacking the <cite>clr module</cite>.  As a result, it is now
 possible to import and use external assemblies from <a class="reference" href="https://codespeak.net/pypy/dist/pypy/doc/getting-started.html#translating-using-the-cli-backend">pypy-cli</a>,
-including <a class="reference" href="https://en.wikipedia.org/wiki/Windows_Forms">Windows Forms</a></p>
+including <a class="reference" href="https://en.wikipedia.org/wiki/Windows_Forms">Windows Forms</a>
+</p>
+<!-- more -->
+
 <p>Here is a screenshot of the result you get by typing the following at
 the <a class="reference" href="https://codespeak.net/pypy/dist/pypy/doc/getting-started.html#translating-using-the-cli-backend">pypy-cli</a> interactive prompt:</p>
 <pre class="literal-block">

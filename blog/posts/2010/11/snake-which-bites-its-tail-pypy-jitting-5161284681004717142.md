@@ -13,7 +13,10 @@ author: "Antonio Cuni"
 
 <p>We have to admit: even if we have been writing for years about the fantastic
 speedups that the PyPy JIT gives, we, the PyPy developers, still don't use it
-for our daily routine.  <strong>Until today</strong> :-).</p>
+for our daily routine.  <strong>Until today</strong> :-).
+</p>
+<!-- more -->
+
 <p>Readers brave enough to run <tt class="docutils literal">translate.py</tt> to translate PyPy by themselves
 surely know that the process takes quite a long time to complete, about a hour
 on super-fast hardware and even more on average computers.  Unfortunately, it

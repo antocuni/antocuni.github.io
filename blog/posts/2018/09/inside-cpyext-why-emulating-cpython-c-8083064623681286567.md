@@ -12,7 +12,10 @@ categories:
     Originally published on the [PyPy blog](https://pypy.org/posts/2018/09/inside-cpyext-why-emulating-cpython-c-8083064623681286567.html).
 
 
-<html><body><br>
+<html><body>
+<br>
+<!-- more -->
+
 <div class="document" id="inside-cpyext-why-emulating-cpython-c-api-is-so-hard">
 <tt class="docutils literal">cpyext</tt> is PyPy's subsystem which provides a compatibility
 layer to compile and run CPython C extensions inside PyPy.  Often people ask

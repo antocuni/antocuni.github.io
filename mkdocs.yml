@@ -16,8 +16,10 @@ theme:
 plugins:
   - blog:
       blog_dir: .
+      post_excerpt: required
       post_url_format: "{date}/{slug}"
       post_date_format: medium
+
 
   - search
 

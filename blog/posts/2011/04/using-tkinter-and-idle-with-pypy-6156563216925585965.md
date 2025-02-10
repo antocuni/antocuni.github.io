@@ -11,7 +11,10 @@ author: "Antonio Cuni"
 <html><body><p>We are pleased to announce that Tkinter, the GUI library based on TCL/TK, now
 works with PyPy.<br>
 Tkinter is composed of two parts:<br>
-</p><blockquote>
+
+</p>
+<!-- more -->
+<blockquote>
 <ul class="simple">
 <li><tt class="docutils literal">_tkinter</tt>, a module written in C which interfaces with the TCL world</li>
 <li><tt class="docutils literal">Tkinter</tt>, a pure Python package which wraps <tt class="docutils literal">_tkinter</tt> to expose the

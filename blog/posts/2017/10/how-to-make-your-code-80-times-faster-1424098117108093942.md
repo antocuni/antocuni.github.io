@@ -15,7 +15,10 @@ categories:
 <html><body><div class="document" id="how-to-make-your-code-80-times-faster">
 I often hear people who are happy because PyPy makes their code 2 times faster
 or so. Here is a short personal story which shows PyPy can go well beyond
-that.<br>
+that.
+<br>
+<!-- more -->
+
 <br>
 <strong>DISCLAIMER</strong>: this is not a silver bullet or a general recipe: it worked in
 this particular case, it might not work so well in other cases. But I think it

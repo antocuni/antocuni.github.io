@@ -9,7 +9,10 @@ author: "Antonio Cuni"
 
 
 <html><body><p>Thanks to the work that was recently done on the <a class="reference external" href="https://codespeak.net/pipermail/pypy-svn/2010-June/041686.html">sys-prefix</a> branch, it is
-now possible to use <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a> with PyPy.</p>
+now possible to use <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a> with PyPy.
+</p>
+<!-- more -->
+
 <p>To try it, you need:</p>
 <blockquote>
 <ul class="simple">

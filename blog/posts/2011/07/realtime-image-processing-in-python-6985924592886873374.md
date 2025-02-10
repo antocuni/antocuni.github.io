@@ -24,7 +24,10 @@ the pixels in the image to form a magnifying effect in the center.
 It consists of a single loop over the pixels in the output image copying
 pixels from the input image.<br>
 You can try by yourself by downloading the appropriate demo:<br>
-</p><blockquote>
+
+</p>
+<!-- more -->
+<blockquote>
 <ul class="simple">
 <li><a class="reference external" href="https://wyvern.cs.uni-duesseldorf.de/%7Eantocuni/pypy-image-demo.tar.bz2">pypy-image-demo.tar.bz2</a>: this archive contains only the source code,
 use this is you have PyPy already installed</li>

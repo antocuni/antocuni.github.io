@@ -8,7 +8,10 @@ author: "Antonio Cuni"
     Originally published on the [PyPy blog](https://pypy.org/posts/2010/10/phd-thesis-about-pypys-cli-jit-backend-969267841095296323.html).
 
 
-<html><body><p>Hi all,</p>
+<html><body><p>Hi all,
+</p>
+<!-- more -->
+
 <p>few months ago I finished the PhD studies and now my <a class="reference external" href="https://codespeak.net/~antocuni/Cuni_PhD_Thesis.pdf">thesis</a> is available,
 just in case someone does not have anything better to do than read it :-).</p>
 <p>The title of the thesis is <strong>High performance implementation of Python for

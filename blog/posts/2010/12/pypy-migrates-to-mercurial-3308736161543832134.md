@@ -11,7 +11,10 @@ author: "Antonio Cuni"
 <html><body><p>The assiduous readers of this blog surely remember that during the last
 <a class="reference external" href="/posts/2010/10/dusseldorf-sprint-report-2010-371223200425847723.html">Düsseldorf sprint</a> in October, we started the process for migrating our main
 development repository from Subversion to Mercurial.  Today, after more than
-two months, the process has finally been completed :-).</p>
+two months, the process has finally been completed :-).
+</p>
+<!-- more -->
+
 <p>The new official PyPy repository is hosted on <a class="reference external" href="https://bitbucket.org/pypy/pypy">BitBucket</a>.</p>
 <p>The migration has been painful because the SVN history of PyPy was a mess and
 none of the existing conversion tools could handle it correctly.  This was

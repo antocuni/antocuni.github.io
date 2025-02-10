@@ -14,7 +14,10 @@ categories:
 
 <html><body><p>As the readers of this blog <a class="reference external" href="/posts/2008/11/porting-jit-to-cli-part-1-8712941279840156635.html">already know</a>, I've been working on porting the
 JIT to CLI/.NET for the last months.  Now that it's finally possible to get a
-working pypy-cli-jit, it's time to do some benchmarks.</p>
+working pypy-cli-jit, it's time to do some benchmarks.
+</p>
+<!-- more -->
+
 <p><strong>Warning:</strong> as usual, all of this has to be considered to be a alpha version:
 don't be surprised if you get a crash when trying to run pypy-cli-jit.  Of
 course, things are improving very quickly so it should become more and more

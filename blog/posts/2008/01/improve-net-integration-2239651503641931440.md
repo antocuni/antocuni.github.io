@@ -9,7 +9,10 @@ author: "Antonio Cuni"
 
 
 <html><body><p>A while ago Amit Regmi, a student from Canada, started working on the
-<a class="reference" href="https://codespeak.net/viewvc/pypy/branch/clr-module-improvements/?pathrev=50773">clr module improvements</a> branch as a university project.</p>
+<a class="reference" href="https://codespeak.net/viewvc/pypy/branch/clr-module-improvements/?pathrev=50773">clr module improvements</a> branch as a university project.
+</p>
+<!-- more -->
+
 <p>During the sprint Carl Friedrich, Paul and me worked more on it and
 brought it to a mergeable state.</p>
 <p>It adds a lot of new features to the <a class="reference" href="https://codespeak.net/pypy/dist/pypy/doc/clr-module.html">clr module</a>, which is the

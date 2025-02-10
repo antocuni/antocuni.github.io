@@ -11,7 +11,10 @@ author: "Antonio Cuni"
 <html><body><p>The next PyPy sprint will be in Genova-Pegli, Italy, the week after <a href="https://ep2011.europython.eu/">EuroPython</a>
 (which is in Florence, about 3h away by train). This is a fully public sprint:
 newcomers and topics other than those proposed below are welcome.<br>
-</p><div class="section" id="goals-and-topics-of-the-sprint">
+
+</p>
+<!-- more -->
+<div class="section" id="goals-and-topics-of-the-sprint">
 <h1>
 
 Goals and topics of the sprint</h1>

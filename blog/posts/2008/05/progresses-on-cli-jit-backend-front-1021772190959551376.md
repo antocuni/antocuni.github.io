@@ -10,7 +10,10 @@ author: "Antonio Cuni"
 
 <html><body><p>In the last months, I've actively worked on the CLI backend for PyPy's
 JIT generator, whose goal is to automatically generate JIT compilers
-that produces .NET bytecode on the fly.</p>
+that produces .NET bytecode on the fly.
+</p>
+<!-- more -->
+
 <p>The CLI JIT backend is far from be completed and there is still a lot
 of work to be done before it can handle the full PyPy's Python
 interpreter; nevertheless, yesterday I finally got the first .NET

@@ -10,7 +10,10 @@ author: "Antonio Cuni"
 
 <html><body><p>As happened in the last years, there will be a PyPy sprint just after
 <a class="reference" href="https://www.europython.org/">EuroPython</a>.  The sprint will take place in the same hotel as the
-conference, from 10th to 12th of July.</p>
+conference, from 10th to 12th of July.
+</p>
+<!-- more -->
+
 <p>This is a fully public sprint: newcomers are welcome, and on the first
 day we will have a tutorial session for those new to PyPy development.</p>
 <p>Some of the topics we would like to work on:</p>
