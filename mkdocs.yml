@@ -1,5 +1,5 @@
 site_name: Antonio Cuni's blog
-# '
+# ' this is for emacs, else it messes up syntax highlighting
 site_url: https://antocuni.github.io/
 
 docs_dir: blog
@@ -17,6 +17,8 @@ plugins:
   - blog:
       blog_dir: .
       post_excerpt: required
+      pagination: true
+      categories_name: Tags
       post_url_format: "{date}/{slug}"
       post_date_format: medium
 
