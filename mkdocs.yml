@@ -62,16 +62,20 @@ plugins:
 
 
 
+# https://squidfunk.github.io/mkdocs-material/setup/extensions/
 markdown_extensions:
   - admonition
   - attr_list
   - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.details
-  - pymdownx.superfences
 
 extra:
   consent:
