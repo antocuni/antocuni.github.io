@@ -6,6 +6,7 @@ docs_dir: blog
 
 theme:
   name: material
+  custom_dir: overrides
   features:
     - navigation.sections
     - navigation.indexes
@@ -18,7 +19,6 @@ plugins:
       blog_dir: .
       post_excerpt: required
       pagination: true
-      categories_name: Tags
       post_url_format: "{date}/{slug}"
       post_date_format: medium
 
