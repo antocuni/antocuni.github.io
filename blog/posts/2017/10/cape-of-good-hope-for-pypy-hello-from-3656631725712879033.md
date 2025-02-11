@@ -3,10 +3,14 @@ date: 2017-10-18 13:31:00
 title: "(Cape of) Good Hope for PyPy"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
-  - sprint,unicode,cpyext,profiling,speed
+  - sprint
+  - unicode
+  - cpyext
+  - profiling
+  - speed
   - pypy
 ---
 

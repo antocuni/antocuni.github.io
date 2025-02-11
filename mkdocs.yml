@@ -4,6 +4,13 @@ site_url: https://antocuni.github.io/
 
 docs_dir: blog
 
+nav:
+  - About: about.md
+  - Blog:
+      - Posts: category/post/
+      - index.md
+      - Tags: tags.md
+
 theme:
   name: material
   custom_dir: overrides
@@ -14,6 +21,7 @@ theme:
     - search.highlight
     - search.suggest
 
+
 plugins:
   - blog:
       blog_dir: .
@@ -21,10 +29,12 @@ plugins:
       pagination: true
       post_url_format: "{date}/{slug}"
       post_date_format: medium
+      categories: true
 
   - search
-
   - tags
+
+
 
 
 markdown_extensions:

@@ -3,11 +3,12 @@ date: 2009-10-15 13:36:00
 title: "First pypy-cli-jit benchmarks"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
-  - jit,pypy,cli
+  - jit
   - pypy
+  - cli
 ---
 
 !!! note ""

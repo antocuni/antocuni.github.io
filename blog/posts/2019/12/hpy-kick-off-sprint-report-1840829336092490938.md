@@ -3,7 +3,7 @@ date: 2019-12-18 13:38:00
 title: "HPy kick-off sprint report"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
   - hpy

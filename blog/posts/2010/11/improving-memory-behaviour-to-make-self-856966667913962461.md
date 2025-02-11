@@ -3,7 +3,7 @@ date: 2010-11-26 12:51:00
 title: "Improving Memory Behaviour to Make Self-Hosted PyPy Translations Practical"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
   - pypy

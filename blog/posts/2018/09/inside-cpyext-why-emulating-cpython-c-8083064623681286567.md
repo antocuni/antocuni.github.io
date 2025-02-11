@@ -3,10 +3,12 @@ date: 2018-09-21 16:32:00
 title: "Inside cpyext: Why emulating CPython C API is so Hard"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
-  - cpyext,profiling,speed
+  - cpyext
+  - profiling
+  - speed
   - pypy
 ---
 

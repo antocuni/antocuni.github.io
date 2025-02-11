@@ -3,7 +3,7 @@ date: 2011-04-20 11:22:00
 title: "Using Tkinter and IDLE with PyPy"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
   - pypy

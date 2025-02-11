@@ -3,7 +3,7 @@ date: 2008-01-19 22:23:00
 title: "PyPy.NET goes Windows Forms"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
   - pypy

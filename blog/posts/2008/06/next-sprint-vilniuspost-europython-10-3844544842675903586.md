@@ -3,7 +3,7 @@ date: 2008-06-16 20:49:00
 title: "Next sprint: Vilnius/Post EuroPython, 10-12th of July"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
   - pypy

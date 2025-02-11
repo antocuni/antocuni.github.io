@@ -3,10 +3,10 @@ date: 2019-01-03 14:21:00
 title: "PyPy for low-latency systems"
 author: "Antonio Cuni"
 categories:
-  - Posts
+  - Post
 
 tags:
-  - gc,
+  - gc
   - sponsors
   - pypy
 ---
