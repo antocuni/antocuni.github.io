@@ -32,7 +32,11 @@ plugins:
   - search
   - tags
 
-
+  - rss:
+      match_path: "posts/.*"
+      date_from_meta:
+        as_creation: date.created
+        as_update: date.updated
 
 
 markdown_extensions:
