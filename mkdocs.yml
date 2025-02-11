@@ -5,11 +5,9 @@ site_url: https://antocuni.github.io/
 docs_dir: blog
 
 nav:
+  - Blog: index.md
   - About: about.md
-  - Blog:
-      - Posts: category/post/
-      - index.md
-      - Tags: tags.md
+  - Tags: tags.md
 
 theme:
   name: material
