@@ -1,6 +1,6 @@
 site_name: Antonio Cuni's blog
 # ' this is for emacs, else it messes up syntax highlighting
-site_url: https://antocuni.github.io/
+site_url: https://antocuni.eu/
 docs_dir: blog
 
 copyright: >
