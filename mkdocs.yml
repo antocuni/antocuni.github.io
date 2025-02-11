@@ -22,8 +22,10 @@ plugins:
       post_url_format: "{date}/{slug}"
       post_date_format: medium
 
-
   - search
+
+  - tags
+
 
 markdown_extensions:
   - admonition

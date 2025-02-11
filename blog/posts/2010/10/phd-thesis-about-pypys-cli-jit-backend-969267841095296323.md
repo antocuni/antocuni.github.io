@@ -2,6 +2,11 @@
 date: 2010-10-22 12:49:00
 title: "PhD Thesis about PyPy's CLI JIT Backend"
 author: "Antonio Cuni"
+categories:
+  - Posts
+
+tags:
+  - pypy
 ---
 
 !!! note ""

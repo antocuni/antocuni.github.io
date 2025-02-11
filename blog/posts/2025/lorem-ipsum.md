@@ -3,7 +3,11 @@ draft: false
 date: 2025-02-11
 title: Lorem ipsum
 categories:
-  - General
+  - Posts
+
+tags:
+  - aaa
+  - bbb
 ---
 
 # This is a test

@@ -2,6 +2,11 @@
 date: 2010-11-09 17:32:00
 title: "A snake which bites its tail: PyPy JITting itself"
 author: "Antonio Cuni"
+categories:
+  - Posts
+
+tags:
+  - pypy
 ---
 
 !!! note ""

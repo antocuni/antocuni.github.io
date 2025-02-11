@@ -2,6 +2,11 @@
 date: 2011-11-14 11:42:00
 title: "Gothenburg sprint report"
 author: "Antonio Cuni"
+categories:
+  - Posts
+
+tags:
+  - pypy
 ---
 
 !!! note ""

@@ -2,6 +2,11 @@
 date: 2008-05-28 14:10:00
 title: "Progresses on the CLI JIT backend front"
 author: "Antonio Cuni"
+categories:
+  - Posts
+
+tags:
+  - pypy
 ---
 
 !!! note ""

@@ -2,6 +2,11 @@
 date: 2010-08-02 14:55:00
 title: "Using virtualenv with PyPy"
 author: "Antonio Cuni"
+categories:
+  - Posts
+
+tags:
+  - pypy
 ---
 
 !!! note ""
