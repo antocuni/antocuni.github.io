@@ -23,6 +23,7 @@ theme:
     - navigation.top
     - search.highlight
     - search.suggest
+    - header.autohide
 
   palette:
     - scheme: default
@@ -84,3 +85,17 @@ extra:
   analytics:
     provider: google
     property: G-Z20FNJZ1GJ
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/antocuni/
+
+    - icon: fontawesome/brands/mastodon
+      link: https://mastodon.social/@antocuni
+
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/antocuni.bsky.social
+
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/antocuni

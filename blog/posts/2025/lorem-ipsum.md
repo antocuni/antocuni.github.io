@@ -5,6 +5,11 @@ title: Lorem ipsum
 categories:
   - Post
 
+# related links
+# links:
+#  - about.md
+#  - First part: part-one.md
+
 ---
 
 # This is a test
