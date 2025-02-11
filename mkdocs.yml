@@ -10,6 +10,8 @@ nav:
   - Tags: tags.md
 
 theme:
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
   name: material
   custom_dir: overrides
   features:
