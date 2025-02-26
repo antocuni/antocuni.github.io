@@ -1,0 +1,94 @@
+---
+draft: false
+date: 2025-02-25
+title: Above the clouds computing
+categories:
+  - Post
+tags:
+  - spy
+  - pyodide
+  - cpython
+
+# related links
+# links:
+#  - about.md
+#  - First part: part-one.md
+
+---
+
+# Above the clouds computing
+
+The Python community is awesome.
+
+It is full of great people and minds, and interacting with people at
+conferences is always nice and stimulating. But one of my favore things is
+that with time, after many conferences, talks, pull requests and beers, the
+personal relationshipt with some of them strenghten and become friends.
+
+I am lucky enough that two of them, Lukasz Langa and Hood Chatham, accepted my
+invite to join me in Cervinia, at the border between italian and swiss alps,
+for a week of hacking, winter sports and going literally over the clouds. This
+is a brief summary of what we did during our time together.
+
+XXX image
+
+<!-- more -->
+
+## About us
+
+Lukasz doesn't need much introductions, as he's one of the most visible
+personalities of the Python world: among the other things, he has been the
+release manager of CPython 3.x and 3.y, he is the original author of black and
+these days is the CPython developer in residence.
+
+Hood is mainly know thanks to his work on Pyodide, which in my opinion is one
+of the most underrated projects in the Python world: it allows us to run
+CPython in the broweser by compiling CPython and huge set of extension modules
+to WebAssembly, using emscripten. This sounds easier than it is, because
+WebAssembly is a very weird and young platform, meaning that during the course
+of the years the Pypodide maintainers had to deal with it by developing a
+considerable amount of patches to CPython itself, emscripten, LLVM, etc.  If
+you use any website or project which allows you to run Python in th browser
+such as PyScript, there is a good chance that it's actually Pyodide under the
+hood (pun intended 😅).
+
+As for me, as many other people in the Python world my name is associated to
+many projects whose name starts or ends (or both!) with "Py", like PyPy, HPy,
+and PyScript.  A couple of years ago I decided that all these Pys weren't
+enough, so I started SPy: SPy is an experiment to see whether we can come up
+with a Python variant which can be easily interpreted (for good development
+experience) and compiled (for performance).  This is the appropriate place to
+give a big thanks to Anaconda, which is letting me to work on it full time,
+these days.
+
+## Hacking
+
+There is one thing which face-to-face pairing does and which is impossible to
+achive with async and remote collaboration: you can see all the little tricks
+and tools which the other people use in their daily hacking. On the first day,
+Lukasz showed me the wonder of [Xonsh](https://xon.sh/), a multi platform
+shell written and scriptable in Python.
+
+Likewise, very soon he noticed that whenever I pressed TAB at my Python REPL,
+I'd get colored completions, thanks to
+[fancycompleter](https://github.com/pdbpp/fancycompleter). This is a project
+which I started ~15 years ago and I've used since then: at that time, it
+couldn't work out of the box on CPython, because it required a patched version
+of `libreadline`: but nowadays CPython ships with `pyrepl` which _does_
+support colored completions out of the box: with that in mind, we thought that
+it could be a good idea to integrate it in CPython. The result of this work
+ended up in [PR #130473](https://github.com/python/cpython/pull/130473): it is
+still very WIP but hopefully I'll be able to continue working on it in the
+next days or weeks.
+
+Meanwhile, Hood discovered that the latest version of Pyodide
+[didn't work on iOS](https://github.com/pyodide/pyodide/issues/5428). In
+perfect accordance to the spirit of the week, Lukasz promptly paired with him
+to [fix the issue](https://github.com/pyodide/pyodide/pull/5445).
+
+So, with this, we have PRs for two of our three projects. SPy is next in line,
+but it deserves its own section.
+
+## SPy
+
+SPy occupied a significant portion of our week. Initially, we dedicated time to explaining the fundamental concepts and design decisions to Lukasz and Hood. Subsequently, Hood and I worked diligently to integrate SPy with Pyodide. Finally, I assisted Lukasz in porting some of his existing code from Python to SPy, resulting in an impressive ~140x speedup.

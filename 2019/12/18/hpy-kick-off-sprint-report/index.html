@@ -1,0 +1,1335 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Antonio Cuni">
+      
+      
+        <link rel="canonical" href="https://antocuni.eu/2019/12/18/hpy-kick-off-sprint-report/">
+      
+      
+        <link rel="prev" href="../../../02/11/pypy-v700-triple-release-of-27-35-and-36-alpha/">
+      
+      
+        <link rel="next" href="../../../../2021/03/29/hello-hpy/">
+      
+      
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../../feed_rss_updated.xml">
+      
+      <link rel="icon" href="../../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+    
+    
+      
+        <title>HPy kick-off sprint report - Antonio Cuni's blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-Z20FNJZ1GJ"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-Z20FNJZ1GJ",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-Z20FNJZ1GJ",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+    
+   <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Antonio Cuni&#39;s blog" class="md-header__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Antonio Cuni's blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              HPy kick-off sprint report
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Antonio Cuni&#39;s blog" class="md-nav__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Antonio Cuni's blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../feed_rss_updated.xml" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RSS feed
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2021
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2019/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2019
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2018/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2018
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2017/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2017
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2012/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2012
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2011/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2011
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2010/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2010
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2009/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2009
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2008/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2008
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Post
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2019-12-18 13:38:00+00:00" class="md-ellipsis">Dec 18, 2019</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/post/">Post</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              7 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:hpy" class="md-tag">hpy</a>
+      
+    
+  </nav>
+
+
+
+  <h1>HPy kick-off sprint report</h1>
+
+<div class="admonition note">
+<p>Originally published on the <a href="https://pypy.org/posts/2019/12/hpy-kick-off-sprint-report-1840829336092490938.html">PyPy blog</a>.</p>
+</div>
+<html><body><p>Recently Antonio, Armin and Ronan had a small internal sprint in the beautiful
+city of Gdańsk to kick-off the development of HPy. Here is a brief report of
+what was accomplished during the sprint.
+</p>
+<!-- more -->
+
+<div class="section" id="what-is-hpy">
+<h2>What is HPy?</h2>
+<p>The TL;DR answer is "a better way to write C extensions for Python".</p>
+<p>The idea of HPy was born during EuroPython 2019 in Basel, where there was an
+informal meeting which included core developers of PyPy, CPython (Victor
+Stinner and Mark Shannon) and Cython (Stefan Behnel). The ideas were later also
+discussed with Tim Felgentreff of <a class="reference external" href="https://github.com/graalvm/graalpython">GraalPython</a>, to make sure they would also be
+applicable to this very different implementation, Windel Bouwman of <a class="reference external" href="https://github.com/RustPython/RustPython">RustPython</a>
+is following the project as well.</p>
+<p>All of us agreed that the current design of the CPython C API is problematic
+for various reasons and, in particular, because it is too tied to the current
+internal design of CPython.  The end result is that:</p>
+
+<ul class="simple">
+<li>alternative implementations of Python (such as PyPy, but not only) have a
+<a class="reference external" href="/posts/2018/09/inside-cpyext-why-emulating-cpython-c-8083064623681286567.html">hard time</a> loading and executing existing C extensions;</li>
+<li>CPython itself is unable to change some of its internal implementation
+details without breaking the world. For example, as of today it would be
+impossible to switch from using reference counting to using a real GC,
+which in turns make it hard for example to remove the GIL, as <a class="reference external" href="https://pythoncapi.readthedocs.io/gilectomy.html">gilectomy</a>
+attempted.</li>
+</ul>
+
+<p>HPy tries to address these issues by following two major design guidelines:</p>
+<ol class="arabic simple">
+<li>objects are referenced and passed around using opaque handles, which are
+similar to e.g., file descriptors in spirit. Multiple, different handles
+can point to the same underlying object, handles can be duplicated and
+each handle must be released independently of any other duplicate.</li>
+<li>The internal data structures and C-level layout of objects are not
+visible nor accessible using the API, so each implementation if free to
+use what fits best.</li>
+</ol>
+<p>The other major design goal of HPy is to allow incremental transition and
+porting, so existing modules can migrate their codebase one method at a time.
+Moreover, Cython is considering to optionally generate HPy code, so extension
+module written in Cython would be able to benefit from HPy automatically.</p>
+<p>More details can be found in the README of the official <a class="reference external" href="https://github.com/pyhandle/hpy">HPy repository</a>.</p>
+</div>
+<div class="section" id="target-abi">
+<h2>Target ABI</h2>
+<p>When compiling an HPy extension you can choose one of two different target ABIs:</p>
+
+<ul class="simple">
+<li><strong>HPy/CPython ABI</strong>: in this case, <tt class="docutils literal">hpy.h</tt> contains a set of macros and
+static inline functions. At compilation time this translates the HPy API
+into the standard C-API. The compiled module will have no performance
+penalty, and it will have a "standard" filename like
+<tt class="docutils literal"><span class="pre">foo.cpython-37m-x86_64-linux-gnu.so</span></tt>.</li>
+<li><strong>Universal HPy ABI</strong>: as the name implies, extension modules compiled
+this way are "universal" and can be loaded unmodified by multiple Python
+interpreters and versions.  Moreover, it will be possible to dynamically
+enable a special debug mode which will make it easy to find e.g., open
+handles or memory leaks, <strong>without having to recompile the extension</strong>.</li>
+</ul>
+
+<p>Universal modules can <strong>also</strong> be loaded on CPython, thanks to the
+<tt class="docutils literal">hpy_universal</tt> module which is under development. An extra layer of
+indirection enables loading extensions compiled with the universal ABI. Users
+of <tt class="docutils literal">hpy_universal</tt> will face a small performance penalty compared to the ones
+using the HPy/CPython ABI.</p>
+<p>This setup gives several benefits:</p>
+
+<ul class="simple">
+<li>Extension developers can use the extra debug features given by the
+Universal ABI with no need to use a special debug version of Python.</li>
+<li>Projects which need the maximum level of performance can compile their
+extension for each relevant version of CPython, as they are doing now.</li>
+<li>Projects for which runtime speed is less important will have the choice of
+distributing a single binary which will work on any version and
+implementation of Python.</li>
+</ul>
+
+</div>
+<div class="section" id="a-simple-example">
+<h2>A simple example</h2>
+<p>The HPy repo contains a <a class="reference external" href="https://github.com/pyhandle/hpy/blob/master/proof-of-concept/pof.c">proof of concept</a> module. Here is a simplified
+version which illustrates what a HPy module looks like:</p>
+<pre class="code C literal-block">
+<span class="comment preproc">#include</span> <span class="comment preprocfile">"hpy.h"</span><span class="comment preproc">
+</span>
+<span class="name">HPy_DEF_METH_VARARGS</span><span class="punctuation">(</span><span class="name">add_ints</span><span class="punctuation">)</span>
+<span class="keyword">static</span> <span class="name">HPy</span> <span class="name">add_ints_impl</span><span class="punctuation">(</span><span class="name">HPyContext</span> <span class="name">ctx</span><span class="punctuation">,</span> <span class="name">HPy</span> <span class="name">self</span><span class="punctuation">,</span> <span class="name">HPy</span> <span class="operator">*</span><span class="name">args</span><span class="punctuation">,</span> <span class="name">HPy_ssize_t</span> <span class="name">nargs</span><span class="punctuation">)</span>
+<span class="punctuation">{</span>
+    <span class="keyword type">long</span> <span class="name">a</span><span class="punctuation">,</span> <span class="name">b</span><span class="punctuation">;</span>
+    <span class="keyword">if</span> <span class="punctuation">(</span><span class="operator">!</span><span class="name">HPyArg_Parse</span><span class="punctuation">(</span><span class="name">ctx</span><span class="punctuation">,</span> <span class="name">args</span><span class="punctuation">,</span> <span class="name">nargs</span><span class="punctuation">,</span> <span class="literal string">"ll"</span><span class="punctuation">,</span> <span class="operator">&amp;</span><span class="name">a</span><span class="punctuation">,</span> <span class="operator">&amp;</span><span class="name">b</span><span class="punctuation">))</span>
+        <span class="keyword">return</span> <span class="name">HPy_NULL</span><span class="punctuation">;</span>
+    <span class="keyword">return</span> <span class="name function">HPyLong_FromLong</span><span class="punctuation">(</span><span class="name">ctx</span><span class="punctuation">,</span> <span class="name">a</span><span class="operator">+</span><span class="name">b</span><span class="punctuation">);</span>
+<span class="punctuation">}</span>
+
+
+<span class="keyword">static</span> <span class="name">HPyMethodDef</span> <span class="name">PofMethods</span><span class="punctuation">[]</span> <span class="operator">=</span> <span class="punctuation">{</span>
+    <span class="punctuation">{</span><span class="literal string">"add_ints"</span><span class="punctuation">,</span> <span class="name">add_ints</span><span class="punctuation">,</span> <span class="name">HPy_METH_VARARGS</span><span class="punctuation">,</span> <span class="literal string">""</span><span class="punctuation">},</span>
+    <span class="punctuation">{</span><span class="name builtin">NULL</span><span class="punctuation">,</span> <span class="name builtin">NULL</span><span class="punctuation">,</span> <span class="literal number integer">0</span><span class="punctuation">,</span> <span class="name builtin">NULL</span><span class="punctuation">}</span>
+<span class="punctuation">};</span>
+
+<span class="keyword">static</span> <span class="name">HPyModuleDef</span> <span class="name">moduledef</span> <span class="operator">=</span> <span class="punctuation">{</span>
+    <span class="name">HPyModuleDef_HEAD_INIT</span><span class="punctuation">,</span>
+    <span class="punctuation">.</span><span class="name">m_name</span> <span class="operator">=</span> <span class="literal string">"pof"</span><span class="punctuation">,</span>
+    <span class="punctuation">.</span><span class="name">m_doc</span> <span class="operator">=</span> <span class="literal string">"HPy Proof of Concept"</span><span class="punctuation">,</span>
+    <span class="punctuation">.</span><span class="name">m_size</span> <span class="operator">=</span> <span class="operator">-</span><span class="literal number integer">1</span><span class="punctuation">,</span>
+    <span class="punctuation">.</span><span class="name">m_methods</span> <span class="operator">=</span> <span class="name">PofMethods</span>
+<span class="punctuation">};</span>
+
+
+<span class="name">HPy_MODINIT</span><span class="punctuation">(</span><span class="name">pof</span><span class="punctuation">)</span>
+<span class="keyword">static</span> <span class="name">HPy</span> <span class="name">init_pof_impl</span><span class="punctuation">(</span><span class="name">HPyContext</span> <span class="name">ctx</span><span class="punctuation">)</span>
+<span class="punctuation">{</span>
+    <span class="name">HPy</span> <span class="name">m</span><span class="punctuation">;</span>
+    <span class="name">m</span> <span class="operator">=</span> <span class="name">HPyModule_Create</span><span class="punctuation">(</span><span class="name">ctx</span><span class="punctuation">,</span> <span class="operator">&amp;</span><span class="name">moduledef</span><span class="punctuation">);</span>
+    <span class="keyword">if</span> <span class="punctuation">(</span><span class="name">HPy_IsNull</span><span class="punctuation">(</span><span class="name">m</span><span class="punctuation">))</span>
+        <span class="keyword">return</span> <span class="name">HPy_NULL</span><span class="punctuation">;</span>
+    <span class="keyword">return</span> <span class="name">m</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+</pre>
+<p>People who are familiar with the current C-API will surely notice many
+similarities. The biggest differences are:</p>
+
+<ul class="simple">
+<li>Instead of <tt class="docutils literal">PyObject *</tt>, objects have the type <tt class="docutils literal">HPy</tt>, which as
+explained above represents a handle.</li>
+<li>You need to explicitly pass an <tt class="docutils literal">HPyContext</tt> around: the intent is
+primary to be future-proof and make it easier to implement things like
+sub- interpreters.</li>
+<li><tt class="docutils literal">HPy_METH_VARARGS</tt> is implemented differently than CPython's
+<tt class="docutils literal">METH_VARARGS</tt>: in particular, these methods receive an array of <tt class="docutils literal">HPy</tt>
+and its length, instead of a fully constructed tuple: passing a tuple
+makes sense on CPython where you have it anyway, but it might be an
+unnecessary burden for alternate implementations.  Note that this is
+similar to the new <a class="reference external" href="https://www.python.org/dev/peps/pep-0580/">METH_FASTCALL</a> which was introduced in CPython.</li>
+<li>HPy relies a lot on C macros, which most of the time are needed to support
+the HPy/CPython ABI compilation mode. For example, <tt class="docutils literal">HPy_DEF_METH_VARARGS</tt>
+expands into a trampoline which has the correct C signature that CPython
+expects (i.e., <tt class="docutils literal">PyObject <span class="pre">(*)(PyObject</span> *self, *PyObject *args)</tt>) and
+which calls <tt class="docutils literal">add_ints_impl</tt>.</li>
+</ul>
+
+</div>
+<div class="section" id="sprint-report-and-current-status">
+<h2>Sprint report and current status</h2>
+<p>After this long preamble, here is a rough list of what we accomplished during
+the week-long sprint and the days immediatly after.</p>
+<p>On the HPy side, we kicked-off the code in the repo: at the moment of writing
+the layout of the directories is a bit messy because we moved things around
+several times, but we identified several main sections:</p>
+
+<ol class="arabic">
+<li><p class="first">A specification of the API which serves both as documentation and as an
+input for parts of the projects which are automatically
+generated. Currently, this lives in <a class="reference external" href="https://github.com/pyhandle/hpy/blob/9aa8a2738af3fd2eda69d4773b319d10a9a5373f/tools/public_api.h">public_api.h</a>.</p>
+</li>
+<li><p class="first">A set of header files which can be used to compile extension modules:
+depending on whether the flag <tt class="docutils literal"><span class="pre">-DHPY_UNIVERSAL_ABI</span></tt> is passed to the
+compiler, the extension can target the <a class="reference external" href="https://github.com/pyhandle/hpy/blob/9aa8a2738af3fd2eda69d4773b319d10a9a5373f/hpy-api/hpy_devel/include/cpython/hpy.h">HPy/CPython ABI</a> or the <a class="reference external" href="https://github.com/pyhandle/hpy/blob/9aa8a2738af3fd2eda69d4773b319d10a9a5373f/hpy-api/hpy_devel/include/universal/hpy.h">HPy
+Universal ABI</a></p>
+</li>
+<li><p class="first">A <a class="reference external" href="https://github.com/pyhandle/hpy/tree/9aa8a2738af3fd2eda69d4773b319d10a9a5373f/cpython-universal/src">CPython extension module</a> called <tt class="docutils literal">hpy_universal</tt> which makes it
+possible to import universal modules on CPython</p>
+</li>
+<li><p class="first">A set of <a class="reference external" href="https://github.com/pyhandle/hpy/tree/9aa8a2738af3fd2eda69d4773b319d10a9a5373f/test">tests</a> which are independent of the implementation and are meant
+to be an "executable specification" of the semantics.  Currently, these
+tests are run against three different implementations of the HPy API:</p>
+
+<ul class="simple">
+<li>the headers which implements the "HPy/CPython ABI"</li>
+<li>the <tt class="docutils literal">hpy_universal</tt> module for CPython</li>
+<li>the <tt class="docutils literal">hpy_universal</tt> module for PyPy (these tests are run in the PyPy repo)</li>
+</ul>
+
+</li>
+</ol>
+
+<p>Moreover, we started a <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/hpy/pypy/module/hpy_universal/">PyPy branch</a> in which to implement the
+<tt class="docutils literal">hpy_univeral</tt> module: at the moment of writing PyPy can pass all the HPy
+tests apart the ones which allow conversion to and from <tt class="docutils literal">PyObject *</tt>.
+Among the other things, this means that it is already possible to load the
+very same binary module in both CPython and PyPy, which is impressive on its
+own :).</p>
+<p>Finally, we wanted a real-life use case to show how to port a module to HPy
+and to do benchmarks.  After some searching, we choose <a class="reference external" href="https://github.com/esnme/ultrajson">ultrajson</a>, for the
+following reasons:</p>
+
+<ul class="simple">
+<li>it is a real-world extension module which was written with performance in
+mind</li>
+<li>when parsing a JSON file it does a lot of calls to the Python API to
+construct the various parts of the result message</li>
+<li>it uses only a small subset of the Python API</li>
+</ul>
+
+<p>This repo contains the <a class="reference external" href="https://github.com/pyhandle/ultrajson-hpy">HPy port of ultrajson</a>. This <a class="reference external" href="https://github.com/pyhandle/ultrajson-hpy/commit/efb35807afa8cf57db5df6a3dfd4b64c289fe907">commit</a> shows an example
+of what the porting looks like.</p>
+<p><tt class="docutils literal">ujson_hpy</tt> is also a very good example of incremental migration: so far
+only <tt class="docutils literal">ujson.loads</tt> is implemented using the HPy API, while <tt class="docutils literal">ujson.dumps</tt>
+is still implemented using the old C-API, and both can coexist nicely in the
+same compiled module.</p>
+</div>
+<div class="section" id="benchmarks">
+<h2>Benchmarks</h2>
+<p>Once we have a fully working <tt class="docutils literal">ujson_hpy</tt> module, we can finally run
+benchmarks!  We tested several different versions of the module:</p>
+
+<ul class="simple">
+<li><tt class="docutils literal">ujson</tt>: this is the vanilla implementation of ultrajson using the
+C-API. On PyPy this is executed by the infamous <tt class="docutils literal">cpyext</tt> compatibility
+layer, so we expect it to be much slower than on CPython</li>
+<li><tt class="docutils literal">ujson_hpy</tt>: our HPy port compiled to target the HPy/CPython ABI. We
+expect it to be as fast as <tt class="docutils literal">ujson</tt></li>
+<li><tt class="docutils literal">ujson_hpy_universal</tt>: same as above but compiled to target the
+Universal HPy ABI. We expect it to be slightly slower than <tt class="docutils literal">ujson</tt> on
+CPython, and much faster on PyPy.</li>
+</ul>
+
+<p>Finally, we also ran the benchmark using the builtin <tt class="docutils literal">json</tt> module. This is
+not really relevant to HPy, but it might still be an interesting as a
+reference data point.</p>
+<p>The <a class="reference external" href="https://github.com/pyhandle/ultrajson-hpy/blob/hpy/benchmark/main.py">benchmark</a> is very simple and consists of parsing a <a class="reference external" href="https://github.com/pyhandle/ultrajson-hpy/blob/hpy/benchmark/download_data.sh">big JSON file</a> 100
+times. Here is the average time per iteration (in milliseconds) using the
+various versions of the module, CPython 3.7 and the latest version of the hpy
+PyPy branch:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="55%">
+<col width="24%">
+<col width="21%">
+</colgroup>
+<tbody valign="top">
+<tr><td> </td>
+<td>CPython</td>
+<td>PyPy</td>
+</tr>
+<tr><td>ujson</td>
+<td>154.32</td>
+<td>633.97</td>
+</tr>
+<tr><td>ujson_hpy</td>
+<td>152.19</td>
+<td> </td>
+</tr>
+<tr><td>ujson_hpy_universal</td>
+<td>168.78</td>
+<td>207.68</td>
+</tr>
+<tr><td>json</td>
+<td>224.59</td>
+<td>135.43</td>
+</tr>
+</tbody>
+</table>
+<p>As expected, the benchmark proves that when targeting the HPy/CPython ABI, HPy
+doesn't impose any performance penalty on CPython. The universal version is
+~10% slower on CPython, but gives an impressive 3x speedup on PyPy! It it
+worth noting that the PyPy hpy module is not fully optimized yet, and we
+expect to be able to reach the same performance as CPython for this particular
+example (or even more, thanks to our better GC).</p>
+<p>All in all, not a bad result for two weeks of intense hacking :)</p>
+<p>It is also worth noting than PyPy's builtin <tt class="docutils literal">json</tt> module does <strong>really</strong>
+well in this benchmark, thanks to the recent optimizations that were described
+in an <a class="reference external" href="/posts/2019/10/pypys-new-json-parser-492911724084305501.html">earlier blog post</a>.</p>
+</div>
+<div class="section" id="conclusion-and-future-directions">
+<h2>Conclusion and future directions</h2>
+<p>We think we can be very satisfied about what we have got so far. The
+development of HPy is quite new, but these early results seem to indicate that
+we are on the right track to bring Python extensions into the future.</p>
+<p>At the moment, we can anticipate some of the next steps in the development of
+HPy:</p>
+
+<ul class="simple">
+<li>Think about a proper API design: what we have done so far has
+been a "dumb" translation of the API we needed to run <tt class="docutils literal">ujson</tt>. However,
+one of the declared goal of HPy is to improve the design of the API. There
+will be a trade-off between the desire of having a clean, fresh new API
+and the need to be not too different than the old one, to make porting
+easier.  Finding the sweet spot will not be easy!</li>
+<li>Implement the "debug" mode, which will help developers to find
+bugs such as leaking handles or using invalid handles.</li>
+<li>Instruct Cython to emit HPy code on request.</li>
+<li>Eventually, we will also want to try to port parts of <tt class="docutils literal">numpy</tt> to HPy to
+finally solve the long-standing problem of sub-optimal <tt class="docutils literal">numpy</tt>
+performance in PyPy.</li>
+</ul>
+
+<p>Stay tuned!</p>
+
+</div><script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body></html>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js"
+        data-repo="antocuni/antocuni.github.io"
+        data-repo-id="R_kgDON3STLg"
+        data-category="Announcements"
+        data-category-id="DIC_kwDON3STLs4Cm2EZ"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2008 - 2025 Antonio Cuni  - <a href="#__consent">Change cookie settings</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="feed_rss_updated.xml" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/antocuni/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://mastodon.social/@antocuni" target="_blank" rel="noopener me" title="mastodon.social" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/antocuni.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/antocuni" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+  
+    
+  
+
+
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+      
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="analytics" checked>
+          <span class="task-list-indicator"></span>
+          Google Analytics
+        </label>
+      </li>
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.highlight", "search.suggest", "header.autohide"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+    
+  </body>
+</html>

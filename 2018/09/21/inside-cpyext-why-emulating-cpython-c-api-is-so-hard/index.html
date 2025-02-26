@@ -1,0 +1,1550 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Antonio Cuni">
+      
+      
+        <link rel="canonical" href="https://antocuni.eu/2018/09/21/inside-cpyext-why-emulating-cpython-c-api-is-so-hard/">
+      
+      
+        <link rel="prev" href="../../../04/27/how-to-ignore-the-annoying-cython-warnings-in-pypy-60/">
+      
+      
+        <link rel="next" href="../../../../2019/01/03/pypy-for-low-latency-systems/">
+      
+      
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../../feed_rss_updated.xml">
+      
+      <link rel="icon" href="../../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+    
+    
+      
+        <title>Inside cpyext: Why emulating CPython C API is so Hard - Antonio Cuni's blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-Z20FNJZ1GJ"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-Z20FNJZ1GJ",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-Z20FNJZ1GJ",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+    
+   <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+    html.glightbox-open { overflow: initial; height: 100%; }
+    .gslide-title { margin-top: 0px; user-select: text; }
+    .gslide-desc { color: #666; user-select: text; }
+    .gslide-image img { background: white; }
+    .gscrollbar-fixer { padding-right: 15px; }
+    .gdesc-inner { font-size: 0.75rem; }
+    body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+    body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+    body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}</style> <script src="../../../../assets/javascripts/glightbox.min.js"></script></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Antonio Cuni&#39;s blog" class="md-header__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Antonio Cuni's blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Inside cpyext: Why emulating CPython C API is so Hard
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Antonio Cuni&#39;s blog" class="md-nav__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Antonio Cuni's blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../feed_rss_updated.xml" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RSS feed
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2021
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2019/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2019
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2018/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2018
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2017/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2017
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2012/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2012
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2011/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2011
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2010/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2010
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2009/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2009
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2008/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2008
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Post
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2018-09-21 16:32:00+00:00" class="md-ellipsis">Sep 21, 2018</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/post/">Post</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              18 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:cpyext" class="md-tag">cpyext</a>
+      
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:profiling" class="md-tag">profiling</a>
+      
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:pypy" class="md-tag">pypy</a>
+      
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:speed" class="md-tag">speed</a>
+      
+    
+  </nav>
+
+
+
+<div class="admonition note">
+<p>Originally published on the <a href="https://pypy.org/posts/2018/09/inside-cpyext-why-emulating-cpython-c-8083064623681286567.html">PyPy blog</a>.</p>
+</div>
+<html><body>
+<br>
+<!-- more -->
+
+<div class="document" id="inside-cpyext-why-emulating-cpython-c-api-is-so-hard">
+<tt class="docutils literal">cpyext</tt> is PyPy's subsystem which provides a compatibility
+layer to compile and run CPython C extensions inside PyPy.  Often people ask
+why a particular C extension doesn't work or is very slow on PyPy.
+Usually it is hard to answer without going into technical details. The goal of
+this blog post is to explain some of these technical details, so that we can
+simply link here instead of explaining again and again :).<br>
+From a 10.000 foot view, <tt class="docutils literal">cpyext</tt> is PyPy's version of <tt class="docutils literal">"Python.h"</tt>. Every time
+you compile an extension which uses that header file, you are using <tt class="docutils literal">cpyext</tt>.
+This includes extension explicitly written in C (such as <tt class="docutils literal">numpy</tt>) and
+extensions which are generated from other compilers/preprocessors
+(e.g. <tt class="docutils literal">Cython</tt>).<br>
+At the time of writing, the current status is that most C extensions "just
+work". Generally speaking, you can simply <tt class="docutils literal">pip install</tt> them,
+provided they use the public, <a class="reference external" href="https://docs.python.org/2/c-api/index.html">official C API</a> instead of poking at private
+implementation details.  However, the performance of cpyext is generally
+poor. A Python program which makes heavy use of <tt class="docutils literal">cpyext</tt> extensions
+is likely to be slower on PyPy than on CPython.<br>
+Note: in this blog post we are talking about Python 2.7 because it is still
+the default version of PyPy: however most of the implementation of <tt class="docutils literal">cpyext</tt> is
+shared with PyPy3, so everything applies to that as well.<br>
+<div class="section" id="c-api-overview">
+<h1>
+C API Overview</h1>
+In CPython, which is written in C, Python objects are represented as <tt class="docutils literal">PyObject*</tt>,
+i.e. (mostly) opaque pointers to some common "base struct".<br>
+CPython uses a very simple memory management scheme: when you create an
+object, you allocate a block of memory of the appropriate size on the heap.
+Depending on the details, you might end up calling different allocators, but
+for the sake of simplicity, you can think that this ends up being a call to
+<tt class="docutils literal">malloc()</tt>. The resulting block of memory is initialized and casted to to
+<tt class="docutils literal">PyObject*</tt>: this address never changes during the object lifetime, and the
+C code can freely pass it around, store it inside containers, retrieve it
+later, etc.<br>
+Memory is managed using reference counting. When you create a new reference to
+an object, or you discard a reference you own, you have to <a class="reference external" href="https://docs.python.org/2/c-api/refcounting.html#c.Py_INCREF">increment</a> or
+<a class="reference external" href="https://docs.python.org/2/c-api/refcounting.html#c.Py_DECREF">decrement</a> the reference counter accordingly. When the reference counter goes to
+0, it means that the object is no longer used and can safely be
+destroyed. Again, we can simplify and say that this results in a call to
+<tt class="docutils literal">free()</tt>, which finally releases the memory which was allocated by <tt class="docutils literal">malloc()</tt>.<br>
+Generally speaking, the only way to operate on a <tt class="docutils literal">PyObject*</tt> is to call the
+appropriate API functions. For example, to convert a given <tt class="docutils literal">PyObject*</tt> to a C
+integer, you can use <a class="reference external" href="https://docs.python.org/2/c-api/int.html#c.PyInt_AsLong">PyInt_AsLong()</a>; to add two objects together, you can
+call <a class="reference external" href="https://docs.python.org/2/c-api/number.html#c.PyNumber_Add">PyNumber_Add()</a>.<br>
+Internally, PyPy uses a similar approach. All Python objects are subclasses of
+the RPython <tt class="docutils literal">W_Root</tt> class, and they are operated by calling methods on the
+<tt class="docutils literal">space</tt> singleton, which represents the interpreter.<br>
+At first, it looks very easy to write a compatibility layer: just make
+<tt class="docutils literal">PyObject*</tt> an alias for <tt class="docutils literal">W_Root</tt>, and write simple RPython functions
+(which will be translated to C by the RPython compiler) which call the
+<tt class="docutils literal">space</tt> accordingly:<br>
+<pre class="code python literal-block"><span class="keyword">def</span> <span class="name function">PyInt_AsLong</span><span class="punctuation">(</span><span class="name">space</span><span class="punctuation">,</span> <span class="name">o</span><span class="punctuation">):</span>
+    <span class="keyword">return</span> <span class="name">space</span><span class="operator">.</span><span class="name">int_w</span><span class="punctuation">(</span><span class="name">o</span><span class="punctuation">)</span>
+
+<span class="keyword">def</span> <span class="name function">PyNumber_Add</span><span class="punctuation">(</span><span class="name">space</span><span class="punctuation">,</span> <span class="name">o1</span><span class="punctuation">,</span> <span class="name">o2</span><span class="punctuation">):</span>
+    <span class="keyword">return</span> <span class="name">space</span><span class="operator">.</span><span class="name">add</span><span class="punctuation">(</span><span class="name">o1</span><span class="punctuation">,</span> <span class="name">o2</span><span class="punctuation">)</span>
+</pre>
+Actually, the code above is not too far from the real
+implementation. However, there are tons of gory details which make it much
+harder than it looks, and much slower unless you pay a lot of attention
+to performance.</div>
+<div class="section" id="the-pypy-gc">
+<h1>
+The PyPy GC</h1>
+To understand some of <tt class="docutils literal">cpyext</tt> challenges, you need to have at least a rough
+idea of how the PyPy GC works.<br>
+Contrarily to the popular belief, the "Garbage Collector" is not only about
+collecting garbage: instead, it is generally responsible for all memory
+management, including allocation and deallocation.<br>
+Whereas CPython uses a combination of malloc/free/refcounting to manage
+memory, the PyPy GC uses a completely different approach. It is designed
+assuming that a dynamic language like Python behaves the following way:<br>
+<blockquote>
+<ul class="simple">
+<li>You create, either directly or indirectly, lots of objects.</li>
+<li>Most of these objects are temporary and very short-lived. Think e.g. of
+doing <tt class="docutils literal">a + b + c</tt>: you need to allocate an object to hold the temporary
+result of <tt class="docutils literal">a + b</tt>, then it dies very quickly because you no longer need it
+when you do the final <tt class="docutils literal">+ c</tt> part.</li>
+<li>Only small fraction of the objects survive and stay around for a while.</li>
+</ul>
+</blockquote>
+So, the strategy is: make allocation as fast as possible; make deallocation of
+short-lived objects as fast as possible; find a way to handle the remaining
+small set of objects which actually survive long enough to be important.<br>
+This is done using a <strong>Generational GC</strong>: the basic idea is the following:<br>
+<blockquote>
+<ol class="arabic simple">
+<li>We have a nursery, where we allocate "young objects" very quickly.</li>
+<li>When the nursery is full, we start what we call a "minor collection".<ul>
+<li>We do a quick scan to determine the small set of objects which survived so
+far</li>
+<li>We <strong>move</strong> these objects out of the nursery, and we place them in the
+area of memory which contains the "old objects". Since the address of the
+objects changes, we fix all the references to them accordingly.</li>
+</ul>
+</li>
+</ol>
+<ol class="arabic simple" start="4">
+<li>now the nursery contains only objects which "died young". We can
+discard all of them very quickly, reset the nursery, and use the same area
+of memory to allocate new objects from now.</li>
+</ol>
+</blockquote>
+In practice, this scheme works very well and it is one of the reasons why PyPy
+is much faster than CPython.  However, careful readers have surely noticed
+that this is a problem for <tt class="docutils literal">cpyext</tt>. On one hand, we have PyPy objects which
+can potentially move and change their underlying memory address; on the other
+hand, we need a way to represent them as fixed-address <tt class="docutils literal">PyObject*</tt> when we
+pass them to C extensions.  We surely need a way to handle that.</div>
+<div class="section" id="pyobject-in-pypy">
+<h1>
+<tt class="docutils literal">PyObject*</tt> in PyPy</h1>
+Another challenge is that sometimes, <tt class="docutils literal">PyObject*</tt> structs are not completely
+opaque: there are parts of the public API which expose to the user specific
+fields of some concrete C struct. For example the definition of <a class="reference external" href="https://docs.python.org/2/c-api/typeobj.html">PyTypeObject</a>
+which exposes many of the <tt class="docutils literal">tp_*</tt> slots to the user.
+Since the low-level layout of PyPy <tt class="docutils literal">W_Root</tt> objects is completely different
+than the one used by CPython, we cannot simply pass RPython objects to C; we
+need a way to handle the difference.<br>
+So, we have two issues so far: objects can move, and incompatible
+low-level layouts. <tt class="docutils literal">cpyext</tt> solves both by decoupling the RPython and the C
+representations. We have two "views" of the same entity, depending on whether
+we are in the PyPy world (the movable <tt class="docutils literal">W_Root</tt> subclass) or in the C world
+(the non-movable <tt class="docutils literal">PyObject*</tt>).<br>
+<tt class="docutils literal">PyObject*</tt> are created lazily, only when they are actually needed. The
+vast majority of PyPy objects are never passed to any C extension, so we don't
+pay any penalty in that case. However, the first time we pass a <tt class="docutils literal">W_Root</tt> to
+C, we allocate and initialize its <tt class="docutils literal">PyObject*</tt> counterpart.<br>
+The same idea applies also to objects which are created in C, e.g. by calling
+<a class="reference external" href="https://docs.python.org/2/c-api/allocation.html#c.PyObject_New">PyObject_New()</a>. At first, only the <tt class="docutils literal">PyObject*</tt> exists and it is
+exclusively managed by reference counting. As soon as we pass it to the PyPy
+world (e.g. as a return value of a function call), we create its <tt class="docutils literal">W_Root</tt>
+counterpart, which is managed by the GC as usual.<br>
+Here we start to see why calling cpyext modules is more costly in PyPy than in
+CPython. We need to pay some penalty for all the conversions between
+<tt class="docutils literal">W_Root</tt> and <tt class="docutils literal">PyObject*</tt>.<br>
+Moreover, the first time we pass a <tt class="docutils literal">W_Root</tt> to C we also need to allocate
+the memory for the <tt class="docutils literal">PyObject*</tt> using a slowish "CPython-style" memory
+allocator. In practice, for all the objects which are passed to C we pay more
+or less the same costs as CPython, thus effectively "undoing" the speedup
+guaranteed by PyPy's Generational GC under normal circumstances.</div>
+<div class="section" id="maintaining-the-link-between-w-root-and-pyobject">
+<h1>
+Maintaining the link between <tt class="docutils literal">W_Root</tt> and <tt class="docutils literal">PyObject*</tt></h1>
+We now need a way to convert between <tt class="docutils literal">W_Root</tt> and <tt class="docutils literal">PyObject*</tt> and
+vice-versa; also, we need to to ensure that the lifetime of the two entities
+are in sync. In particular:<br>
+<blockquote>
+<ol class="arabic simple">
+<li>as long as the <tt class="docutils literal">W_Root</tt> is kept alive by the GC, we want the
+<tt class="docutils literal">PyObject*</tt> to live even if its refcount drops to 0;</li>
+<li>as long as the <tt class="docutils literal">PyObject*</tt> has a refcount greater than 0, we want to
+make sure that the GC does not collect the <tt class="docutils literal">W_Root</tt>.</li>
+</ol>
+</blockquote>
+The <tt class="docutils literal">PyObject*</tt> ⇨ <tt class="docutils literal">W_Root</tt> link is maintained by the special field
+<a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/module/cpyext/parse/cpyext_object.h#lines-5">ob_pypy_link</a> which is added to all <tt class="docutils literal">PyObject*</tt>. On a 64 bit machine this
+means that all <tt class="docutils literal">PyObject*</tt> have 8 bytes of overhead, but then the
+conversion is very quick, just reading the field.<br>
+For the other direction, we generally don't want to do the same: the
+assumption is that the vast majority of <tt class="docutils literal">W_Root</tt> objects will never be
+passed to C, and adding an overhead of 8 bytes to all of them is a
+waste. Instead, in the general case the link is maintained by using a
+dictionary, where <tt class="docutils literal">W_Root</tt> are the keys and <tt class="docutils literal">PyObject*</tt> the values.<br>
+However, for a <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/module/cpyext/pyobject.py#lines-66">few selected</a> <tt class="docutils literal">W_Root</tt> subclasses we <strong>do</strong> maintain a
+direct link using the special <tt class="docutils literal">_cpy_ref</tt> field to improve performance. In
+particular, we use it for <tt class="docutils literal">W_TypeObject</tt> (which is big anyway, so a 8 bytes
+overhead is negligible) and <tt class="docutils literal">W_NoneObject</tt>. <tt class="docutils literal">None</tt> is passed around very
+often, so we want to ensure that the conversion to <tt class="docutils literal">PyObject*</tt> is very
+fast. Moreover it's a singleton, so the 8 bytes overhead is negligible as
+well.<br>
+This means that in theory, passing an arbitrary Python object to C is
+potentially costly, because it involves doing a dictionary lookup.  We assume
+that this cost will eventually show up in the profiler: however, at the time
+of writing there are other parts of <tt class="docutils literal">cpyext</tt> which are even more costly (as we
+will show later), so the cost of the dict lookup is never evident in the
+profiler.</div>
+<div class="section" id="crossing-the-border-between-rpython-and-c">
+<h1>
+Crossing the border between RPython and C</h1>
+There are two other things we need to care about whenever we cross the border
+between RPython and C, and vice-versa: exception handling and the GIL.<br>
+In the C API, exceptions are raised by calling <a class="reference external" href="https://docs.python.org/2/c-api/exceptions.html#c.PyErr_SetString">PyErr_SetString()</a> (or one of
+<a class="reference external" href="https://docs.python.org/2/c-api/exceptions.html#exception-handling">many other functions</a> which have a similar effect), which basically works by
+creating an exception value and storing it in some global variable. The
+function then signals that an exception has occurred by returning an error value,
+usually <tt class="docutils literal">NULL</tt>.<br>
+On the other hand, in the PyPy interpreter, exceptions are propagated by raising the
+RPython-level <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/interpreter/error.py#lines-20">OperationError</a> exception, which wraps the actual app-level
+exception values. To harmonize the two worlds, whenever we return from C to
+RPython, we need to check whether a C API exception was raised and if so turn it
+into an <tt class="docutils literal">OperationError</tt>.<br>
+We won't dig into details of <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/module/cpyext/api.py#lines-205">how the GIL is handled in cpyext</a>.
+For the purpose of this post, it is enough to know that whenever we enter
+C land, we store the current thread id into a global variable which is
+accessible also from C; conversely, whenever we go back from RPython to C, we
+restore this value to 0.<br>
+Similarly, we need to do the inverse operations whenever you need to cross the
+border between C and RPython, e.g. by calling a Python callback from C code.<br>
+All this complexity is automatically handled by the RPython function
+<a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/module/cpyext/api.py#lines-1757">generic_cpy_call</a>. If you look at the code you see that it takes care of 4
+things:<br>
+<blockquote>
+<ol class="arabic simple">
+<li>Handling the GIL as explained above.</li>
+<li>Handling exceptions, if they are raised.</li>
+<li>Converting arguments from <tt class="docutils literal">W_Root</tt> to <tt class="docutils literal">PyObject*</tt>.</li>
+<li>Converting the return value from <tt class="docutils literal">PyObject*</tt> to <tt class="docutils literal">W_Root</tt>.</li>
+</ol>
+</blockquote>
+So, we can see that calling C from RPython introduce some overhead.
+Can we measure it?<br>
+Assuming that the conversion between <tt class="docutils literal">W_Root</tt> and <tt class="docutils literal">PyObject*</tt> has a
+reasonable cost (as explained by the previous section), the overhead
+introduced by a single border-cross is still acceptable, especially if the
+callee is doing some non-negligible amount of work.<br>
+However this is not always the case. There are basically three problems that
+make (or used to make) <tt class="docutils literal">cpyext</tt> super slow:<br>
+<blockquote>
+<ol class="arabic simple">
+<li>Paying the border-crossing cost for trivial operations which are called
+very often, such as <tt class="docutils literal">Py_INCREF</tt>.</li>
+<li>Crossing the border back and forth many times, even if it's not strictly
+needed.</li>
+<li>Paying an excessive cost for argument and return value conversions.</li>
+</ol>
+</blockquote>
+The next sections explain in more detail each of these problems.</div>
+<div class="section" id="avoiding-unnecessary-roundtrips">
+<h1>
+Avoiding unnecessary roundtrips</h1>
+Prior to the <a class="reference external" href="/posts/2017/10/cape-of-good-hope-for-pypy-hello-from-3656631725712879033.html">2017 Cape Town Sprint</a>, <tt class="docutils literal">cpyext</tt> was horribly slow, and we were
+well aware of it: the main reason was that we never really paid too much
+attention to performance. As explained in the blog post, emulating all the
+CPython quirks is basically a nightmare, so better to concentrate on
+correctness first.<br>
+However, we didn't really know <strong>why</strong> it was so slow. We had theories and
+assumptions, usually pointing at the cost of conversions between <tt class="docutils literal">W_Root</tt>
+and <tt class="docutils literal">PyObject*</tt>, but we never actually measured it.<br>
+So, we decided to write a set of <a class="reference external" href="https://github.com/antocuni/cpyext-benchmarks">cpyext microbenchmarks</a> to measure the
+performance of various operations.  The result was somewhat surprising: the
+theory suggests that when you do a cpyext C call, you should pay the
+border-crossing costs only once, but what the profiler told us was that we
+were paying the cost of <tt class="docutils literal">generic_cpy_call</tt> several times more than what we expected.<br>
+After a bit of investigation, we discovered this was ultimately caused by our
+"correctness-first" approach. For simplicity of development and testing, when
+we started <tt class="docutils literal">cpyext</tt> we wrote everything in RPython: thus, every single API call
+made from C (like the omnipresent <a class="reference external" href="https://docs.python.org/2/c-api/arg.html#c.PyArg_ParseTuple">PyArg_ParseTuple()</a>, <a class="reference external" href="https://docs.python.org/2/c-api/int.html#c.PyInt_AsLong">PyInt_AsLong()</a>, etc.)
+had to cross back the C-to-RPython border. This was especially daunting for
+very simple and frequent operations like <tt class="docutils literal">Py_INCREF</tt> and <tt class="docutils literal">Py_DECREF</tt>,
+which CPython implements as a single assembly instruction!<br>
+Another source of slow down was the implementation of <tt class="docutils literal">PyTypeObject</tt> slots.
+At the C level, these are function pointers which the interpreter calls to do
+certain operations, e.g. <a class="reference external" href="https://docs.python.org/2/c-api/typeobj.html#c.PyTypeObject.tp_new">tp_new</a> to allocate a new instance of that type.<br>
+As usual, we have some magic to implement slots in RPython; in particular,
+<a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/module/cpyext/api.py#lines-362">_make_wrapper</a> does the opposite of <tt class="docutils literal">generic_cpy_call</tt>: it takes a
+RPython function and wraps it into a C function which can be safely called
+from C, handling the GIL, exceptions and argument conversions automatically.<br>
+This was very handy during the development of cpyext, but it might result in
+some bad nonsense; consider what happens when you call the following C
+function:<br>
+<pre class="code C literal-block"><span class="keyword">static</span> <span class="name">PyObject</span><span class="operator">*</span> <span class="name function">foo</span><span class="punctuation">(</span><span class="name">PyObject</span><span class="operator">*</span> <span class="name">self</span><span class="punctuation">,</span> <span class="name">PyObject</span><span class="operator">*</span> <span class="name">args</span><span class="punctuation">)</span>
+<span class="punctuation">{</span>
+    <span class="name">PyObject</span><span class="operator">*</span> <span class="name">result</span> <span class="operator">=</span> <span class="name">PyInt_FromLong</span><span class="punctuation">(</span><span class="literal number integer">1234</span><span class="punctuation">);</span>
+    <span class="keyword">return</span> <span class="name">result</span><span class="punctuation">;</span>
+<span class="punctuation">}</span>
+</pre>
+<ol class="arabic simple">
+<li>you are in RPython and do a cpyext call to <tt class="docutils literal">foo</tt>: <strong>RPython-to-C</strong>;</li>
+<li><tt class="docutils literal">foo</tt> calls <tt class="docutils literal">PyInt_FromLong(1234)</tt>, which is implemented in RPython:
+<strong>C-to-RPython</strong>;</li>
+<li>the implementation of <tt class="docutils literal">PyInt_FromLong</tt> indirectly calls
+<tt class="docutils literal">PyIntType.tp_new</tt>, which is a C function pointer: <strong>RPython-to-C</strong>;</li>
+<li>however, <tt class="docutils literal">tp_new</tt> is just a wrapper around an RPython function, created
+by <tt class="docutils literal">_make_wrapper</tt>: <strong>C-to-RPython</strong>;</li>
+<li>finally, we create our RPython <tt class="docutils literal">W_IntObject(1234)</tt>; at some point
+during the <strong>RPython-to-C</strong> crossing, its <tt class="docutils literal">PyObject*</tt> equivalent is
+created;</li>
+<li>after many layers of wrappers, we are again in <tt class="docutils literal">foo</tt>: after we do
+<tt class="docutils literal">return result</tt>, during the <strong>C-to-RPython</strong> step we convert it from
+<tt class="docutils literal">PyObject*</tt> to <tt class="docutils literal">W_IntObject(1234)</tt>.</li>
+</ol>
+Phew! After we realized this, it was not so surprising that <tt class="docutils literal">cpyext</tt> was very
+slow :). And this was a simplified example, since we are not passing a
+<tt class="docutils literal">PyObject*</tt> to the API call. When we do, we need to convert it back and
+forth at every step.  Actually, I am not even sure that what I described was
+the exact sequence of steps which used to happen, but you get the general
+idea.<br>
+The solution is simple: rewrite as much as we can in C instead of RPython,
+to avoid unnecessary roundtrips. This was the topic of most of the Cape Town
+sprint and resulted in the <tt class="docutils literal"><span class="pre">cpyext-avoid-roundtrip</span></tt> branch, which was
+eventually <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/cpyext_avoid-roundtrip">merged</a>.<br>
+Of course, it is not possible to move <strong>everything</strong> to C: there are still
+operations which need to be implemented in RPython. For example, think of
+<tt class="docutils literal">PyList_Append</tt>: the logic to append an item to a list is complex and
+involves list strategies, so we cannot replicate it in C.  However, we
+discovered that a large subset of the C API can benefit from this.<br>
+Moreover, the C API is <strong>huge</strong>. While we invented this new way of writing
+<tt class="docutils literal">cpyext</tt> code, we still need to
+convert many of the functions to the new paradigm.  Sometimes the rewrite is
+not automatic
+or straighforward. <tt class="docutils literal">cpyext</tt> is a delicate piece of software, so it happens often
+that we make a mistake and end up staring at a segfault in gdb.<br>
+However, the most important takeaway is that the performance improvements we got
+from this optimization are impressive, as we will detail later.</div>
+<div class="section" id="conversion-costs">
+<h1>
+Conversion costs</h1>
+The other potential big source of slowdown is the conversion of arguments
+between <tt class="docutils literal">W_Root</tt> and <tt class="docutils literal">PyObject*</tt>.<br>
+As explained earlier, the first time you pass a <tt class="docutils literal">W_Root</tt> to C, you need to
+allocate its <tt class="docutils literal">PyObject*</tt> counterpart. Suppose you have a <tt class="docutils literal">foo</tt> function
+defined in C, which takes a single int argument:<br>
+<pre class="code python literal-block"><span class="keyword">for</span> <span class="name">i</span> <span class="operator word">in</span> <span class="name builtin">range</span><span class="punctuation">(</span><span class="name">N</span><span class="punctuation">):</span>
+    <span class="name">foo</span><span class="punctuation">(</span><span class="name">i</span><span class="punctuation">)</span>
+</pre>
+To run this code, you need to create a different <tt class="docutils literal">PyObject*</tt> for each value
+of <tt class="docutils literal">i</tt>: if implemented naively, it means calling <tt class="docutils literal">N</tt> times <tt class="docutils literal">malloc()</tt>
+and <tt class="docutils literal">free()</tt>, which kills performance.<br>
+CPython has the very same problem, which is solved by using a <a class="reference external" href="https://en.wikipedia.org/wiki/Free_list">free list</a> to
+<a class="reference external" href="https://github.com/python/cpython/blob/2.7/Objects/intobject.c#L16">allocate ints</a>. So, what we did was to simply <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/commit/d8754ab9ba6371c83eaeb80cdf8cc13a37ee0c89">steal the code</a> from CPython
+and do the exact same thing. This was also done in the
+<tt class="docutils literal"><span class="pre">cpyext-avoid-roundtrip</span></tt> branch, and the benchmarks show that it worked
+perfectly.<br>
+Every type which is converted often to <tt class="docutils literal">PyObject*</tt> must have a very fast
+allocator. At the moment of writing, PyPy uses free lists only for ints and
+<a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/commit/35e2fb9903f2483940d7970bd83ce8c65aa1c1a3">tuples</a>: one of the next steps on our TODO list is certainly to use this
+technique with more types, like <tt class="docutils literal">float</tt>.<br>
+Conversely, we also need to optimize the conversion from <tt class="docutils literal">PyObject*</tt> to
+<tt class="docutils literal">W_Root</tt>: this happens when an object is originally allocated in C and
+returned to Python. Consider for example the following code:<br>
+<pre class="code python literal-block"><span class="keyword namespace">import</span> <span class="name namespace">numpy</span> <span class="keyword namespace">as</span> <span class="name namespace">np</span>
+<span class="name">myarray</span> <span class="operator">=</span> <span class="name">np</span><span class="operator">.</span><span class="name">random</span><span class="operator">.</span><span class="name">random</span><span class="punctuation">(</span><span class="name">N</span><span class="punctuation">)</span>
+<span class="keyword">for</span> <span class="name">i</span> <span class="operator word">in</span> <span class="name builtin">range</span><span class="punctuation">(</span><span class="name builtin">len</span><span class="punctuation">(</span><span class="name">arr</span><span class="punctuation">)):</span>
+    <span class="name">myarray</span><span class="punctuation">[</span><span class="name">i</span><span class="punctuation">]</span>
+</pre>
+At every iteration, we get an item out of the array: the return type is a an
+instance of <tt class="docutils literal">numpy.float64</tt> (a numpy scalar), i.e. a <tt class="docutils literal">PyObject'*</tt>: this is
+something which is implemented by numpy entirely in C, so completely
+opaque to <tt class="docutils literal">cpyext</tt>. We don't have any control on how it is allocated,
+managed, etc., and we can assume that allocation costs are the same as on
+CPython.<br>
+As soon as we return these <tt class="docutils literal">PyObject*</tt> to Python, we need to allocate
+their <tt class="docutils literal">W_Root</tt> equivalent. If you do it in a small loop like in the example
+above, you end up allocating all these <tt class="docutils literal">W_Root</tt> inside the nursery, which is
+a good thing since allocation is super fast (see the section above about the
+PyPy GC).<br>
+However, we also need to keep track of the <tt class="docutils literal">W_Root</tt> to <tt class="docutils literal">PyObject*</tt> link.
+Currently, we do this by putting all of them in a dictionary, but it is very
+inefficient, especially because most of these objects die young and thus it
+is wasted work to do that for them.  Currently, this is one of the biggest
+unresolved problem in <tt class="docutils literal">cpyext</tt>, and it is what causes the two microbenchmarks
+<tt class="docutils literal">allocate_int</tt> and <tt class="docutils literal">allocate_tuple</tt> to be very slow.<br>
+We are well aware of the problem, and we have a plan for how to fix it. The
+explanation is too technical for the scope of this blog post as it requires a
+deep knowledge of the GC internals to be understood, but the details are
+<a class="reference external" href="https://foss.heptapod.net/pypy/extradoc/-/blob/branch/extradoc/planning/cpyext.txt#L27">here</a>.</div>
+<div class="section" id="c-api-quirks">
+<h1>
+C API quirks</h1>
+Finally, there is another source of slowdown which is beyond our control. Some
+parts of the CPython C API are badly designed and expose some of the
+implementation details of CPython.<br>
+The major example is reference counting. The <tt class="docutils literal">Py_INCREF</tt> / <tt class="docutils literal">Py_DECREF</tt> API
+is designed in such a way which forces other implementation to emulate
+refcounting even in presence of other GC management schemes, as explained
+above.<br>
+Another example is borrowed references. There are API functions which <strong>do
+not</strong> incref an object before returning it, e.g. <a class="reference external" href="https://docs.python.org/2/c-api/list.html#c.PyList_GetItem">PyList_GetItem()</a>.  This is
+done for performance reasons because we can avoid a whole incref/decref pair,
+if the caller needs to handle the returned item only temporarily: the item is
+kept alive because it is in the list anyway.<br>
+For PyPy, this is a challenge: thanks to <a class="reference external" href="/posts/2011/10/more-compact-lists-with-list-strategies-8229304944653956829.html">list strategies</a>, lists are often
+represented in a compact way. For example, a list containing only integers is
+stored as a C array of <tt class="docutils literal">long</tt>.  How to implement <tt class="docutils literal">PyList_GetItem</tt>? We
+cannot simply create a <tt class="docutils literal">PyObject*</tt> on the fly, because the caller will never
+decref it and it will result in a memory leak.<br>
+The current solution is very inefficient. The first time we do a
+<tt class="docutils literal">PyList_GetItem</tt>, we <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3.6/pypy/module/cpyext/listobject.py#lines-28">convert</a> the <strong>whole</strong> list to a list of
+<tt class="docutils literal">PyObject*</tt>. This is bad in two ways: the first is that we potentially pay a
+lot of unneeded conversion cost in case we will never access the other items
+of the list. The second is that by doing that we lose all the performance
+benefit granted by the original list strategy, making it slower for the
+rest of the pure-python code which will manipulate the list later.<br>
+<tt class="docutils literal">PyList_GetItem</tt> is an example of a bad API because it assumes that the list
+is implemented as an array of <tt class="docutils literal">PyObject*</tt>: after all, in order to return a
+borrowed reference, we need a reference to borrow, don't we?<br>
+Fortunately, (some) CPython developers are aware of these problems, and there
+is an ongoing project to <a class="reference external" href="https://pythoncapi.readthedocs.io/">design a better C API</a> which aims to fix exactly
+this kind of problem.<br>
+Nonetheless, in the meantime we still need to implement the current
+half-broken APIs. There is no easy solution for that, and it is likely that
+we will always need to pay some performance penalty in order to implement them
+correctly.<br>
+However, what we could potentially do is to provide alternative functions
+which do the same job but are more PyPy friendly: for example, we could think
+of implementing <tt class="docutils literal">PyList_GetItemNonBorrowed</tt> or something like that: then, C
+extensions could choose to use it (possibly hidden inside some macro and
+<tt class="docutils literal">#ifdef</tt>) if they want to be fast on PyPy.</div>
+<div class="section" id="current-performance">
+<h1>
+Current performance</h1>
+During the whole blog post we claimed <tt class="docutils literal">cpyext</tt> is slow. How
+slow it is, exactly?<br>
+We decided to concentrate on <a class="reference external" href="https://github.com/antocuni/cpyext-benchmarks">microbenchmarks</a> for now. It should be evident
+by now there are simply too many issues which can slow down a <tt class="docutils literal">cpyext</tt>
+program, and microbenchmarks help us to concentrate on one (or few) at a
+time.<br>
+The microbenchmarks measure very simple things, like calling functions and
+methods with the various calling conventions (no arguments, one arguments,
+multiple arguments); passing various types as arguments (to measure conversion
+costs); allocating objects from C, and so on.<br>
+Here are the results from the old PyPy 5.8 relative and normalized to CPython
+2.7, the lower the better:<br>
+<br>
+
+
+<div class="separator" style="clear: both; text-align: center;">
+<a href="https://4.bp.blogspot.com/-5QV9jBfeXfo/W6UOCRA9YqI/AAAAAAAABX4/H2zgbv_XFQEHD4Lb2lj5Ve4Ob_YMuSXLwCLcBGAs/s1600/pypy58.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="480" src="https://4.bp.blogspot.com/-5QV9jBfeXfo/W6UOCRA9YqI/AAAAAAAABX4/H2zgbv_XFQEHD4Lb2lj5Ve4Ob_YMuSXLwCLcBGAs/s640/pypy58.png" width="640"></a></div>
+<br>
+<div class="separator" style="clear: both; text-align: center;">
+<a href="https://www.blogger.com/blogger.g?blogID=3971202189709462152" style="margin-left: 1em; margin-right: 1em;"></a></div>
+<div class="separator" style="clear: both; text-align: center;">
+<a href="https://www.blogger.com/blogger.g?blogID=3971202189709462152" style="margin-left: 1em; margin-right: 1em;"></a></div>
+<br>
+PyPy was horribly slow everywhere, ranging from 2.5x to 10x slower. It is
+particularly interesting to compare <tt class="docutils literal">simple.noargs</tt>, which measures the cost
+of calling an empty function with no arguments, and <tt class="docutils literal">simple.onearg(i)</tt>,
+which measures the cost calling an empty function passing an integer argument:
+the latter is ~2x slower than the former, indicating that the conversion cost
+of integers is huge.<br>
+PyPy 5.8 was the last release before the famous Cape Town sprint, when we
+started to look at cpyext performance seriously. Here are the performance data for
+PyPy 6.0, the latest release at the time of writing:<br>
+<div class="separator" style="clear: both; text-align: center;">
+<a href="https://1.bp.blogspot.com/-MRkRoxtCeOE/W6UOL5txl1I/AAAAAAAABX8/i0ZiOyS2MOgiSyxFAyMOkKcB6xqjSihBACLcBGAs/s1600/pypy60.png" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="480" src="https://1.bp.blogspot.com/-MRkRoxtCeOE/W6UOL5txl1I/AAAAAAAABX8/i0ZiOyS2MOgiSyxFAyMOkKcB6xqjSihBACLcBGAs/s640/pypy60.png" width="640"></a></div>
+<br>
+<br>
+The results are amazing! PyPy is now massively faster than before, and for
+most benchmarks it is even faster than CPython: yes, you read it correctly:
+PyPy is faster than CPython at doing CPython's job, even considering all the
+extra work it has to do to emulate the C API.  This happens thanks to the JIT,
+which produces speedups high enough to counterbalance the slowdown caused by
+cpyext.<br>
+There are two microbenchmarks which are still slower though: <tt class="docutils literal">allocate_int</tt>
+and <tt class="docutils literal">allocate_tuple</tt>, for the reasons explained in the section about
+<a class="reference internal" href="https://www.blogger.com/blogger.g?blogID=3971202189709462152#conversion-costs">Conversion costs</a>.</div>
+<div class="section" id="next-steps">
+<h1>
+Next steps</h1>
+Despite the spectacular results we got so far, <tt class="docutils literal">cpyext</tt> is still slow enough to
+kill performance in most real-world code which uses C extensions extensively
+(e.g., the omnipresent numpy).<br>
+Our current approach is something along these lines:<br>
+<blockquote>
+<ol class="arabic simple">
+<li>run a real-world small benchmark which exercises cpyext</li>
+<li>measure and find the major bottleneck</li>
+<li>write a corresponding microbenchmark</li>
+<li>optimize it</li>
+<li>repeat</li>
+</ol>
+</blockquote>
+On one hand, this is a daunting task because the C API is huge and we need to
+tackle functions one by one.  On the other hand, not all the functions are
+equally important, and is is enough to optimize a relatively small subset to
+improve many different use cases.<br>
+Where a year ago we announced we have a working answer to run c-extension in
+PyPy, we now have a clear picture of what are the performance bottlenecks, and
+we have developed some technical solutions to fix them. It is "only" a matter
+of tackling them, one by one.  It is worth noting that most of the work was
+done during two sprints, for a total 2-3 person-months of work.<br>
+We think this work is important for the Python ecosystem. PyPy has established
+a baseline for performance in pure python code, providing an answer for the
+"Python is slow" detractors. The techniques used to make <tt class="docutils literal">cpyext</tt> performant
+will let PyPy become an alternative for people who mix C extensions with
+Python, which, it turns out, is just about everyone, in particular those using
+the various scientific libraries. Today, many developers are forced to seek
+performance by converting code from Python to a lower language. We feel there
+is no reason to do this, but in order to prove it we must be able to run both
+their python and their C extensions performantly, then we can begin to educate
+them how to write JIT-friendly code in the first place.<br>
+We envision a future in which you can run arbitrary Python programs on PyPy,
+with the JIT speeding up the pure Python parts and the C parts running as fast
+as today: the best of both worlds!</div>
+</div><script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(() => { lightbox.reload() });
+</script></body></html>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js"
+        data-repo="antocuni/antocuni.github.io"
+        data-repo-id="R_kgDON3STLg"
+        data-category="Announcements"
+        data-category-id="DIC_kwDON3STLs4Cm2EZ"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2008 - 2025 Antonio Cuni  - <a href="#__consent">Change cookie settings</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="feed_rss_updated.xml" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/antocuni/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://mastodon.social/@antocuni" target="_blank" rel="noopener me" title="mastodon.social" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/antocuni.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/antocuni" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+  
+    
+  
+
+
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings" >
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+      
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="analytics" checked>
+          <span class="task-list-indicator"></span>
+          Google Analytics
+        </label>
+      </li>
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.highlight", "search.suggest", "header.autohide"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+    
+  </body>
+</html>
