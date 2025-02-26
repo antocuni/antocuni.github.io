@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://antocuni.eu/2025/02/25/over-the-clouds-cpython-pyodide-and-spy/">
+        <link rel="canonical" href="https://antocuni.eu/2025/02/26/over-the-clouds-cpython-pyodide-and-spy/">
       
       
         <link rel="prev" href="../../../../2021/07/15/hpy-002-first-public-release/">
@@ -767,7 +767,7 @@
         <li class="md-nav__item">
   <a href="#the-first-spy-program-ever" class="md-nav__link">
     <span class="md-ellipsis">
-      The first SPy program ever
+      The first SPy program ever 🥸
     </span>
   </a>
   
@@ -828,7 +828,7 @@
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
-                        <time datetime="2025-02-25 00:00:00+00:00" class="md-ellipsis">Feb 25, 2025</time>
+                        <time datetime="2025-02-26 00:00:00+00:00" class="md-ellipsis">Feb 26, 2025</time>
                       </div>
                     </li>
                     
@@ -850,7 +850,7 @@
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
                           <span class="md-ellipsis">
                             
-                              7 min read
+                              8 min read
                             
                           </span>
                         </div>
@@ -899,50 +899,51 @@
 <h1 id="over-the-clouds-cpython-pyodide-and-spy">Over the clouds: CPython, Pyodide and SPy<a class="headerlink" href="#over-the-clouds-cpython-pyodide-and-spy" title="Permanent link">&para;</a></h1>
 <p>The Python community is awesome.</p>
 <p>It is full of great people and minds, and interacting with people at
-conferences is always nice and stimulating. But one of my favore things is
-that with time, after many conferences, talks, pull requests and beers, the
-personal relationshipt with some of them strenghten and become friends.</p>
+conferences is always nice and stimulating. But one of my favorite things is
+that over time, after many conferences, talks, pull requests and beers, the
+personal relationship with some of them strengthen and they become friends.</p>
 <p><a class="glightbox" href="../../../02-over-the-clouds/valtournenche-over-the-clouds.jpg" data-type="image" data-width="auto" data-height="auto" data-title="View from a ski slope in Valtournenche, Italy" data-desc-position="bottom"><img alt="View from a ski slope in Valtournenche, Italy" src="../../../02-over-the-clouds/valtournenche-over-the-clouds.jpg" /></a></p>
-<p>I am lucky enough that two of them, Łukasz Langa and Hood Chatham, accepted my
-invite to join me in Cervinia, at the border between italian and swiss alps,
+<p>I am fortunate enough that two of them, Łukasz Langa and Hood Chatham, accepted my
+invitation to join me in Cervinia, at the border between Italian and Swiss Alps,
 for a week of hacking, winter sports and going literally over the clouds. This
 is a brief summary of what we did during our time together.</p>
 <!-- more -->
 
 <h2 id="about-us">About us<a class="headerlink" href="#about-us" title="Permanent link">&para;</a></h2>
 <p><a class="glightbox" href="../../../02-over-the-clouds/klein-matterhorn.jpg" data-type="image" data-width="auto" data-height="auto" data-title="The three of us from the panoramic terrace on top of Klein Matterhorn, Switzerland" data-desc-position="bottom"><img alt="The three of us from the panoramic terrace on top of Klein Matterhorn, Switzerland" src="../../../02-over-the-clouds/klein-matterhorn.jpg" /></a></p>
-<p>Łukasz doesn't need much introductions, as he's one of the most visible
-personalities of the Python world: among the other things, he has been the
-release manager of CPython 3.8 and 3.9, he is the creator of the
+<p>Łukasz doesn't need much introduction, as he's one of the most visible
+personalities of the Python world: among other things, he has been the
+release manager of CPython 3.8 and 3.9, he is the creator of
 <a href="https://black.readthedocs.io/">Black</a> and these days is the <a href="https://lukasz.langa.pl/a072a74b-19d7-41ff-a294-e6b1319fdb6e/">CPython developer
 in residence</a>.</p>
-<p>Hood is mainly know thanks to his work on <a href="https://pyodide.org/">Pyodide</a>,
+<p>Hood is mainly known for his work on <a href="https://pyodide.org/">Pyodide</a>,
 which in my opinion is one of the most underrated projects in the Python
 world: it allows us to run CPython in the browser by compiling CPython and
-huge sets of extension modules to WebAssembly, using Emscripten. This sounds
+huge sets of extension modules to WebAssembly, using Emscripten. This may sound
 easier than it is, because WebAssembly is a very weird and young platform,
-meaning that during the course of the years the Pypodide maintainers had to
-deal with it by developing a considerable amount of patches to CPython itself,
-emscripten, LLVM, etc.  If you use any website or project which allows you to
+meaning that over the years the Pyodide maintainers have had to develop
+a considerable amount of patches to CPython itself,
+Emscripten, LLVM, etc.  If you use any website or project which allows you to
 run Python in the browser such as <a href="https://pyscript.net/">PyScript</a>, there is
-a good chance that it's actually Pyodide under the hood (pun intended 😅).</p>
-<p>As for me, as many other people in the Python world my name is associated to
-many projects whose name starts or ends (or both!) with "Py", like PyPy, HPy,
-and PyScript.  A couple of years ago I decided that all these Pys weren't
-enough, so I started <a href="https://github.com/spylang/spy">SPy</a>, which is an
-experiment to see whether we can come up with a Python variant which can be
-easily interpreted (for good development experience) and compiled (for
-performance).  This is the appropriate place to give a big thanks to
-<a href="https://www.anaconda.com/">Anaconda</a>, which is letting me to work on it full
-time, these days.</p>
+a good chance it's actually Pyodide under the hood (pun intended 😅).</p>
+<p>As for me, like many other Pythonistas, my name is associated with
+many projects starting or ending (or both!) with "Py", like
+<a href="https://pypy.org/">PyPy</a>, <a href="https://hpyproject.org/">HPy</a> and PyScript.  A
+couple of years ago I decided that all these Pys weren't enough, so I started
+<a href="https://github.com/spylang/spy">SPy</a>, which is an experiment to see whether
+we can come up with a Python variant which can be easily interpreted (for good
+development experience) and compiled (for performance).  This is the
+appropriate place to give a big thanks to
+<a href="https://www.anaconda.com/">Anaconda</a>, which is allowing me to work on it full
+time currently.</p>
 <h2 id="hacking">Hacking<a class="headerlink" href="#hacking" title="Permanent link">&para;</a></h2>
 <p>There is one thing which face-to-face pairing does and which is impossible to
-achive with async and remote collaboration: you can see all the little tricks
-and tools which the other people use in their daily hacking. On the first day,
+achieve with async and remote collaboration: you can see all the little tricks
+and tools which other people use in their daily hacking. On the first day,
 Łukasz showed me the wonder of <a href="https://xon.sh/">Xonsh</a>, a multi platform
 shell written and scriptable in Python.</p>
 <p><a class="glightbox" href="../../../02-over-the-clouds/fancycompleter.png" data-type="image" data-width="auto" data-height="auto" data-title="Colored TAB completions with fancycompleter" data-desc-position="bottom"><img align="right" alt="Colored TAB completions with fancycompleter" src="../../../02-over-the-clouds/fancycompleter.png" /></a></p>
-<p>Likewise, very soon he noticed that whenever I pressed TAB at my Python REPL,
+<p>Likewise, very soon he noticed that whenever I pressed <code>TAB</code> at my Python REPL,
 I'd get colored completions, thanks to
 <a href="https://github.com/pdbpp/fancycompleter">fancycompleter</a>. This is a project
 which I started ~15 years ago and I've used since then: at that time, it
@@ -960,7 +961,7 @@ perfect accordance to the spirit of the week, Łukasz promptly paired with him
 to <a href="https://github.com/pyodide/pyodide/pull/5445">fix the issue</a>.</p>
 <p>So, with this, we have PRs for two of our three projects. SPy is next in line,
 but it deserves its own section.</p>
-<h2 id="the-first-spy-program-ever">The first SPy program ever<a class="headerlink" href="#the-first-spy-program-ever" title="Permanent link">&para;</a></h2>
+<h2 id="the-first-spy-program-ever">The first SPy program ever 🥸<a class="headerlink" href="#the-first-spy-program-ever" title="Permanent link">&para;</a></h2>
 <p>SPy occupied a significant portion of our week. At the beginning of the week,
 we dedicated time to explaining the fundamental concepts and design decisions
 to Łukasz and Hood.</p>
@@ -1024,14 +1025,14 @@ list of PRs that Łukasz had to make in order to achieve his goals:</p>
 <li><a href="https://github.com/spylang/spy/pull/124">Add post mortem to other exception types if --pdb was passed #124</a></li>
 <li><a href="https://github.com/spylang/spy/pull/125">Teach the C compiler about f64_to_i32 conversions #125</a></li>
 </ul>
-<p>Thanks to this, we also got Łukasz as a contributor to SPy. Only Hood is
+<p>Thanks to this, we also got Łukasz as a contributor to SPy. Only Hood was
 left...</p>
 <h2 id="spy-playground">SPy playground<a class="headerlink" href="#spy-playground" title="Permanent link">&para;</a></h2>
-<p>The SPy interpreter is written in Python (for now... eventually it will be
+<p>The SPy interpreter is written in Python (for now... eventually, it will be
 written in SPy itself), and Pyodide/PyScript makes it very easy to run Python
 in the browser. The goal for Hood and me was to be able to run the SPy
 interpreter on top of Pyodide, to make it easier for people to try it out.</p>
-<p>This proved to be challenging, because of the very peculiar way in which SPy
+<p>This proved to be challenging because of the very peculiar way in which SPy
 relies on WASM.  WebAssembly plays a central role in SPy, for two reasons:</p>
 <ul>
 <li>
@@ -1039,8 +1040,8 @@ relies on WASM.  WebAssembly plays a central role in SPy, for two reasons:</p>
     then invoking clang)</p>
 </li>
 <li>
-<p>the interpreter uses <a href="https://wasmtime.dev/">wasmtime</a> as a sandbox where
-    to allocate the raw memory used by SPy programs.</p>
+<p>the interpreter uses <a href="https://wasmtime.dev/">wasmtime</a> as a sandbox for
+    SPy's application-level memory allocation</p>
 </li>
 </ul>
 <p>The latter point requires some extra explanation: SPy includes a special
@@ -1053,23 +1054,23 @@ preserving the stability of the interpreter. Additionally, this system is
 employed to call the runtime library, which is partially written in C. The C
 code is compiled to WASM and subsequently loaded by <code>wasmtime</code>, providing a
 secure and efficient execution environment.</p>
-<p>The other nice aspect of this architecture is that you can instantiate
+<p>Another nice aspect of this architecture is that you can instantiate
 multiple SPy VMs in the same process, since all the state is stored in the
 sandoxed WASM memory.</p>
 <p>The challenging part is that <code>wasmtime</code> doesn't run on top of Pyodide. On the
 other hand, Pyodide literally sits on top of another WASM engine, provided by
-the browser and exposed by emscripten.</p>
-<p>With that in mind, I and hood started a
+the browser and exposed by Emscripten.</p>
+<p>With this in mind, Hood and I started a
 <a href="https://github.com/hoodmane/spy/tree/pyodide">SPy branch called pyodide</a>: the
 plan was to create a layer called
 <a href="https://github.com/hoodmane/spy/tree/pyodide/spy/llwasm">llwasm</a> to abstract
-away the differences between wasmtime and emscriptem, so that we could transparently use one or the other from the SPyVM.</p>
-<p>This proved to be more challenging that expected, in part because the WASM API
+away the differences between <code>wasmtime</code> and Emscriptem, so that we could transparently use one or the other from the SPyVM.</p>
+<p>This proved to be more challenging than expected, in part because the WASM API
 exposed by Javascript/Emscripten is async, while the one exposed by wasmtime
 is sync.  Anyway, after a few days of intense work we managed to have it
 working 🎉, although the PR is not merged yet because it requires some
 polishing.</p>
-<p>With that, I could hack together a quick&amp;dirty
+<p>With that, I could hack together a quick &amp; dirty
 <a href="https://antocuni.pyscriptapps.com/spy-playground/latest/">SPy playground</a>: it
 is written with PyScript + <a href="https://github.com/pyscript/ltk">LTK</a>.  My web
 design skills leave a bit to be desired, so improvements and PRs are totally
@@ -1107,11 +1108,12 @@ pipeline:</p>
 <li><code>--redshift</code>: perform redshifting</li>
 <li><code>--cwrite</code>: convert redshifted code into C</li>
 </ol>
-<p>There is a last missing step: compiling the generated C code to WASM, which is
+<p>There is the last missing step: compiling the generated C code to WASM, which is
 currently not possible because it would require to run clang in the
-browser. Again, if anybody has any idea on how to make it happening, PRs are
+browser. Again, if anybody has any idea on how to make it happen, PRs are
 welcome.</p>
 <h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p><a class="glightbox" href="../../../02-over-the-clouds/snowshoeing.jpg" data-type="image" data-width="auto" data-height="auto" data-title="Łukasz, Antonio and Hood with snowshoes" data-desc-position="bottom"><img alt="Łukasz, Antonio and Hood with snowshoes" src="../../../02-over-the-clouds/snowshoeing.jpg" /></a></p>
 <p>It has been a fun and productive week! While this post is rich in technical
 details, I think it's important to highlight the value of personal
 relationships and the joy of spending time together. A big thank you to Łukasz
