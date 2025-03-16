@@ -18,6 +18,11 @@ tags:
 
 # Over the clouds: CPython, Pyodide and SPy
 
+<meta property="og:title" content="Over the Clouds: CPython, Pyodide, and SPy">
+<meta property="og:description" content="A week of hacking and winter sports in Cervinia">
+<meta property="og:image" content="http://antocuni.eu/2025/02-over-the-clouds/valtournenche-over-the-clouds.jpg">
+<meta name="author" content="Antonio Cuni">
+
 The Python community is awesome.
 
 It is full of great people and minds, and interacting with people at
