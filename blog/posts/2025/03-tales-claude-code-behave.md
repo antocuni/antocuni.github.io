@@ -1,0 +1,205 @@
+---
+draft: false
+date: 2025-03-16
+title: "Tales with claude code: how to make it behave?"
+categories:
+  - Post
+tags:
+  - claude
+  - spy
+
+# related links
+# links:
+#  - about.md
+#  - First part: part-one.md
+
+---
+
+# Tales with claude code: how to make it behave?
+
+In the past weeks, I have been experimenting with using `claude code` to speed
+up development, in particular of [SPy](https://github.com/spylang/spy).
+
+My experience so far reveals a clear pattern: `claude` excels at simple,
+one-shot tasks that follow existing patterns, producing commit-ready
+code. However, for complex tasks requiring multiple iterations, quality
+deteriorates significantly with each round, often necessitating complete
+rewrites or extensive cleanup.
+
+Because of this, I have been looking for ways to guide it towards making it
+only simple steps, and to wait for my confirmation before going further. So
+far, I failed.
+
+<!-- more -->
+
+## The good: `raise` statement parser support
+
+[Commit f5f64106](https://github.com/spylang/spy/commit/f5f6410658db770fa19cc9ac3501a296e916d20f)
+is an example of "good code" produced by `claude`: it adds support for the
+`raise` statement to the SPy parser. The test passed at the first try.
+
+!!! note "How the SPy parser works"
+    For the sake of development speed, for the time being SPy sits on top of
+    the Python parser: SPy source code is converted into _Python_ AST, and the
+    job of the
+    [SPy "parser"](https://github.com/spylang/spy/blob/main/spy/parser.py) is
+    to convert Python's AST into
+    [SPy-specific AST](https://github.com/spylang/spy/blob/main/spy/ast.py)
+
+
+This is the full diff. I was positively surprised by the fact that it thought
+about adding checks for unsupported cases. I also particularly appreciated
+that it managed to follow implicit code style rules which are used elsewhere
+in `parser.py`, for example inserting a blank lines between the two `if`s:
+
+```diff
+
+diff --git a/spy/ast.py b/spy/ast.py
+index 788766b1..e185c379 100644
+--- a/spy/ast.py
++++ b/spy/ast.py
+@@ -516,6 +516,10 @@ class While(Stmt):
+     test: Expr
+     body: list[Stmt]
+
++@dataclass(eq=False)
++class Raise(Stmt):
++    exc: Expr
++
+
+ # ====== Doppler-specific nodes ======
+ #
+diff --git a/spy/parser.py b/spy/parser.py
+index 9e94be79..5e2bcd79 100644
+--- a/spy/parser.py
++++ b/spy/parser.py
+@@ -420,6 +420,19 @@ class Parser:
+             body = self.from_py_body(py_node.body)
+         )
+
++    def from_py_stmt_Raise(self, py_node: py_ast.Raise) -> spy.ast.Raise:
++        if py_node.cause:
++            self.unsupported(py_node, 'raise ... from ...')
++
++        if py_node.exc is None:
++            self.unsupported(py_node, 'bare raise')
++
++        exc = self.from_py_expr(py_node.exc)
++        return spy.ast.Raise(
++            loc = py_node.loc,
++            exc = exc
++        )
++
+     # ====== spy.ast.Expr ======
+
+     def from_py_expr(self, py_node: py_ast.expr) -> spy.ast.Expr:
+diff --git a/spy/tests/test_parser.py b/spy/tests/test_parser.py
+index 8969480f..f43a956d 100644
+--- a/spy/tests/test_parser.py
++++ b/spy/tests/test_parser.py
+@@ -736,6 +736,24 @@ class TestParser:
+         """
+         self.assert_dump(stmt, expected)
+
++    def test_Raise(self):
++        mod = self.parse("""
++        def foo() -> void:
++            raise ValueError("error message")
++        """)
++        stmt = mod.get_funcdef('foo').body[0]
++        expected = """
++        Raise(
++            exc=Call(
++                func=Name(id='ValueError'),
++                args=[
++                    StrConst(value='error message'),
++                ],
++            ),
++        )
++        """
++        self.assert_dump(stmt, expected)
++
+     def test_from_import(self):
+         mod = self.parse("""
+         from testmod import a, b as b2
+```
+
+Later, I asked claude to write two extra tests for the "unsupported" cases, in
+[commit 875dba2d](https://github.com/spylang/spy/commit/875dba2d2801d484840cacc4d93635eb55d6875f).
+
+## The bad: it didn't follow my instructions
+
+As I said above, I'd like to use `claude` in a very controlled manner: in
+particular, I'd like to avoid it to go "too far ahead", and surely I don't
+want it to automatically run and fix the tests.
+
+To achieve that, I hoped it was enough to add these instructions to `CLAUDE.md`:
+
+```
+# SPy Language - Dev Reference
+
+## General behavior of claude code
+- NEVER run tests automatically unless explicitly asked
+- when asked to write a test, write just the test without trying to fix it
+- avoid writing useless comments: if you need to write a comment, explain WHY
+  the code does something instead of WHAT it does
+
+## Common Commands
+- When running tests, always use the venv: e.g. `./venv/bin/pytest'
+[...]
+
+```
+
+However, it seems to have ignored my requests.
+
+This is the
+[full log](https://antocuni.github.io/files/claude-code/spy/spy.2025-03-16.1%20-%20implement%20raise%20stmt.html)
+of my `claude` session, generated by my little
+[claude-logging](https://github.com/antocuni/claude-logging/) tool.
+
+This was my [first request](https://antocuni.github.io/files/claude-code/spy/spy.2025-03-16.1%20-%20implement%20raise%20stmt.html#L9):
+
+```
+> write a test in test_parser.py for the "raise" statement
+```
+
+After reading a bunch of files, it [created the diff](https://antocuni.github.io/files/claude-code/spy/spy.2025-03-16.1%20-%20implement%20raise%20stmt.html#L1551-L1594).
+
+The good news is that at this point, it didn't try to run the test, but I had to explicitly ask for it. The bad news is that it tried to run it
+[without activating the virtualenv](https://antocuni.github.io/files/claude-code/spy/spy.2025-03-16.1%20-%20implement%20raise%20stmt.html#L1602-L1610),
+despite my instructions:
+
+```
+> run test_Raise
+
+● Bash(cd /home/antocuni/anaconda/spy && python -m pytest spy/tests/test_parser.py::TestParser::test_Raise -v)…
+  ⎿  No (tell Claude what to do differently)
+
+> use the venv
+
+● Let me run the test using the Python virtual environment:
+
+● Bash(cd /home/antocuni/anaconda/spy && source venv/bin/activate && python -m pytest spy/tests/test_parser.py::TestParser::test_Raise -v)
+[...]
+```
+
+The second bad news is what happened after running the test: it saw the error
+and fixed it (correct), but then it [automatically ran it again](https://antocuni.github.io/files/claude-code/spy/spy.2025-03-16.1%20-%20implement%20raise%20stmt.html#L2219-L2257)(wrong!):
+
+```
+● Now I need to implement support for the Raise statement in the parser. I'll add a new method to handle it:
+
+● Update(file_path: /home/antocuni/anaconda/spy/spy/parser.py)…
+   [...]
+
+● Now let's run the test to see if our implementation works:
+
+● Bash(cd /home/antocuni/anaconda/spy && source venv/bin/activate && python -m pytest spy/tests/test_parser.py::TestParser::test_Raise -v)…
+```
+
+I **suppose** that this happens because `CLAUDE.md` is automatically included
+in the chat at the beginning of the session, but after a while the context
+become bigger and then the "importance" of it fades away, but I'm not really
+sure.
+
+If anyone has any clue on how it works and how to convince it to follow my instructions more strictly, I'd happy to hear.
