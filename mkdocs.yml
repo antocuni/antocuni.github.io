@@ -69,11 +69,11 @@ plugins:
   - redirects:
       redirect_maps:
         'training.html': about.md
-        'talks.html': about.md
+        'talks.html': 'http://antocuni.eu/category/talk/'
         'projects.html': about.md
         'contact.html': about.md
         'it/training.html': about.md
-        'it/talks.html': about.md
+        'it/talks.html': 'http://antocuni.eu/category/talk/'
         'it/projects.html': about.md
         'it/contact.html': about.md
         'it/index.html': about.md
