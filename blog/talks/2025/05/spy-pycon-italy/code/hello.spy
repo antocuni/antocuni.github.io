@@ -1,0 +1,8 @@
+# hello.spy
+
+def add(x: int, y: int) -> int:
+    return x + y
+
+def main() -> void:
+    print("Hello world")
+    print(add(40, 2))

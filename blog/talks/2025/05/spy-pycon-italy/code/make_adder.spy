@@ -1,0 +1,13 @@
+@blue
+def make_adder(x: int):
+  def adder(y: int) -> int:
+    return x + y
+  return adder
+
+
+add5 = make_adder(5)
+add7 = make_adder(7)
+
+def main() -> void:
+    x = 3
+    print(add5(x) + add7(x))

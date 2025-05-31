@@ -1,0 +1,10 @@
+@blue.generic
+def add(T):
+  def impl(x: T, y: T) -> T:
+    return x + y
+  return impl
+
+
+def main() -> void:
+    print(add[str]("The answer", " is"))
+    print(add[int](40, 2))

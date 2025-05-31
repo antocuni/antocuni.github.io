@@ -1,0 +1,13 @@
+@blue
+def make_adder(T):
+  def adder(x: T, y: T) -> T:
+    return x + y
+  return adder
+
+
+add_int = make_adder(int)
+add_str = make_adder(str)
+
+def main() -> void:
+    print(add_str("The answer", " is"))
+    print(add_int(40, 2))
