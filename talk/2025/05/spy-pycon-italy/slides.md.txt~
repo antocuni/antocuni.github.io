@@ -1,0 +1,119 @@
+<style>
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal pre code {
+    padding: 5px;
+    overflow: auto;
+    max-height: 600px;
+    word-wrap: normal;
+  }
+
+  .big {
+    font-size: 2.5em;
+  }
+
+  .main-size {
+    font-size: var(--r-main-font-size);
+  }
+</style>
+
+
+# Updates from SPy land 🥸
+
+---
+
+# Quick recap
+
+## Where we left 1 year ago
+
+---
+
+## Thought experiment
+
+How much dynamicity we can remove from Python while still feeling Pythonic?
+
+---
+
+### Goals
+
+- Easy to understand. Pythonic.
+
+- Easy to implement
+
+- No performance cliffs
+
+- No "optimization chasing".
+
+### Non-goals
+
+- 100% compatibility with CPython.
+
+---
+
+### (2024) Future directions
+
+- Individual executables
+
+- WASM (emscripten/browser)
+
+- WASM (WASI)
+
+- Integration with CPython
+
+  - "better cython"
+
+---
+
+# Fast forward to present
+
+---
+
+## SPy + PyScript
+
+- Compile .spy code to WASM/emscripten
+
+- Integrate with pyodide via CFFI (*)
+
+- [Demo](https://antocuni.pyscriptapps.com/sobel/latest/)
+
+---
+
+## Current status
+
+- ✅ (super) basic support for arrays
+
+- ✅ `struct`
+
+- ❌ `list`
+
+- ❌ `dict`
+
+- ❌ `class` (*)
+
+---
+
+## ?!?
+
+- Antonio, what did you do for one whole year? 😱
+
+---
+
+## SPy as a two-levels language
+
+- Python is a high level language
+
+- You cannot implement `list` in Python itself
+
+  - ==> C, C++, Rust, Cython, etc.
+
+- SPy has a low-level core
+
+  - `from unsafe import gc_alloc, ptr`
+
+- Most of builtin types can (now) be implemented in SPy itself

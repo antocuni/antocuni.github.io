@@ -1,0 +1,65 @@
+<!--
+    This svg file represents an AST.
+    I want an animation which works in reveal.js using fragments, as described here:
+    https://revealjs.com/fragments/
+
+    fragment #0:
+      the input svg, unmodified, all nodes present in the original svg are visible
+
+    fragment #1:
+      Name(pi) is deleted, replaced by FQNConst(mod::pi) (lightblue)
+      Name(r) is deleted, replaced by LocalVar(r) (lightpink)
+      2 is colored lightblue
+
+    fragment #2:
+      Call is colored lightblue
+
+    fragment #3:
+      Call and FQNConst(mod::pi) are deleted and replaced by a single node 3.14 (lightblue)
+
+    fragment #4:
+      the second BinOp(*) is colored lightblue
+
+    fragment #5:
+      the second BinOp(*), 2 and 3.14 are deleted and replaced by a single node 6.28 (lightblue)
+
+    fragment #6:
+      the first BinOp(*) is colored lightpink
+-->
+
+<svg width="420" height="240" xmlns="http://www.w3.org/2000/svg">
+  <g font-family="monospace" font-size="12" text-anchor="middle">
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black"/>
+    <text x="210" y="26">BinOp (*)</text>
+
+    <!-- Left BinOp (*) -->
+    <rect x="60" y="60" width="80" height="24" fill="white" stroke="black"/>
+    <text x="100" y="76">BinOp (*)</text>
+
+    <!-- Constant 2 -->
+    <rect x="10" y="110" width="40" height="20" fill="white" stroke="black"/>
+    <text x="30" y="125">2</text>
+
+    <!-- Call -->
+    <rect x="100" y="110" width="60" height="20" fill="white" stroke="black"/>
+    <text x="130" y="125">Call</text>
+
+    <!-- Name(pi) -->
+    <rect x="110" y="160" width="60" height="20" fill="white" stroke="black"/>
+    <text x="140" y="175">Name(pi)</text>
+
+    <!-- Name(r) -->
+    <rect x="300" y="60" width="60" height="20" fill="white" stroke="black"/>
+    <text x="330" y="75">Name(r)</text>
+
+    <!-- Edges -->
+    <line x1="210" y1="34" x2="100" y2="60" stroke="black"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black"/>
+
+    <line x1="100" y1="84" x2="30" y2="110" stroke="black"/>
+    <line x1="100" y1="84" x2="130" y2="110" stroke="black"/>
+
+    <line x1="130" y1="130" x2="140" y2="160" stroke="black"/>
+  </g>
+</svg>

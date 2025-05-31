@@ -1,0 +1,206 @@
+<svg width="420" height="240" xmlns="http://www.w3.org/2000/svg">
+  <g font-family="monospace" font-size="12" text-anchor="middle">
+    <!-- Original nodes (fragment 0) -->
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <text x="210" y="26" class="fragment fade-in-then-out" data-fragment-index="0">BinOp (*)</text>
+
+    <!-- Left BinOp (*) -->
+    <rect x="60" y="60" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <text x="100" y="76" class="fragment fade-in-then-out" data-fragment-index="0">BinOp (*)</text>
+
+    <!-- Constant 2 -->
+    <rect x="10" y="110" width="40" height="20" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <text x="30" y="125" class="fragment fade-in-then-out" data-fragment-index="0">2</text>
+
+    <!-- Call -->
+    <rect x="100" y="110" width="60" height="20" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <text x="130" y="125" class="fragment fade-in-then-out" data-fragment-index="0">Call</text>
+
+    <!-- Name(pi) -->
+    <rect x="110" y="160" width="60" height="20" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <text x="140" y="175" class="fragment fade-in-then-out" data-fragment-index="0">Name(pi)</text>
+
+    <!-- Name(r) -->
+    <rect x="300" y="60" width="60" height="20" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <text x="330" y="75" class="fragment fade-in-then-out" data-fragment-index="0">Name(r)</text>
+
+    <!-- Edges for fragment 0 -->
+    <line x1="210" y1="34" x2="100" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <line x1="100" y1="84" x2="30" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <line x1="100" y1="84" x2="130" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+    <line x1="130" y1="130" x2="140" y2="160" stroke="black" class="fragment fade-in-then-out" data-fragment-index="0"/>
+
+    <!-- Fragment 1: Replace nodes and color constants -->
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <text x="210" y="26" class="fragment fade-in-then-out" data-fragment-index="1">BinOp (*)</text>
+
+    <!-- Left BinOp (*) -->
+    <rect x="60" y="60" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <text x="100" y="76" class="fragment fade-in-then-out" data-fragment-index="1">BinOp (*)</text>
+
+    <!-- Constant 2 (colored lightblue) -->
+    <rect x="10" y="110" width="40" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <text x="30" y="125" class="fragment fade-in-then-out" data-fragment-index="1">2</text>
+
+    <!-- Call -->
+    <rect x="100" y="110" width="60" height="20" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <text x="130" y="125" class="fragment fade-in-then-out" data-fragment-index="1">Call</text>
+
+    <!-- FQNConst(mod::pi) instead of Name(pi) -->
+    <rect x="85" y="160" width="130" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <text x="150" y="175" class="fragment fade-in-then-out" data-fragment-index="1">FQNConst(mod::pi)</text>
+
+    <!-- LocalVar(r) instead of Name(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <text x="330" y="75" class="fragment fade-in-then-out" data-fragment-index="1">LocalVar(r)</text>
+
+    <!-- Edges for fragment 1 -->
+    <line x1="210" y1="34" x2="100" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <line x1="100" y1="84" x2="30" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <line x1="100" y1="84" x2="130" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+    <line x1="130" y1="130" x2="140" y2="160" stroke="black" class="fragment fade-in-then-out" data-fragment-index="1"/>
+
+    <!-- Fragment 2: Color Call node -->
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <text x="210" y="26" class="fragment fade-in-then-out" data-fragment-index="2">BinOp (*)</text>
+
+    <!-- Left BinOp (*) -->
+    <rect x="60" y="60" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <text x="100" y="76" class="fragment fade-in-then-out" data-fragment-index="2">BinOp (*)</text>
+
+    <!-- Constant 2 (colored lightblue) -->
+    <rect x="10" y="110" width="40" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <text x="30" y="125" class="fragment fade-in-then-out" data-fragment-index="2">2</text>
+
+    <!-- Call (colored lightblue) -->
+    <rect x="100" y="110" width="60" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <text x="130" y="125" class="fragment fade-in-then-out" data-fragment-index="2">Call</text>
+
+    <!-- FQNConst(mod::pi) -->
+    <rect x="85" y="160" width="130" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <text x="150" y="175" class="fragment fade-in-then-out" data-fragment-index="2">FQNConst(mod::pi)</text>
+
+    <!-- LocalVar(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <text x="330" y="75" class="fragment fade-in-then-out" data-fragment-index="2">LocalVar(r)</text>
+
+    <!-- Edges for fragment 2 -->
+    <line x1="210" y1="34" x2="100" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <line x1="100" y1="84" x2="30" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <line x1="100" y1="84" x2="130" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+    <line x1="130" y1="130" x2="140" y2="160" stroke="black" class="fragment fade-in-then-out" data-fragment-index="2"/>
+
+    <!-- Fragment 3: Replace Call and FQNConst with constant 3.14 -->
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <text x="210" y="26" class="fragment fade-in-then-out" data-fragment-index="3">BinOp (*)</text>
+
+    <!-- Left BinOp (*) -->
+    <rect x="60" y="60" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <text x="100" y="76" class="fragment fade-in-then-out" data-fragment-index="3">BinOp (*)</text>
+
+    <!-- Constant 2 (colored lightblue) -->
+    <rect x="10" y="110" width="40" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <text x="30" y="125" class="fragment fade-in-then-out" data-fragment-index="3">2</text>
+
+    <!-- Constant 3.14 instead of Call and FQNConst -->
+    <rect x="100" y="110" width="60" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <text x="130" y="125" class="fragment fade-in-then-out" data-fragment-index="3">3.14</text>
+
+    <!-- LocalVar(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <text x="330" y="75" class="fragment fade-in-then-out" data-fragment-index="3">LocalVar(r)</text>
+
+    <!-- Edges for fragment 3 -->
+    <line x1="210" y1="34" x2="100" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <line x1="100" y1="84" x2="30" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+    <line x1="100" y1="84" x2="130" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="3"/>
+
+    <!-- Fragment 4: Color second BinOp(*) -->
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <text x="210" y="26" class="fragment fade-in-then-out" data-fragment-index="4">BinOp (*)</text>
+
+    <!-- Left BinOp (*) (colored lightblue) -->
+    <rect x="60" y="60" width="80" height="24" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <text x="100" y="76" class="fragment fade-in-then-out" data-fragment-index="4">BinOp (*)</text>
+
+    <!-- Constant 2 (colored lightblue) -->
+    <rect x="10" y="110" width="40" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <text x="30" y="125" class="fragment fade-in-then-out" data-fragment-index="4">2</text>
+
+    <!-- Constant 3.14 -->
+    <rect x="100" y="110" width="60" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <text x="130" y="125" class="fragment fade-in-then-out" data-fragment-index="4">3.14</text>
+
+    <!-- LocalVar(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <text x="330" y="75" class="fragment fade-in-then-out" data-fragment-index="4">LocalVar(r)</text>
+
+    <!-- Edges for fragment 4 -->
+    <line x1="210" y1="34" x2="100" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <line x1="100" y1="84" x2="30" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+    <line x1="100" y1="84" x2="130" y2="110" stroke="black" class="fragment fade-in-then-out" data-fragment-index="4"/>
+
+    <!-- Fragment 5: Replace second BinOp, 2 and 3.14 with 6.28 -->
+    <!-- Top level BinOp (*) -->
+    <rect x="170" y="10" width="80" height="24" fill="white" stroke="black" class="fragment fade-in-then-out" data-fragment-index="5"/>
+    <text x="210" y="26" class="fragment fade-in-then-out" data-fragment-index="5">BinOp (*)</text>
+
+    <!-- Constant 6.28 (replacing BinOp, 2, and 3.14) -->
+    <rect x="100" y="60" width="60" height="20" fill="lightblue" stroke="black" class="fragment fade-in-then-out" data-fragment-index="5"/>
+    <text x="130" y="75" class="fragment fade-in-then-out" data-fragment-index="5">6.28</text>
+
+    <!-- LocalVar(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in-then-out" data-fragment-index="5"/>
+    <text x="330" y="75" class="fragment fade-in-then-out" data-fragment-index="5">LocalVar(r)</text>
+
+    <!-- Edges for fragment 5 -->
+    <line x1="210" y1="34" x2="130" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="5"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in-then-out" data-fragment-index="5"/>
+
+    <!-- Fragment 6: Color first BinOp(*) -->
+    <!-- Top level BinOp (*) (colored lightpink) -->
+    <rect x="170" y="10" width="80" height="24" fill="lightpink" stroke="black" class="fragment fade-in" data-fragment-index="6"/>
+    <text x="210" y="26" class="fragment fade-in" data-fragment-index="6">BinOp (*)</text>
+
+    <!-- Constant 6.28 -->
+    <rect x="100" y="60" width="60" height="20" fill="lightblue" stroke="black" class="fragment fade-in" data-fragment-index="6"/>
+    <text x="130" y="75" class="fragment fade-in" data-fragment-index="6">6.28</text>
+
+    <!-- LocalVar(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in" data-fragment-index="6"/>
+    <text x="330" y="75" class="fragment fade-in" data-fragment-index="6">LocalVar(r)</text>
+
+    <!-- Edges for fragment 6 -->
+    <line x1="210" y1="34" x2="130" y2="60" stroke="black" class="fragment fade-in" data-fragment-index="6"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in" data-fragment-index="6"/>
+
+
+    <!-- Fragment 7: Color 6.28 in lightpink -->
+    <!-- Top level BinOp (*) (still lightpink) -->
+    <rect x="170" y="10" width="80" height="24" fill="lightpink" stroke="black" class="fragment fade-in" data-fragment-index="7"/>
+    <text x="210" y="26" class="fragment fade-in" data-fragment-index="7">BinOp (*)</text>
+
+    <!-- Constant 6.28 (colored lightpink) -->
+    <rect x="100" y="60" width="60" height="20" fill="lightpink" stroke="black" class="fragment fade-in" data-fragment-index="7"/>
+    <text x="130" y="75" class="fragment fade-in" data-fragment-index="7">6.28</text>
+
+    <!-- LocalVar(r) -->
+    <rect x="285" y="60" width="90" height="20" fill="lightpink" stroke="black" class="fragment fade-in" data-fragment-index="7"/>
+    <text x="330" y="75" class="fragment fade-in" data-fragment-index="7">LocalVar(r)</text>
+
+    <!-- Edges for fragment 7 -->
+    <line x1="210" y1="34" x2="130" y2="60" stroke="black" class="fragment fade-in" data-fragment-index="7"/>
+    <line x1="210" y1="34" x2="330" y2="60" stroke="black" class="fragment fade-in" data-fragment-index="7"/>
+
+  </g>
+</svg>

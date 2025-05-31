@@ -1,0 +1,40 @@
+---
+draft: false
+date: 2025-03-16
+title: "Tales with claude code: how to make it behave?"
+categories:
+  - Post
+tags:
+  - claude
+  - spy
+
+# related links
+# links:
+#  - about.md
+#  - First part: part-one.md
+
+---
+
+# Tales with claude code: how to make it behave?
+
+In the past weeks, I have been experimenting with using `claude code` to speed
+up development, in particular of [SPy](https://github.com/spylang/spy).
+
+Generally speaking, my experience so far is that it works reasonably well for
+small tasks which involve a lot copy/paste/adapt, mimicking existing patters
+which are well estabilished in the code. It is usually able to get them right
+in one shot, and to generate code whose quality is high enough quality to be
+committed.
+
+At the same time, I didn't get satisfactory results for more complex tasks
+which involve touching many different pieces of code, and/or complex
+refactoring. For these, it usually needs to do several rounds of trial and
+error: sometimes it manages to get something which vaguely works, but the
+overall quality of the work is generally so low that I either need to redo it
+with completely different approaches, or alternatively spend a lot of time to
+improve the generated code.  Generally speaking, the code quality diminishes the more steps/iterations it does.
+
+My experiments with `claude code` reveal a clear pattern: it excels at simple, one-shot tasks that follow existing patterns, producing commit-ready code. However, for complex tasks requiring multiple iterations, quality deteriorates significantly with each round, often necessitating complete rewrites or extensive cleanup.
+
+
+<!-- more -->

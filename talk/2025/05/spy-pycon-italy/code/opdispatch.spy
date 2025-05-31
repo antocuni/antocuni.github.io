@@ -1,0 +1,7 @@
+from operator import ADD
+
+def main() -> void:
+    x = 0
+    print(STATIC_TYPE(x))
+    print(ADD(int, int))
+    print(ADD(str, str))

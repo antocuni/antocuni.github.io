@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="348.07462mm"
+   height="142.64572mm"
+   viewBox="0 0 348.07462 142.64572"
+   version="1.1"
+   id="svg69701"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="spy1.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview69703"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.58974467"
+     inkscape:cx="1256.476"
+     inkscape:cy="586.69458"
+     inkscape:window-width="2494"
+     inkscape:window-height="1399"
+     inkscape:window-x="66"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs69698" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(289.78656,42.609872)">
+    <g
+       id="g57110"
+       transform="matrix(0.35277777,0,0,0.35277777,-228.13992,-50.816551)">
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="121.11315"
+         rx="27"
+         ry="18"
+         id="ellipse8-3-7"
+         style="fill:#aaccff;fill-opacity:1" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-75.246391"
+         cy="193.11314"
+         rx="27"
+         ry="18"
+         id="ellipse15-6-7"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 47.193633,132.59313 c -24.1,11.72 -63.36,30.8 -90.91,44.2"
+         id="path22-7-6" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="121.6,-245.98 129.06,-253.5 132.12,-247.21 "
+         id="polygon24-5-7"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="193.11314"
+         rx="27"
+         ry="18"
+         id="ellipse29-3-36"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 68.753633,139.41313 c 0,7.29 0,15.97 0,24.16"
+         id="path36-5-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-253.62 239.5,-263.62 246.5,-263.62 "
+         id="polygon38-6-6"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="212.75368"
+         cy="193.11314"
+         rx="27"
+         ry="18"
+         id="ellipse43-2-3"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 90.313633,132.59313 c 24.099997,11.72 63.359997,30.8 90.909977,44.2"
+         id="path50-9-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="364.4,-245.98 353.88,-247.21 356.94,-253.5 "
+         id="polygon52-1-4"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-147.24638"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse57-2-8"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -90.166367,208.61314 c -9.850003,9.58 -22.940003,22.31 -34.110003,33.16"
+         id="path64-7-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="42.98,-178.54 47.71,-188.02 52.59,-183 "
+         id="polygon66-0-2"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-75.246391"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse71-9-9"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -75.246367,211.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path78-3-3" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="99,-181.62 95.5,-191.62 102.5,-191.62 "
+         id="polygon80-6-9"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-3.2463934"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse85-0-0"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 53.833633,208.61314 c -9.85,9.58 -22.94,22.31 -34.11,33.16"
+         id="path92-6-8" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="186.98,-178.54 191.71,-188.02 196.59,-183 "
+         id="polygon94-2-8"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse99-6-50"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 68.753633,211.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path106-1-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-181.62 239.5,-191.62 246.5,-191.62 "
+         id="polygon108-8-6"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="140.75362"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse113-7-38"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 83.673633,208.61314 c 9.85,9.58 22.939997,22.31 34.109997,33.16"
+         id="path120-9-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="299.02,-178.54 289.41,-183 294.29,-188.02 "
+         id="polygon122-2-6"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-147.24638"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse141-0-1"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -147.24637,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path148-2-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="27,-109.62 23.5,-119.62 30.5,-119.62 "
+         id="polygon150-3-59"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-75.246391"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse155-7-8"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -75.246367,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path162-5-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="99,-109.62 95.5,-119.62 102.5,-119.62 "
+         id="polygon164-9-8"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-3.2463934"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse169-2-1"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -60.326367,280.61314 c 9.85,9.58 22.94,22.31 34.11,33.16"
+         id="path176-2-0" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="155.02,-106.54 145.41,-111 150.29,-116.02 "
+         id="polygon178-8-3"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse183-9-0"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 68.753633,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path190-7-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-109.62 239.5,-119.62 246.5,-119.62 "
+         id="polygon192-3-4"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="140.75362"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse197-6-4"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 140.75363,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path204-1-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="315,-109.62 311.5,-119.62 318.5,-119.62 "
+         id="polygon206-2-7"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="212.75368"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse211-9-6"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 155.67363,280.61314 c 9.85,9.58 22.93998,22.31 34.10998,33.16"
+         id="path218-3-3" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="371.02,-106.54 361.41,-111 366.29,-116.02 "
+         id="polygon220-1-1"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-3.2463934"
+         cy="409.1131"
+         rx="27"
+         ry="18"
+         id="ellipse267-9-7"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -3.2463672,355.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path274-4-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="171,-37.62 167.5,-47.62 174.5,-47.62 "
+         id="polygon276-7-9"
+         transform="translate(-174.24637,427.11314)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.2889px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-247.4048"
+       y="-34.429829"
+       id="text38431"><tspan
+         sodipodi:role="line"
+         style="font-size:11.2889px;stroke-width:0.264583px"
+         x="-247.4048"
+         y="-34.429829"
+         id="tspan63808">            SPy</tspan></text>
+    <g
+       id="g57191"
+       transform="matrix(0.35277777,0,0,0.35277777,-521.60202,107.02074)">
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="900.61469"
+         cy="-326.29965"
+         rx="27"
+         ry="18"
+         id="ellipse8-3"
+         style="fill:#ffaaaa" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="756.61469"
+         cy="-254.29967"
+         rx="27"
+         ry="18"
+         id="ellipse15-6"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 879.05472,-314.81967 c -24.1,11.72 -63.36,30.8 -90.91,44.2"
+         id="path22-7" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="132.12,-247.21 121.6,-245.98 129.06,-253.5 "
+         id="polygon24-5"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="900.61469"
+         cy="-254.29967"
+         rx="27"
+         ry="18"
+         id="ellipse29-3"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 900.61472,-307.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path36-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="246.5,-263.62 243,-253.62 239.5,-263.62 "
+         id="polygon38-6"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1044.6147"
+         cy="-254.29967"
+         rx="27"
+         ry="18"
+         id="ellipse43-2"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 922.17472,-314.81967 c 24.1,11.72 63.36,30.8 90.90998,44.2"
+         id="path50-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="356.94,-253.5 364.4,-245.98 353.88,-247.21 "
+         id="polygon52-1"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="684.61469"
+         cy="-182.29967"
+         rx="27"
+         ry="18"
+         id="ellipse57-2"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 741.69472,-238.79967 c -9.85,9.58 -22.94,22.31 -34.11,33.16"
+         id="path64-7" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="52.59,-183 42.98,-178.54 47.71,-188.02 "
+         id="polygon66-0"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="756.61469"
+         cy="-182.29967"
+         rx="27"
+         ry="18"
+         id="ellipse71-9"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 756.61472,-235.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path78-3" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="102.5,-191.62 99,-181.62 95.5,-191.62 "
+         id="polygon80-6"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="828.61469"
+         cy="-182.29967"
+         rx="27"
+         ry="18"
+         id="ellipse85-0"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 885.69472,-238.79967 c -9.85,9.58 -22.94,22.31 -34.11,33.16"
+         id="path92-6" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="196.59,-183 186.98,-178.54 191.71,-188.02 "
+         id="polygon94-2"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="900.61469"
+         cy="-182.29967"
+         rx="27"
+         ry="18"
+         id="ellipse99-6"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 900.61472,-235.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path106-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="246.5,-191.62 243,-181.62 239.5,-191.62 "
+         id="polygon108-8"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="972.61469"
+         cy="-182.29967"
+         rx="27"
+         ry="18"
+         id="ellipse113-7"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 915.53472,-238.79967 c 9.85,9.58 22.94,22.31 34.11,33.16"
+         id="path120-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="294.29,-188.02 299.02,-178.54 289.41,-183 "
+         id="polygon122-2"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="684.61469"
+         cy="-110.29966"
+         rx="27"
+         ry="18"
+         id="ellipse141-0"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 684.61472,-163.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path148-2" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="30.5,-119.62 27,-109.62 23.5,-119.62 "
+         id="polygon150-3"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="756.61469"
+         cy="-110.29966"
+         rx="27"
+         ry="18"
+         id="ellipse155-7"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 756.61472,-163.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path162-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="102.5,-119.62 99,-109.62 95.5,-119.62 "
+         id="polygon164-9"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="828.61469"
+         cy="-110.29966"
+         rx="27"
+         ry="18"
+         id="ellipse169-2"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 771.53472,-166.79967 c 9.85,9.58 22.94,22.31 34.11,33.16"
+         id="path176-2" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="150.29,-116.02 155.02,-106.54 145.41,-111 "
+         id="polygon178-8"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="900.61469"
+         cy="-110.29966"
+         rx="27"
+         ry="18"
+         id="ellipse183-9"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 900.61472,-163.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path190-7" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="246.5,-119.62 243,-109.62 239.5,-119.62 "
+         id="polygon192-3"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="972.61469"
+         cy="-110.29966"
+         rx="27"
+         ry="18"
+         id="ellipse197-6"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 972.61472,-163.99967 c 0,7.29 0,15.97 0,24.16"
+         id="path204-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="318.5,-119.62 315,-109.62 311.5,-119.62 "
+         id="polygon206-2"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1044.6147"
+         cy="-110.29966"
+         rx="27"
+         ry="18"
+         id="ellipse211-9"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 987.53472,-166.79967 c 9.85,9.58 22.93998,22.31 34.10998,33.16"
+         id="path218-3" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="366.29,-116.02 371.02,-106.54 361.41,-111 "
+         id="polygon220-1"
+         transform="translate(657.61472,-20.299666)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="828.61469"
+         cy="-38.299664"
+         rx="27"
+         ry="18"
+         id="ellipse267-9"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 828.61472,-91.999666 c 0,7.29 0,15.97 0,24.16"
+         id="path274-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="174.5,-47.62 171,-37.62 167.5,-47.62 "
+         id="polygon276-7"
+         transform="translate(657.61472,-20.299666)" />
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,10 @@
+cc = python -m ziglang cc
+cflags = --std=c99 -Werror=implicit-function-declaration -Wfatal-errors -fdiagnostics-color=always -I /home/antocuni/anaconda/spy/spy/libspy/include -DSPY_TARGET_WASI -DSPY_DEBUG -O0 -g -mmultivalue -Xclang -target-abi -Xclang experimental-mv --target=wasm32-wasi-musl
+ldflags = -L /home/antocuni/anaconda/spy/spy/libspy/build/wasi/debug -lspy --target=wasm32-wasi-musl
+
+rule cc
+  command = $cc $in -o $out $cflags $ldflags
+  description = CC $out
+
+build hello.wasm: cc src/hello.c
+default hello.wasm

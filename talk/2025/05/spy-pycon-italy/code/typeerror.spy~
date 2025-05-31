@@ -1,0 +1,8 @@
+def inc(x: i32) -> i32:
+  return x + 1
+
+def main() -> void:
+  if True:
+     print(inc(41))
+  else:
+     print(inc("hello"))

@@ -1,0 +1,32 @@
+---
+draft: false
+date: 2025-05-14
+title: "SPy update"
+categories:
+  - Talks
+tags:
+  - spy
+
+# related links
+# links:
+#  - about.md
+#  - First part: part-one.md
+
+---
+
+# Hello
+
+bla bla bla
+
+<!-- more -->
+
+  <script type="module" src="https://cdn.jsdelivr.net/npm/polyscript@0.1.10/+esm"></script>
+
+  <script>
+      console.log("hello from JS!")
+  </script>
+
+  <script type="micropython" config="config.toml">
+    import pyreveal
+    pyreveal.show('slides.md.txt')
+  </script>

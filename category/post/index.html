@@ -769,6 +769,95 @@
     <div class="md-post__meta md-meta">
       <ul class="md-meta__list">
         <li class="md-meta__item">
+          <time datetime="2025-04-27 00:00:00+00:00">Apr 27, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              5 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="spys-approach-to-static-typing"><a class="toclink" href="../../2025/04/27/spys-approach-to-static-typing/">SPy's approach to static typing</a></h2>
+<p>SPy is a statically typed variant of Python: the way it deals with types is a
+bit... "atypical", and very different than most of its peers.</p>
+<p>TODO</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../2025/04/27/spys-approach-to-static-typing/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-03-16 00:00:00+00:00">Mar 16, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="./" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              4 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="tales-with-claude-code-how-to-make-it-behave"><a class="toclink" href="../../2025/03/16/tales-with-claude-code-how-to-make-it-behave/">Tales with claude code: how to make it behave?</a></h2>
+<p>In the past weeks, I have been experimenting with using <code>claude code</code> to speed
+up development, in particular of <a href="https://github.com/spylang/spy">SPy</a>.</p>
+<p>My experience so far reveals a clear pattern: <code>claude</code> excels at simple,
+one-shot tasks that follow existing patterns, producing commit-ready
+code. However, for complex tasks requiring multiple iterations, quality
+deteriorates significantly with each round, often necessitating complete
+rewrites or extensive cleanup.</p>
+<p>Because of this, I have been looking for ways to guide it towards making it
+only simple steps, and to wait for my confirmation before going further. So
+far, I failed.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../2025/03/16/tales-with-claude-code-how-to-make-it-behave/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
           <time datetime="2025-02-26 00:00:00+00:00">Feb 26, 2025</time></li>
         
           <li class="md-meta__item">
@@ -790,6 +879,10 @@
   </header>
   <div class="md-post__content md-typeset">
     <h2 id="over-the-clouds-cpython-pyodide-and-spy"><a class="toclink" href="../../2025/02/26/over-the-clouds-cpython-pyodide-and-spy/">Over the clouds: CPython, Pyodide and SPy</a></h2>
+<p><meta property="og:title" content="Over the Clouds: CPython, Pyodide, and SPy">
+<meta property="og:description" content="A week of hacking and winter sports in Cervinia">
+<meta property="og:image" content="http://antocuni.eu/2025/02-over-the-clouds/valtournenche-over-the-clouds.jpg">
+<meta name="author" content="Antonio Cuni"></p>
 <p>The Python community is awesome.</p>
 <p>It is full of great people and minds, and interacting with people at
 conferences is always nice and stimulating. But one of my favorite things is
@@ -1136,117 +1229,6 @@ same problems as described here.
     
       <nav class="md-post__action">
         <a href="../../2018/09/21/inside-cpyext-why-emulating-cpython-c-api-is-so-hard/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2018-04-27 14:10:00+00:00">Apr 27, 2018</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="./" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="how-to-ignore-the-annoying-cython-warnings-in-pypy-60"><a class="toclink" href="../../2018/04/27/how-to-ignore-the-annoying-cython-warnings-in-pypy-60/">How to ignore the annoying Cython warnings in PyPy 6.0</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2018/04/how-to-ignore-annoying-cython-warnings-1007636731207810779.html">PyPy blog</a>.</p>
-</div>
-<html><body><div>
-</div>
-<div>
-<br class="Apple-interchange-newline">
-If you install any Cython-based module in PyPy 6.0.0, it is very likely that you get a warning like this:</div>
-<pre><code>&gt;&gt;&gt;&gt; import numpy
-/data/extra/pypy/6.0.0/site-packages/numpy/random/__init__.py:99: UserWarning: __builtin__.type size changed, may indicate binary incompatibility. Expected 888, got 408
-  from .mtrand import *
-</code></pre>
-<div>
-The TL;DR version is: the warning is a false alarm, and you can hide it by doing:</div>
-<pre><code>$ pypy -m pip install pypy-fix-cython-warning
-</code></pre>
-<div>
-The package does not contain any module, only a <code>.pth</code> file which installs a warning filter at startup.</div>
-<h2>
-Technical details</h2>
-<div>
-This happens because whenever Cython compiles a pyx file, it generates C code which does a sanity check on the C size of <code>PyType_Type</code>. PyPy versions up to 5.10 are buggy and report the incorrect size, so Cython includes a workaround to compare it with the incorrect value, when on PyPy.</div>
-<div>
-PyPy 6 fixed the bug and now <code>PyType_Type</code> reports the correct size; however, Cython still tries to compare it with the old, buggy value, so it (wrongly) emits the warning.</div>
-<div>
-Cython 0.28.2 includes a fix for it, so that C files generated by it no longer emit the warning. However, most packages are distributed with pre-cythonized C files. For example, <code>numpy-1.14.2.zip</code> include C files which were generated by Cython 0.26.1: if you compile it you still get the warning, even if you locally installed a newer version of Cython.
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2018/04/27/how-to-ignore-the-annoying-cython-warnings-in-pypy-60/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2017-10-30 10:15:00+00:00">Oct 30, 2017</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="./" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              8 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="how-to-make-your-code-80-times-faster"><a class="toclink" href="../../2017/10/30/how-to-make-your-code-80-times-faster/">How to make your code 80 times faster</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2017/10/how-to-make-your-code-80-times-faster-1424098117108093942.html">PyPy blog</a>.</p>
-</div>
-<html><body><div class="document" id="how-to-make-your-code-80-times-faster">
-I often hear people who are happy because PyPy makes their code 2 times faster
-or so. Here is a short personal story which shows PyPy can go well beyond
-that.
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../2017/10/30/how-to-make-your-code-80-times-faster/">
           Continue reading
         </a>
       </nav>

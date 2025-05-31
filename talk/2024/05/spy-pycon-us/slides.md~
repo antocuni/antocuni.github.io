@@ -1,0 +1,517 @@
+<style>
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal pre code {
+    padding: 5px;
+    overflow: auto;
+    max-height: 600px;
+    word-wrap: normal;
+  }
+
+  .big {
+    font-size: 2.5em;
+  }
+
+  .main-size {
+    font-size: var(--r-main-font-size);
+  }
+</style>
+
+
+# SPy lang 🥸
+
+---
+
+## Thought experiment
+
+How much dynamicity we can remove from Python while still feeling Pythonic?
+
+---
+
+## Humans vs compilers
+
+```python
+
+import numpy as np
+
+N = 10
+
+def calc(v: np.ndarray[float], k: float) -> float:
+  return (v * k).sum() + N
+
+```
+
+---
+
+## Motivation
+
+- In practice we *already* use subset of Python
+
+- People want/like static typing but:
+
+  - it doesn't help performance
+
+  - it's not really safe anyway
+
+- SPy rules and typesystem designed to match how Python is actually
+  used in practice
+
+---
+
+## Python-like languages
+
+- Numba, RPython, cython, pytorch JIT, mypyc, ...
+
+<a href="https://xkcd.com/927/"><img src="https://imgs.xkcd.com/comics/standards.png"></a>
+
+---
+
+### Goals
+
+- Easy to understand. Pythonic.
+
+- Easy to implement
+
+- No performance cliffs
+
+- No "optimization chasing".
+
+### Non-goals
+
+- 100% compatibility with CPython.
+
+
+---
+
+<!-- .slide: data-transition="none" -->
+
+<img src="interp-compiler.svg">
+
+---
+
+<!-- .slide: data-transition="none" -->
+
+<img src="spy1.svg">
+
+---
+
+<!-- .slide: data-transition="none" -->
+
+<img src="spy2.svg">
+
+---
+
+## Tweaks to the Python semantics
+
+- Import/freeze/runtime
+
+- Types are actually enforced
+
+- Static dispatch of operations
+
+  1. "opimpl" lookup (blue)
+
+  2. "opimpl" execution (red)
+
+---
+
+
+## Execution phases
+
+1. Import time
+
+2. --- FREEZE ---
+
+3. Runtime
+
+---
+
+## (1) Import time
+
+- Statically resolve modules and imports
+
+- Everything is mutable "as usual"
+
+- Metaclasses, decorators, pre-init computations, monkey-patching, ...
+
+---
+
+## (2) FREEZE
+
+- Global constants are "frozen" and made immutable
+
+  * classes
+
+  * modules
+
+  * global data (e.g. a list of URLs)
+
+- Support for explicit mutable globals (i.e., variables)
+
+---
+
+## (3) Runtime
+
+- Execution "as usual"
+
+- Type checking is actually enforced
+
+---
+
+## (2.5) Partial evaluation
+
+- Optionally done between FREEZE and runtime
+
+- Completey transparent
+
+- Optimize away all operations on frozen data
+
+  - Module-level lookups
+
+  - `getattr(MyClass, "foo")`
+
+  - `if DEBUG: ...`
+
+  - `for url in unroll(URLS): ...`
+
+---
+
+## Interpreter *AND* compiler (1)
+
+* In fully-interpreted mode:
+  - "import time": interpreted
+  - "partial evaluation": interpreted
+  - "runtime": interpreted
+
+* In compiled mode:
+  - "import time": interpreted
+  - "partial evaluation": interpreted
+  - "runtime": *compiled*
+
+---
+
+## Interpreter *AND* compiler (2)
+
+* Interpreter:
+  - super simpler AST-based, written in Python, slow
+  - support all the language
+
+* Compiler:
+  - emits C code, which is then compiled by gcc/clang
+  - support only what's needed for "runtime"
+
+---
+
+## Partial evaluation
+
+- AST nodes are colored
+
+- "Blue" nodes can be safely partially evaluated / constant folded
+
+- "Red" nodes can be executed only at runtime
+
+- Interpreter: blue and red
+
+- Compiler: only red
+
+- *Redshift* turns a red+blue AST into a red AST (ready to be compiled)
+
+---
+
+## Partial evaluation
+
+```python
+# filename: bluefunc.spy
+
+@blue
+def K():
+  # this can do arbitrary things and it's guaranteed to be executed at
+  # peval-time. E.g. it could pre-parse a CSV from disk, do expensive
+  # computation, use features which are available only in the interpreter,
+  # etc.
+  return 5 * 8 + 2
+
+def func(x: i32) -> i32:
+  return 10 + K()
+```
+
+---
+
+## Blue closures
+
+```python
+# filename: make_adder.spy
+
+@blue
+def make_adder(x: i32):
+  def adder(y: i32) -> i32:
+    return x + y
+  return adder
+
+
+add5 = make_adder(5)
+add7 = make_adder(7)
+
+def fn(x: i32) -> i32:
+  return add5(x) + add7(x)
+```
+
+---
+
+## Type checking
+
+```python
+# filename: typeerror.spy
+
+def inc(x: i32) -> i32:
+  return x + 1
+
+def main() -> void:
+  if True:
+     print(inc(41))
+  else:
+     print(inc("hello"))
+```
+
+---
+
+## Peval of typechecks
+
+```python
+def inc(x: i32) -> i32:
+  return x + 1
+
+def main() -> void:
+  if True:
+     print(inc(41))
+  else:
+     raise TypeError(...)
+```
+
+---
+
+## Lazy and eager errors
+
+- Lazy errors
+
+  * At runtime
+
+- Eager errors
+
+  * Collected and reported during redshifting
+
+  * Can be turned into warnings or hard errors
+
+---
+
+
+## Generics
+
+- Annotations: arbitrary BLUE expressions
+
+```python
+# filename: generics.spy
+
+@blue
+def make_fn(T):
+  def fn(x: T, y: T) -> T:
+    return x + y * 2
+  return fn
+
+fn_i32 = make_fn(i32)
+fn_f64 = make_fn(f64)
+
+# In the future, syntax sugar:
+# def fn[T](x: T, y: T) -> T:
+#   ...
+```
+
+---
+
+## Operation dispatch (1)
+
+```python
+def add(x: T, y: T) -> T:
+  return x + y
+```
+
+EQUIVALENT TO
+
+```python
+import operator as op
+
+def add(x: T, y: T) -> T:
+  xT = STATIC_TYPE(x)   # blue
+  yT = STATIC_TYPE(y)   # blue
+  impl = op.ADD(xT, yT) # blue
+  return impl(x, y)     # red
+```
+
+---
+
+## Operation dispatch (2)
+
+```python
+def foo(x: MyClass) -> str:
+  return x.name
+```
+
+EQUIVALENT TO
+
+```python
+import operator as op
+
+def foo(x: MyClass) -> str:
+  xT = STATIC_TYPE(x)
+  impl = op.GETATTR(xT, "name")
+  return impl(x)
+```
+
+---
+
+## object vs dynamic
+
+```python
+
+def add1(x: object, y: object) -> object:
+    return x + y # ==> TypeError
+
+def add2(x: dynamic, y: dynamic) -> dynamic:
+    return x + y # OK
+```
+
+---
+
+## Example: C structs
+
+```python
+class Field:
+  T: type
+  offset: i32
+
+  @blue
+  def __GET__(self):
+    def opimpl(obj: RawBuffer) -> T:
+      # rb_get is translated into a direct memory read
+      return rb_get[T](obj, self.offset)
+    return opimpl
+
+  @blue
+  def __SET__(self):
+    ...
+
+class Point(metaclass=Struct):
+    x: Field(i32, 0)
+    y: Field(i32, 4)
+
+```
+
+---
+
+## Example: C structs
+
+```python
+def foo(p: Point):
+   p.x = 42
+   p.y = 43
+
+# redshift ==>
+
+def foo(p: Point):
+  `cstruct::opimpl_set#0`(p, 'x', 42)
+  `cstruct::opimpl_set#1`(p, 'y', 43)
+
+---
+
+## JS FFI
+
+```python
+from jsffi import ...
+
+def main() -> void:
+  js_init()
+  window: JsRef = get_GlobalThis()
+  div = window.document.getElementById("title")
+  div.innerText = "hello"
+```
+
+---
+
+## Low-level JS FFI
+
+```python
+def main() -> void:
+  window: JsRef = get_GlobalThis()
+  document = js_getattr(window, "document")
+  div_title = js_call_method_1(
+    document,
+    "getElementById",
+    js_string("title")
+  )
+  js_setattr(
+    div_title,
+    "innerText",
+    js_string("hello HTML from SPy (lldemo)")
+  )
+```
+
+---
+
+## High level JS FFI (Python)
+
+```python
+class JsRef:
+
+  def __getattr__(self, attr):
+    return JsRef(js_getattr(self._jsobj, attr))
+```
+
+---
+
+## High level JS FFI (SPy)
+
+```python
+class JsRef:
+
+  @staticmethod
+  @blue
+  def __GETATTR__(cls, attr):
+    def opimpl(self: JsRef) -> JsRef:
+      return js_getattr(self, attr)
+    return opimpl
+```
+
+---
+
+## Syntax sugar
+
+```python
+
+class JsRef:
+
+  @staticmethod
+  def __GETATTR__[cls, attr](self: JsRef) -> JsRef:
+    # -----------  ^    ^     ^
+    # ----------- blue blue  red
+    return js_getattr(self, attr)
+```
+
+---
+
+## Future directions
+
+- Individual executables
+
+- WASM (emscripten/browser)
+
+- WASM (WASI)
+
+- Integration with CPython
+
+  - "better cython"
