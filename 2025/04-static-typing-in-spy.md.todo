@@ -1,0 +1,324 @@
+---
+draft: false
+date: 2025-04-27
+title: "SPy's approach to static typing"
+categories:
+  - Post
+tags:
+  - spy
+
+# related links
+# links:
+#  - about.md
+#  - First part: part-one.md
+
+---
+
+# SPy's approach to static typing
+
+SPy is a statically typed variant of Python: the way it deals with types is a
+bit... "atypical", and very different than most of its peers.
+
+TODO
+
+<!-- more -->
+
+## Python's approach
+
+In Python, types exist purely in the dynamic realm - objects carry their types
+at runtime, and these dynamic types determine which operations are
+supported.
+
+Type annotations serve only as hints for developers and external tools; they
+hold no runtime meaning and don't affect program execution. Static type
+checking is handled by separate tools like `mypy` and `pyright`, which analyze
+code without running it.
+
+This separation creates a type system that is both incomplete and unsound. It
+can produce false positives (reporting errors in perfectly valid code) and
+false negatives (missing actual type errors that will cause runtime
+failures). Importantly, Python's type annotations play no role in performance
+optimization - unlike languages where type information guides compiler
+optimizations, Python's interpreter doesn't leverage these annotations to
+generate more efficient code.
+
+## Restricted subsets: interpreter vs compiler
+
+There are numerous tools that compile restricted subsets or variants of
+Python, all utilizing some form of static typing to achieve performance
+gains. Examples include Numba, Cython, RPython, mypyc, and Codon.
+
+While code written for these tools can often run under the standard Python
+interpreter, the semantics may differ slightly or significantly depending on
+the specific case. Generally speaking, if your program runs correctly in
+Python, you cannot automatically expect it to work with these specialized
+tools (and vice versa).
+
+This disparity is particularly evident with type errors - code that works
+flawlessly in Python might use features unsupported by a specific tool,
+forcing you to refactor to avoid them.
+
+Ideally, developers would like to use the Python interpreter during
+development (for its debugging capabilities, safety checks, and other
+benefits), but with these tools, the experience is suboptimal because the only
+way to verify compatibility is to translate/compile the code. This results in
+slower edit/run cycles and more difficult debugging.
+
+This is fundamental problem of all these kind of solutions: the interpreter
+dictates the semantics, the compiler/static checker tries to trim it down to
+its needs, but in doing so it introduces incompatibilities.
+
+As we are about to see, SPy uses a very different approach.
+
+## SPy: interpreter AND compiler
+
+The SPy solution is the following:
+
+1. Design from the ground a language semantics which can be statically typed
+   and compiled
+
+2. Implement an interpreter, which will be the default tool used in daily
+   development by programmers.
+
+3. Implement a compiler, for speed.
+
+Both the interpreter and the compiler MUST give the same observable results
+for any given program. If they don't, it is considered a bug.
+
+XXX: this paragraph lacks some kind of ending.
+
+!!! note "Note"
+    SPy is still in very early stages. At the moment of writing the
+    interpreter is written in Python, and thus it's super slow. Eventually,
+    SPy will be able to compile itself, resulting in an interpreter which
+    should be as fast (or faster) than CPython.
+
+# SPy vs Python
+
+Let's see some concrete example of actual differences between Python and
+SPy.
+
+## Blue ops and redshifting
+
+XXX explain
+
+## Types are enforced
+
+The first is that types are actually enforced: assigning to a variable of
+the wrong type or calling a function with the wrong parameters raises
+`TypeError`:
+
+```python
+def main() -> void:
+    x: i32 = 42
+    x = "hello"
+    print(x)
+```
+
+```
+$ spy x.spy
+TypeError: mismatched types
+   --> /tmp/x.spy:3:9
+  3 |     x = "hello"
+    |         |_____| expected `i32`, got `str`
+
+   --> /tmp/x.spy:2:8
+  2 |     x: int = 42
+    |        |_| expected `i32` because of type declaration
+```
+
+XXX add screenshot with colors
+
+## Operator dispatching
+
+Consider the following code:
+
+```python
+def add(a: i32, b: i32) -> i32:
+    return a + b
+```
+
+In Python, operators such dispatched at runtime, according to the dynamic type
+of the operands:
+```python
+a + b
+# is equivalent to:
+operator.add(a, b)
+# which is (very) roughly equivalent to:
+type(a).__add__(b)
+```
+
+In SPy, operator dispatching happens in two phases:
+
+1. first, we find an `OpImpl`, based on the *static types* of the operands
+2. then we call the `OpImpl`, passing it the actual values of the operands.
+
+In code:
+```python
+# SPy
+a + b
+# is equivalent to:
+t_a = STATIC_TYPE(a)
+t_b = STATIC_TYPE(b)
+impl = operator.ADD(t_a, t_b)
+impl(a, b)
+```
+
+We can try it ourselves:
+```python
+from operator import ADD
+def main() -> void:
+    x = 1
+    print(STATIC_TYPE(x))
+    print(ADD(i32, i32))
+    print(ADD(f64, f64))
+    print(ADD(str, str))
+```
+
+```
+$ spy x.spy
+<spy type 'i32'>
+<spy adapter `def(i32, i32) -> i32` for `operator::i32_add`>
+<spy adapter `def(f64, f64) -> f64` for `operator::f64_add`>
+<spy adapter `def(str, str) -> str` for `operator::str_add`>
+```
+
+Things become interesting when we take into account redshifting: both
+`STATIC_TYPE` and `operator.ADD` are `@blue` functions, which means that
+during redshift they are optimized away:
+
+```python
+def add(a: i32, b: i32) -> i32:
+    return a + b
+
+def main() -> void:
+    print(add(1, 2))
+```
+
+```
+$ spy --redshift x.spy --full-fqn
+def `x::add`(x: `builtins::i32`, y: `builtins::i32`) -> `builtins::i32`:
+    return `operator::i32_add`(x, y)
+
+def `x::main`() -> `builtins::void`:
+    `builtins::print_i32`(`x::add`(1, 2))
+```
+
+!!! note "Fully Qualified Names (FQN)"
+    In SPy, every function, type and constant is identified by an FQN, which
+    is guaranteed to be unique. In the example above, we can see some notable
+    things:
+
+      1. the lookup of the name `i32` has been statically resolved to its
+         fully qualified version, `builtins::i32`
+
+      2. `a + b` was turned into `operator.ADD(t_a, t_b)(a, b)`, and the call
+         to `operator.ADD` returned `operator::i32_add`
+
+      3. the call to `print()` has been type-specialized
+
+    By default, `spy --redshift` emits an "human readable" version of the
+    code, in which "well known" FQNs are printed in a shortend form (e.g.,
+    `builtins::i32` is printed as `i32`): with `--full-fqn`, we make sure to
+    see their full version.
+
+
+# Static vs `dynamic` dispatch
+
+The example above highlights one important difference between SPy and Python:
+*operator dispatch is resolved statically*. Consider the following code:
+
+```python
+def add(x: object, y: object) -> object:
+    return x + y
+
+def main() -> void:
+    print(add(1, 2))
+```
+
+In Python, this code would run without problems, but in SPy we get the
+following:
+
+```
+$ spy x.spy
+TypeError: cannot do `object` + `object`
+   --> /tmp/x.spy:2:12
+  2 |     return x + y
+    |            ^ this is `object`
+
+   --> /tmp/x.spy:2:16
+  2 |     return x + y
+    |                ^ this is `object`
+
+   --> /tmp/x.spy:2:12
+  2 |     return x + y
+    |            |___| operator::ADD called here
+```
+
+Dynamic dispatch is still available in SPy, but only on objects of type
+`dynamic`:
+
+```python
+def add(x: dynamic, y: dynamic) -> object:
+    return x + y
+
+def main() -> void:
+    print(add(1, 2))
+    print(add("hello ", "world"))
+```
+
+```
+$ spy x.spy
+3
+hello world
+```
+
+Let's see what happens during redshift:
+```
+$ spy --redshift --full-fqn x.spy
+def `x::add`(x: `builtins::dynamic`, y: `builtins::dynamic`) -> `builtins::dynamic`:
+    return `operator::dynamic_add`(x, y)
+
+def `x::main`() -> `builtins::void`:
+    `builtins::print_dynamic`(`x::add`(1, 2))
+    `builtins::print_dynamic`(`x::add`('hello ', 'world'))
+```
+
+Both `object` and `dynamic` are similar to Python's `typing.Any`: the reason
+we decided not to use the name `Any` is to make sure that SPy users make a
+deliberate choice of whether they need `object` or `dynamic`.
+
+!!! warning "`dynamic` support"
+
+    To implement proper `dynamic` dispatch we need a fully SPy VM available at
+    runtime.
+
+    At the time of writing, the C backend does not support `dynamic`, because
+    we don't have any easy way to embed a full SPy VM into final
+    executables. Eventually, SPy will be able to compile itself and to
+    generated `libspy.so`, the equivalent of `libpython.so`.
+
+    The overhead of embedding/linking `libspy.so` will be paid only if and
+    when `dynamic` is actually used.
+
+
+
+
+
+# Lazy vs eager errors
+
+
+Consider this program:
+
+```python
+def foo(flag: bool) -> i32:
+    x: i32
+    if flag:
+        x = 42
+    else:
+        x = 'hello'
+    return x
+
+def main() -> void:
+    print(foo(True))
+```
