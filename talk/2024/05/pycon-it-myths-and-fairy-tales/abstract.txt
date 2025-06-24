@@ -1,0 +1,46 @@
+Myths and fairy tales around Python performance
+===============================================
+
+Python is slow: why? Can we make it faster?
+
+Over the years, various answers to these questions have been given, and
+in my opinion, many of those are partial, imperfect, or just plainly wrong.
+
+The truth is that there is no simple answer. We will examine some of the most
+common ones, and explain why they aren't totally accurate. While doing so, we
+will examine the current status of some of the techniques currently adopted
+such as static typing, JIT, and AOT compilation, and explain why those alone
+are not enough.
+
+Finally, we will go deeper and try to understand what are the fundamental
+issues to overcome, and what could be possible ways of moving forward.
+
+
+* Part one: myths
+
+    - Myth 1: it's just a glue language
+      * submyth: only the GPU matters nowadays
+
+    - Myth 2: you just need to rewrite the hot parts in C/Rust
+
+    - Myth 3: it's slow because it's interpreted
+      * submyth: project X will be fast because it uses LLVM
+
+    - Myth 4: static types can solve all these problems
+
+    - Myth 5: a JIT compiler can solve all your problems
+
+* Part two: the actual problem
+
+    - Humans vs compilers
+
+    - Too much dynamicity
+      * But that's what makes Python awesome!
+
+    - Abstraction overhead
+      * Python-to-Python
+      * Python-to-C
+
+    - The elephant in the room: memory managment
+
+* How to move forward?

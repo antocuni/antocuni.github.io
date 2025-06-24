@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="124.71443mm"
+   height="124.71443mm"
+   viewBox="0 0 124.71443 124.71443"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="venn1.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.1794893"
+     inkscape:cx="-272.15168"
+     inkscape:cy="279.7821"
+     inkscape:window-width="3764"
+     inkscape:window-height="2119"
+     inkscape:window-x="76"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-47.029646,-29.728827)">
+    <ellipse
+       style="color:#000000;overflow:visible;fill:#000000;fill-opacity:0;stroke:#000000;stroke-width:0.706;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path846-3"
+       cx="109.38686"
+       cy="129.29089"
+       rx="25.351168"
+       ry="24.799364" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:4.5823px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.229115px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="109.50321"
+       y="124.70177"
+       id="text2360-6"><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';text-align:center;text-anchor:middle;stroke-width:0.229115px"
+         x="109.50321"
+         y="124.70177"
+         id="tspan5190-5">Programs</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';text-align:center;text-anchor:middle;stroke-width:0.229115px"
+         x="109.50321"
+         y="130.44878"
+         id="tspan7975">where Py is</tspan><tspan
+         sodipodi:role="line"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';text-align:center;text-anchor:middle;stroke-width:0.229115px"
+         x="109.50321"
+         y="136.19579"
+         id="tspan7977">fast enough</tspan></text>
+  </g>
+</svg>
