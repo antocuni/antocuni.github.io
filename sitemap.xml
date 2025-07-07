@@ -2,270 +2,274 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://antocuni.eu/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/about/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/tags/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/01/19/improve-net-integration/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/01/19/pypynet-goes-windows-forms/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/04/01/trying-to-get-pypy-to-run-on-python-30/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/05/28/progresses-on-the-cli-jit-backend-front/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/06/16/next-sprint-vilniuspost-europython-10-12th-of-july/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/06/22/pdb-and-rlcompleter_ng/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/06/27/pypy-code-swarm/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/11/04/porting-the-jit-to-cli-part-1/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/11/07/porting-the-jit-to-cli-part-2/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2008/12/07/porting-the-jit-to-cli-part-3/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2009/10/15/first-pypy-cli-jit-benchmarks/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/07/26/europython-2010-report/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/08/17/europython-2010-videos-available/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/08/02/using-virtualenv-with-pypy/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/10/25/the-peace-of-green/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/10/22/phd-thesis-about-pypys-cli-jit-backend/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/11/26/improving-memory-behaviour-to-make-self-hosted-pypy-translations-practical/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/11/09/a-snake-which-bites-its-tail-pypy-jitting-itself/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2010/12/14/pypy-migrates-to-mercurial/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2011/01/21/pypy-wants-you/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2011/04/20/using-tkinter-and-idle-with-pypy/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2011/05/23/pypy-genova-pegli-post-europython-sprint-june-27---july-2-2011/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2011/07/07/realtime-image-processing-in-python/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2011/11/14/gothenburg-sprint-report/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2012/02/16/py3k-status-update/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2012/03/01/py3k-status-update-2/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2012/04/06/py3k-status-update-3/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2012/06/05/py3k-status-update-4/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2012/07/10/py3k-status-update-5/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2012/09/26/py3k-status-update-6/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2017/07/26/binary-wheels-for-pypy/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2017/10/18/cape-of-good-hope-for-pypy/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2017/10/30/how-to-make-your-code-80-times-faster/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2018/04/27/how-to-ignore-the-annoying-cython-warnings-in-pypy-60/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2018/09/21/inside-cpyext-why-emulating-cpython-c-api-is-so-hard/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2019/01/03/pypy-for-low-latency-systems/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2019/02/11/pypy-v700-triple-release-of-27-35-and-36-alpha/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2019/12/18/hpy-kick-off-sprint-report/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2021/03/29/hello-hpy/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2021/07/15/hpy-002-first-public-release/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2021/05/12/hpy--python-language-summit/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2025/03/16/tales-with-claude-code-how-to-make-it-behave/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2025/02/26/over-the-clouds-cpython-pyodide-and-spy/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/2025/05/31/spy--pycon-it-2025/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
+    </url>
+    <url>
+         <loc>https://antocuni.eu/2025/07/07/claude-code-modified-my-bashrc-without-asking/</loc>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2025/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2021/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2019/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2018/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2017/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2012/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2011/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2010/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2009/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/archive/2008/</loc>
-         <lastmod>2025-06-24</lastmod>
-    </url>
-    <url>
-         <loc>https://antocuni.eu/category/talk/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/category/post/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
+    </url>
+    <url>
+         <loc>https://antocuni.eu/category/talk/</loc>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/page/2/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/page/3/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/page/4/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/page/5/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/category/post/page/2/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/category/post/page/3/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/category/post/page/4/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
     <url>
          <loc>https://antocuni.eu/category/post/page/5/</loc>
-         <lastmod>2025-06-24</lastmod>
+         <lastmod>2025-07-07</lastmod>
     </url>
 </urlset>

@@ -8,13 +8,11 @@
       
       
       
-        <link rel="canonical" href="https://antocuni.eu/category/post/page/4/">
+        <link rel="canonical" href="https://antocuni.eu/2025/07/07/claude-code-modified-my-bashrc-without-asking/">
       
       
-        <link rel="prev" href="../../../../tags/">
+        <link rel="prev" href="../../../05/31/spy--pycon-it-2025/">
       
-      
-        <link rel="next" href="../../../talk/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
@@ -25,7 +23,7 @@
     
     
       
-        <title>Post - Antonio Cuni's blog</title>
+        <title>Claude code modified my .bashrc without asking? - Antonio Cuni's blog</title>
       
     
     
@@ -96,7 +94,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#post" class="md-skip">
+        <a href="#claude-code-modified-my-bashrc-without-asking" class="md-skip">
           Skip to content
         </a>
       
@@ -131,7 +129,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Post
+              Claude code modified my .bashrc without asking?
             
           </span>
         </div>
@@ -225,7 +223,9 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -248,11 +248,13 @@
       
   
   
+    
+  
   
     
   
   
-    <li class="md-nav__item">
+    <li class="md-nav__item md-nav__item--active">
       <a href="../../../.." class="md-nav__link">
         
   
@@ -644,10 +646,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -663,11 +663,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
@@ -682,7 +682,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Categories
@@ -695,19 +695,10 @@
   
   
     
-      
-    
   
   
     <li class="md-nav__item">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="../../" class="md-nav__link md-nav__link--active">
+      <a href="../../../../category/post/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -717,7 +708,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -732,7 +722,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../talk/" class="md-nav__link">
+      <a href="../../../../category/talk/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -762,6 +752,8 @@
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -774,6 +766,32 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#investigating" class="md-nav__link">
+    <span class="md-ellipsis">
+      Investigating
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -781,469 +799,244 @@
             
           
           
-  <div class="md-content" data-md-component="content">
-    <div class="md-content__inner">
-      <header class="md-typeset">
-        <h1 id="post">Post<a class="headerlink" href="#post" title="Permanent link">&para;</a></h1>
-      </header>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2010-08-17 10:51:00+00:00">Aug 17, 2010</time></li>
-        
-          <li class="md-meta__item">
-            in
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
             
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2025-07-07 00:00:00+00:00" class="md-ellipsis">Jul 7, 2025</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/post/">Post</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              3 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
           
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
+        </div>
+      </div>
     </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="europython-2010-videos-available"><a class="toclink" href="../../../../2010/08/17/europython-2010-videos-available/">EuroPython 2010 Videos available</a></h2>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+  <nav class="md-tags" >
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:claude" class="md-tag">claude</a>
+      
+    
+  </nav>
+
+
+
+<h1 id="claude-code-modified-my-bashrc-without-asking">Claude code modified my .bashrc without asking?<a class="headerlink" href="#claude-code-modified-my-bashrc-without-asking" title="Permanent link">&para;</a></h1>
 <div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2010/08/europython-2010-videos-available-8446190660370796142.html">PyPy blog</a>.</p>
+<p class="admonition-title">Note</p>
+<p>This is not the classical post about running <code>claude</code> in
+YOLO mode and then complaining that it damaged the system. I have reasons
+to think that <code>claude</code> automatically modified my <code>.bashrc</code> without asking
+my permission and without notifying me of the change.</p>
 </div>
-<html><body><p>Hi all,
-</p>
+<!-- more -->
 
-    
-      <nav class="md-post__action">
-        <a href="../../../../2010/08/17/europython-2010-videos-available/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2010-08-02 14:55:00+00:00">Aug 2, 2010</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="using-virtualenv-with-pypy"><a class="toclink" href="../../../../2010/08/02/using-virtualenv-with-pypy/">Using virtualenv with PyPy</a></h2>
+<p>I'm not a huge fan of AI-assisted coding, but I occasionally use claude code.</p>
+<p>Today I started <code>claude</code> for the first time after weeks, and it notified me
+about automatically updating to the latest version (which I believe is
+1.0.43). I didn't pay particular attention to the update, and then I did a
+productive session of vibe coding which resulted into a nice
+<a href="https://github.com/spylang/spy/pull/194">SPy PR</a>.</p>
+<p>Later today I returned to my computer and noticed that my <code>~/.bashrc</code> (which I
+keep in a git repo) had been modified. This is the diff:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh">diff --git a/dotfiles/bashrc b/dotfiles/bashrc</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gh">index 6e9fd68..6a1fb30 100644</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gd">--- a/dotfiles/bashrc</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gi">+++ b/dotfiles/bashrc</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="gu">@@ -107,7 +107,6 @@ alias dmesg=&quot;dmesg --human&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w"> </span>alias ddmesg=&quot;/bin/dmesg&quot;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w"> </span>alias xs=&#39;xdg-open&#39;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="gd">-alias claude=&#39;claude-logging&#39;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w"> </span>#alias hg=&quot;/usr/bin/python -s -E `which hg`&quot; # else hg it&#39;s awfully slow to start
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w"> </span>alias mcd=&#39;mount /mnt/cdrom&#39;
+</code></pre></div>
+<p>So, apparently "someone" decided that I should alias <code>claude</code> to something
+else. And I am 100% sure that I didn't do that change.</p>
 <div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2010/08/using-virtualenv-with-pypy-7238942727709530503.html">PyPy blog</a>.</p>
+<p class="admonition-title">What is <code>claude-logging</code>?</p>
+<p><a href="https://github.com/antocuni/claude-logging/">claude-logging</a> is a little
+tool which I wrote some months ago, when <code>claude</code> didn't have a builtin
+logging mechanism yet. It uses <code>script</code> to record all the characters which
+have been sent to the terminal.  Nowadays there are probably better tools
+to achieve the same goal, but that's not the point of course.</p>
 </div>
-<html><body><p>Thanks to the work that was recently done on the <a class="reference external" href="https://codespeak.net/pipermail/pypy-svn/2010-June/041686.html">sys-prefix</a> branch, it is
-now possible to use <a class="reference external" href="https://pypi.python.org/pypi/virtualenv">virtualenv</a> with PyPy.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2010/08/02/using-virtualenv-with-pypy/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2010-07-26 11:06:00+00:00">Jul 26, 2010</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="europython-2010-report"><a class="toclink" href="../../../../2010/07/26/europython-2010-report/">EuroPython 2010 report</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2010/07/europython-2010-report-7803731360759120212.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>So, EuroPython 2010 is over, I am flying home and it's time to write a report
-about the conference from the PyPy point of view.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2010/07/26/europython-2010-report/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2009-10-15 13:36:00+00:00">Oct 15, 2009</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="first-pypy-cli-jit-benchmarks"><a class="toclink" href="../../../../2009/10/15/first-pypy-cli-jit-benchmarks/">First pypy-cli-jit benchmarks</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2009/10/first-pypy-cli-jit-benchmarks-6698484455072589492.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>As the readers of this blog <a class="reference external" href="/posts/2008/11/porting-jit-to-cli-part-1-8712941279840156635.html">already know</a>, I've been working on porting the
-JIT to CLI/.NET for the last months.  Now that it's finally possible to get a
-working pypy-cli-jit, it's time to do some benchmarks.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2009/10/15/first-pypy-cli-jit-benchmarks/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2008-12-07 13:39:00+00:00">Dec 7, 2008</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              14 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="porting-the-jit-to-cli-part-3"><a class="toclink" href="../../../../2008/12/07/porting-the-jit-to-cli-part-3/">Porting the JIT to CLI (part 3)</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2008/12/porting-jit-to-cli-part-3-3519327524638923621.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>In my two <a class="reference" href="/posts/2008/11/porting-jit-to-cli-part-1-8712941279840156635.html">previous</a> <a class="reference" href="/posts/2008/11/porting-jit-to-cli-part-2-2456826431882963884.html">posts</a>, we talked about the PyPy JIT generator, seeing
-that it can produce huge speedups and how its backend-independent frontend
-works.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2008/12/07/porting-the-jit-to-cli-part-3/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2008-11-07 11:03:00+00:00">Nov 7, 2008</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              5 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="porting-the-jit-to-cli-part-2"><a class="toclink" href="../../../../2008/11/07/porting-the-jit-to-cli-part-2/">Porting the JIT to CLI (part 2)</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2008/11/porting-jit-to-cli-part-2-2456826431882963884.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>In my <a class="reference" href="/posts/2008/11/porting-jit-to-cli-part-1-8712941279840156635.html">previous post</a>, we saw that PyPy JIT generator can produce huge
-speedups when applied to the <a class="reference" href="https://www.blogger.com/.._%60sourcecode%60:https://codespeak.net/svn/pypy/branch/oo-jit/pypy/jit/tl/tlc.py">tlc</a> toy language.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2008/11/07/porting-the-jit-to-cli-part-2/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2008-11-04 00:19:00+00:00">Nov 4, 2008</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              5 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="porting-the-jit-to-cli-part-1"><a class="toclink" href="../../../../2008/11/04/porting-the-jit-to-cli-part-1/">Porting the JIT to CLI (part 1)</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2008/11/porting-jit-to-cli-part-1-8712941279840156635.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>As the readers of this blog <a class="reference" href="/posts/2008/05/progresses-on-cli-jit-backend-front-1021772190959551376.html">already know</a>, I have been working on the CLI
-JIT backend for some months: last Friday, it reached an important milestone,
-as it is now able to produce huge speedups for a little dynamic language.  To
-know how huge the speedup is, read on :-).
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2008/11/04/porting-the-jit-to-cli-part-1/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2008-06-27 11:18:00+00:00">Jun 27, 2008</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="pypy-code-swarm"><a class="toclink" href="../../../../2008/06/27/pypy-code-swarm/">PyPy code swarm</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2008/06/pypy-code-swarm-7038411918926116477.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>Following the great success of <a class="reference" href="https://vis.cs.ucdavis.edu/~ogawa/codeswarm/">code_swarm</a>, I recently produced a
-video that shows the commit history of the PyPy project.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2008/06/27/pypy-code-swarm/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2008-06-22 14:48:00+00:00">Jun 22, 2008</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="pdb-and-rlcompleter_ng"><a class="toclink" href="../../../../2008/06/22/pdb-and-rlcompleter_ng/">Pdb++ and rlcompleter_ng</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2008/06/pdb-and-rlcompleterng-2414105295687348881.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>When hacking on PyPy, I spend a lot of time inside pdb; thus, I tried
-to create a more comfortable environment where I can pass my nights
-:-).
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2008/06/22/pdb-and-rlcompleter_ng/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2008-06-16 20:49:00+00:00">Jun 16, 2008</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="next-sprint-vilniuspost-europython-10-12th-of-july"><a class="toclink" href="../../../../2008/06/16/next-sprint-vilniuspost-europython-10-12th-of-july/">Next sprint: Vilnius/Post EuroPython, 10-12th of July</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2008/06/next-sprint-vilniuspost-europython-10-3844544842675903586.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>As happened in the last years, there will be a PyPy sprint just after
-<a class="reference" href="https://www.europython.org/">EuroPython</a>.  The sprint will take place in the same hotel as the
-conference, from 10th to 12th of July.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2008/06/16/next-sprint-vilniuspost-europython-10-12th-of-july/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-      
-        
-          
+<h2 id="investigating">Investigating<a class="headerlink" href="#investigating" title="Permanent link">&para;</a></h2>
+<p>At first, I checked the modification time of <code>~/.bashrc</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>❯ ls -l ~/.bashrc
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>lrwxrwxrwx 1 antocuni antocuni 34 apr 28  2021 /home/antocuni/.bashrc -&gt; /home/antocuni/env/dotfiles/bashrc
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>❯ ls -l /home/antocuni/env/dotfiles/bashrc
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>-rw-rw-r-- 1 antocuni antocuni 8728 lug  7 17:59 /home/antocuni/env/dotfiles/bashrc
+</code></pre></div>
+<p>So, it was modified today at 17:59, which is exactly the time at which I
+started <code>claude</code>. Suspicious.</p>
+<p>Then, I tried to seach for the string <code>.bashrc</code> inside the <code>claude</code> minified
+JS binary:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>❯ cd /home/antocuni/.nvm/versions/node/v23.8.0/lib/node_modules/@anthropic-ai/claude-code/
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>❯ npx prettier cli.js | grep -n -C 10 bashrc
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>303354-    }
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>303355-  }
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>303356-  return A;
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>303357-}
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>303358-var t2Q = 1800000,
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>303359-  Cu1 = &quot;\\&quot;;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>303360-function yU0(A) {
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>303361-  let B = A.includes(&quot;zsh&quot;)
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>303362-    ? &quot;.zshrc&quot;
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>303363-    : A.includes(&quot;bash&quot;)
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>303364:      ? &quot;.bashrc&quot;
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>303365-      : &quot;.profile&quot;;
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>303366-  return o2Q(i2Q(), B);
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>303367-}
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>303368-function e2Q(A, B) {
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>303369-  let Q = yU0(A),
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>303370-    D = Q.endsWith(&quot;.zshrc&quot;),
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>303371-    I = &quot;&quot;;
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>303372-  if (D)
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>303373-    I = `
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>303374-      echo &quot;# Functions&quot; &gt;&gt; $SNAPSHOT_FILE
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>--
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>339189-import { join as Gp } from &quot;path&quot;;
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>339190-import { join as p01 } from &quot;path&quot;;
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>339191-import { execFile as d_6 } from &quot;child_process&quot;;
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>339192-import { homedir as Qw1 } from &quot;os&quot;;
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>339193-import { join as N9A } from &quot;path&quot;;
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>339194-var sf2 = /^\s*alias\s+claude=/;
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>339195-function Rk() {
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>339196-  let A = process.env.ZDOTDIR || Qw1();
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>339197-  return {
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>339198-    zsh: N9A(A, &quot;.zshrc&quot;),
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>339199:    bash: N9A(Qw1(), &quot;.bashrc&quot;),
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>339200-    fish: N9A(Qw1(), &quot;.config/fish/config.fish&quot;),
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>339201-  };
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>339202-}
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>339203-function ec(A) {
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>339204-  let B = !1;
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>339205-  return {
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>339206-    filtered: A.filter((D) =&gt; {
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>339207-      if (sf2.test(D)) return ((B = !0), !1);
+<a id="__codelineno-2-46" name="__codelineno-2-46" href="#__codelineno-2-46"></a>339208-      return !0;
+<a id="__codelineno-2-47" name="__codelineno-2-47" href="#__codelineno-2-47"></a>339209-    }),
+</code></pre></div>
+<p>I surely don't want to try to reverse engineer this code, but again it seems
+very suspicious. Note in particular line 339194, which contains a regex to
+find strings like <code>alias claude=</code>.</p>
+<p>The final thing which I did was to revert my <code>.bashrc</code> to its original state,
+and try to run <code>claude</code> again. This time, it didn't modify the file. Maybe the
+logic is triggered only when there is an update?</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">&para;</a></h2>
+<p>I don't know for sure whether <code>claude</code> modified my <code>.bashrc</code> during the
+update, but I think that my investigation above shows that it's a very
+reasonable hypothesis.</p>
+<p>Personally, I find this completely unacceptable: it would be fine if claude
+detected the alias and suggested an auto-fix, but modifying it automatically
+<em>without telling me</em> crosses a line.</p>
 
 
 
-<nav class="md-pagination">
-  <a class="md-pagination__link" href="../../">1</a> <a class="md-pagination__link" href="../2/">2</a> <a class="md-pagination__link" href="../3/">3</a> <span class="md-pagination__current">4</span> <a class="md-pagination__link" href="../5/">5</a>
-</nav>
-        
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js"
+        data-repo="antocuni/antocuni.github.io"
+        data-repo-id="R_kgDON3STLg"
+        data-category="Announcements"
+        data-category-id="DIC_kwDON3STLs4Cm2EZ"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="en"
+        data-loading="lazy"
+        crossorigin="anonymous"
+        async>
+</script>
+
       
-    </div>
+    </article>
   </div>
 
           

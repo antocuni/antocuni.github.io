@@ -793,6 +793,58 @@
     <div class="md-post__meta md-meta">
       <ul class="md-meta__list">
         <li class="md-meta__item">
+          <time datetime="2011-11-14 11:42:00+00:00">Nov 14, 2011</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              4 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="gothenburg-sprint-report"><a class="toclink" href="../../../../2011/11/14/gothenburg-sprint-report/">Gothenburg sprint report</a></h2>
+<div class="admonition note">
+<p>Originally published on the <a href="https://pypy.org/posts/2011/11/gothenburg-sprint-report-8371395613874909242.html">PyPy blog</a>.</p>
+</div>
+<html><body><p>In the past week, we have been busy hacking on PyPy at the Gothenburg sprint, the second of this 2011.  The sprint was hold at Laura's and Jacob's place, and here is a brief report of what happened.<br>
+<br>
+<br>
+In the first day we welcomed Mark Pearse, who was new to PyPy and at his first sprint.  Mark worked the whole sprint in the new <a class="reference external" href="https://bitbucket.org/pypy/pypy/changesets/tip/branch%28%22SpecialisedTuples%22%29">SpecialisedTuple</a> branch, whose aim is to have a special implementation for small 2-items and 3-items tuples of primitive types (e.g., ints or floats) to save memory.  Mark paired with Antonio for a couple of days, then he continued alone and did an amazing job.  He even learned how to properly do Test Driven Development :-).<br><br>
+Antonio spent a couple of days investigating whether it is possible to use <cite>application checkpoint</cite> libraries such as <a class="reference external" href="https://ftg.lbl.gov/projects/CheckpointRestart/">BLCR</a> and <a class="reference external" href="https://dmtcp.sourceforge.net/">DMTCP</a> to save the state of the PyPy interpreter between subsequent runs, thus saving also the JIT-compiled code to reduce the warmup time.  The conclusion is that these are interesting technologies, but more work would be needed (either on the PyPy side or on the checkpoint library side) before it can have a practical usage for PyPy users.<br><br>
+Then, Antonio spent most of the rest of the sprint working on his <a class="reference external" href="https://bitbucket.org/pypy/pypy/changesets/tip/branch%28%22ffistruct%22%29">ffistruct</a> branch, whose aim is to provide a very JIT-friendly way to interact with C structures, and eventually implement <tt class="docutils literal">ctypes.Structure</tt> on top of that.  The "cool part" of the branch is already done, and the JIT already can compile set/get of fields into a single fast assembly instruction, about 400 times faster than the corresponding ctypes code.  What is still left to do is to add a nicer syntax (which is easy) and to implement all the ctypes peculiarities (which is tedious, at best :-)).<br><br>
+As usual, Armin did tons of different stuff, including fixing a JIT bug, improving the performance of <tt class="docutils literal">file.readlines()</tt> and working on the <a class="reference external" href="https://bitbucket.org/pypy/pypy/changesets/tip/branch%28%22stm%22%29">STM</a> branch (for Software Transactional Memory), which is now able to run RPython multithreaded programs using software transaction (as long as they don't fill up all the memory, because support for the GC is still missing :-)).  Finally, he worked on improving the Windows version of PyPy. While doing so he discovered together with Anto a terrible bug which lead to a continuous leak of stack space because the JIT called some functions using the wrong calling convention.<br><br>
+Håkan, with some help from Armin, worked on the <a class="reference external" href="https://bitbucket.org/pypy/pypy/changesets/tip/branch%28%22stm%22%29">jit-targets</a> branch, whose goal is to heavily refactor the way the traces are internally represented by the JIT, so that in the end we can produce (even :-)) better code than what we do nowadays.  More details in this <a class="reference external" href="https://mail.python.org/pipermail/pypy-dev/2011-November/008728.html">mail</a>.<br><br>
+Andrew Dalke worked on a way to integrate PyPy with FORTRAN libraries, and in particular the ones which are wrapped by Numpy and Scipy: in doing so, he wrote <a class="reference external" href="https://bitbucket.org/pypy/f2pypy">f2pypy</a>, which is similar to the existing <tt class="docutils literal">f2py</tt> but instead of producing a CPython extension module it produces a pure python modules based on <tt class="docutils literal">ctypes</tt>.  More work is needed before it can be considered complete, but <tt class="docutils literal">f2pypy</tt> is already able to produce a wrapper for BLAS which passes most of the tests under CPython, although there's still work left to get it working for PyPy.<br><br>
+
+</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../../../2011/11/14/gothenburg-sprint-report/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
           <time datetime="2011-07-07 16:24:00+00:00">Jul 7, 2011</time></li>
         
           <li class="md-meta__item">
@@ -1206,49 +1258,6 @@ as printed by <tt class="docutils literal">/usr/bin/env</tt>. What else? :-)).
     
       <nav class="md-post__action">
         <a href="../../../../2010/10/22/phd-thesis-about-pypys-cli-jit-backend/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2010-08-17 10:51:00+00:00">Aug 17, 2010</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="europython-2010-videos-available"><a class="toclink" href="../../../../2010/08/17/europython-2010-videos-available/">EuroPython 2010 Videos available</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2010/08/europython-2010-videos-available-8446190660370796142.html">PyPy blog</a>.</p>
-</div>
-<html><body><p>Hi all,
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2010/08/17/europython-2010-videos-available/">
           Continue reading
         </a>
       </nav>
