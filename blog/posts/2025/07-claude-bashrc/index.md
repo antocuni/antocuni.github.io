@@ -12,10 +12,11 @@ tags:
 # Claude code modified my .bashrc without asking?
 
 !!! note "Note"
-    This is not the classical post about running `claude` in
-    YOLO mode and then complaining that it damaged the system. I have reasons
-    to think that `claude` automatically modified my `.bashrc` without asking
-    my permission and without notifying me of the change.
+    This is not the classical post about running `claude` in YOLO mode and
+    then complaining that it damaged the system. I have reasons to think that
+    `claude` automatically modified my `.bashrc` to remove a line
+    `alias claude=...` without asking my permission and without notifying me
+    of the change.
 
 <!-- more -->
 
