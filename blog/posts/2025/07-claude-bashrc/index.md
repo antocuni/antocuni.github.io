@@ -132,6 +132,11 @@ The final thing which I did was to revert my `.bashrc` to its original state,
 and try to run `claude` again. This time, it didn't modify the file. Maybe the
 logic is triggered only when there is an update?
 
+!!! info "Update Jul 8 2025, 09:57"
+    I ran claude again and it updated to version 1.0.44. My alias in .bashrc
+    is gone again, so it seems likely that it's triggered at every update.
+
+
 ## Conclusion
 
 I don't know for sure whether `claude` modified my `.bashrc` during the
