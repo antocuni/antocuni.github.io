@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Talk</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- <script type="module" src="https://pyscript.net/tech-preview/pyscript.core/pyscript.js"></script> -->
+
+    <script type="module" src="https://cdn.jsdelivr.net/npm/polyscript@0.1.10/+esm"></script>
+
+
+</head>
+<body>
+
+  <script type="micropython" config="config.toml">
+    import pyreveal
+    import js
+    pyreveal.show('slides.md.txt', js.fetch_inline_svg)
+  </script>
+
+  <script>
+      function fetch_inline_svg() {
+        console.log("fetch_inline_svg")
+        Reveal.on('ready', () => {
+          console.log("fetch_inline_svg ready")
+          fetch('ast.svg')
+            .then(res => res.text())
+            .then(svgText => {
+              document.getElementById('ast-svg').innerHTML = svgText;
+              // Re-initialize fragments after dynamic insertion
+              Reveal.sync();
+            });
+        });
+      }
+  </script>
+
+</body>
+</html>
