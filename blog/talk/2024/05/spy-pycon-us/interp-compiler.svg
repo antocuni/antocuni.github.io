@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="348.07462mm"
+   height="142.64572mm"
+   viewBox="0 0 348.07462 142.64572"
+   version="1.1"
+   id="svg69701"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="interp-compiler.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview69703"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="0.58974467"
+     inkscape:cx="1256.476"
+     inkscape:cy="722.3465"
+     inkscape:window-width="2494"
+     inkscape:window-height="1399"
+     inkscape:window-x="66"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs69698" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(289.78656,42.609872)">
+    <g
+       id="g57143"
+       transform="matrix(0.35277777,0,0,0.35277777,-536.45006,105.28843)">
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1393.8795"
+         cy="-294.04156"
+         rx="27"
+         ry="18"
+         id="ellipse8-3-8-6"
+         style="fill:#ffaaaa" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1249.8795"
+         cy="-222.04158"
+         rx="27"
+         ry="18"
+         id="ellipse15-6-4-8"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1372.3195,-282.56158 c -24.1,11.72 -63.36,30.79999 -90.91,44.19999"
+         id="path22-7-5-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="132.12,-247.21 121.6,-245.98 129.06,-253.5 "
+         id="polygon24-5-0-2"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1393.8795"
+         cy="-222.04158"
+         rx="27"
+         ry="18"
+         id="ellipse29-3-3-6"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1393.8795,-275.74158 c 0,7.29 0,15.96999 0,24.15999"
+         id="path36-5-6-6" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="246.5,-263.62 243,-253.62 239.5,-263.62 "
+         id="polygon38-6-1-4"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1177.8795"
+         cy="-150.04156"
+         rx="27"
+         ry="18"
+         id="ellipse57-2-2-4"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1234.9595,-206.54159 c -9.85,9.58 -22.9401,22.31 -34.1101,33.16"
+         id="path64-7-0-8" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="52.59,-183 42.98,-178.54 47.71,-188.02 "
+         id="polygon66-0-6-7"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1321.8795"
+         cy="-150.04156"
+         rx="27"
+         ry="18"
+         id="ellipse85-0-4-7"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1378.9595,-206.54159 c -9.85,9.58 -22.94,22.31 -34.11,33.16"
+         id="path92-6-7-2" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="196.59,-183 186.98,-178.54 191.71,-188.02 "
+         id="polygon94-2-6-2"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1393.8795"
+         cy="-150.04156"
+         rx="27"
+         ry="18"
+         id="ellipse99-6-5-6"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1393.8795,-203.74159 c 0,7.29 0,15.97 0,24.16"
+         id="path106-1-6-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="246.5,-191.62 243,-181.62 239.5,-191.62 "
+         id="polygon108-8-9-0"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1465.8795"
+         cy="-150.04156"
+         rx="27"
+         ry="18"
+         id="ellipse113-7-3-6"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1408.7995,-206.54159 c 9.85,9.58 22.94,22.31 34.11,33.16"
+         id="path120-9-7-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="294.29,-188.02 299.02,-178.54 289.41,-183 "
+         id="polygon122-2-4-5"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1177.8795"
+         cy="-78.041565"
+         rx="27"
+         ry="18"
+         id="ellipse141-0-5-9"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1177.8794,-131.74159 c 0,7.29 0,15.97 0,24.16"
+         id="path148-2-2-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="30.5,-119.62 27,-109.62 23.5,-119.62 "
+         id="polygon150-3-5-9"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1393.8795"
+         cy="-78.041565"
+         rx="27"
+         ry="18"
+         id="ellipse183-9-7-0"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1393.8795,-131.74159 c 0,7.29 0,15.97 0,24.16"
+         id="path190-7-8-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="246.5,-119.62 243,-109.62 239.5,-119.62 "
+         id="polygon192-3-6-1"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1465.8795"
+         cy="-78.041565"
+         rx="27"
+         ry="18"
+         id="ellipse197-6-8-7"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1465.8795,-131.74159 c 0,7.29 0,15.97 0,24.16"
+         id="path204-1-8-7" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="318.5,-119.62 315,-109.62 311.5,-119.62 "
+         id="polygon206-2-4-1"
+         transform="translate(1150.8794,11.958414)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="1537.8795"
+         cy="-78.041565"
+         rx="27"
+         ry="18"
+         id="ellipse211-9-3-1"
+         style="fill:#ffaaaa" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 1480.7995,-134.54159 c 9.85,9.58 22.9399,22.31 34.1099,33.16"
+         id="path218-3-1-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="366.29,-116.02 371.02,-106.54 361.41,-111 "
+         id="polygon220-1-4-9"
+         transform="translate(1150.8794,11.958414)" />
+    </g>
+    <g
+       id="g57110"
+       transform="matrix(0.35277777,0,0,0.35277777,-228.13992,-50.816551)">
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="121.11315"
+         rx="27"
+         ry="18"
+         id="ellipse8-3-7"
+         style="fill:#aaccff;fill-opacity:1" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-75.246391"
+         cy="193.11314"
+         rx="27"
+         ry="18"
+         id="ellipse15-6-7"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 47.193633,132.59313 c -24.1,11.72 -63.36,30.8 -90.91,44.2"
+         id="path22-7-6" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="121.6,-245.98 129.06,-253.5 132.12,-247.21 "
+         id="polygon24-5-7"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="193.11314"
+         rx="27"
+         ry="18"
+         id="ellipse29-3-36"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 68.753633,139.41313 c 0,7.29 0,15.97 0,24.16"
+         id="path36-5-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-253.62 239.5,-263.62 246.5,-263.62 "
+         id="polygon38-6-6"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="212.75368"
+         cy="193.11314"
+         rx="27"
+         ry="18"
+         id="ellipse43-2-3"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 90.313633,132.59313 c 24.099997,11.72 63.359997,30.8 90.909977,44.2"
+         id="path50-9-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="364.4,-245.98 353.88,-247.21 356.94,-253.5 "
+         id="polygon52-1-4"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-147.24638"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse57-2-8"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -90.166367,208.61314 c -9.850003,9.58 -22.940003,22.31 -34.110003,33.16"
+         id="path64-7-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="42.98,-178.54 47.71,-188.02 52.59,-183 "
+         id="polygon66-0-2"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-75.246391"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse71-9-9"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -75.246367,211.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path78-3-3" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="99,-181.62 95.5,-191.62 102.5,-191.62 "
+         id="polygon80-6-9"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-3.2463934"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse85-0-0"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 53.833633,208.61314 c -9.85,9.58 -22.94,22.31 -34.11,33.16"
+         id="path92-6-8" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="186.98,-178.54 191.71,-188.02 196.59,-183 "
+         id="polygon94-2-8"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse99-6-50"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 68.753633,211.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path106-1-9" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-181.62 239.5,-191.62 246.5,-191.62 "
+         id="polygon108-8-6"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="140.75362"
+         cy="265.11313"
+         rx="27"
+         ry="18"
+         id="ellipse113-7-38"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 83.673633,208.61314 c 9.85,9.58 22.939997,22.31 34.109997,33.16"
+         id="path120-9-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="299.02,-178.54 289.41,-183 294.29,-188.02 "
+         id="polygon122-2-6"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-147.24638"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse141-0-1"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -147.24637,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path148-2-1" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="27,-109.62 23.5,-119.62 30.5,-119.62 "
+         id="polygon150-3-59"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-75.246391"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse155-7-8"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -75.246367,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path162-5-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="99,-109.62 95.5,-119.62 102.5,-119.62 "
+         id="polygon164-9-8"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-3.2463934"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse169-2-1"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -60.326367,280.61314 c 9.85,9.58 22.94,22.31 34.11,33.16"
+         id="path176-2-0" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="155.02,-106.54 145.41,-111 150.29,-116.02 "
+         id="polygon178-8-3"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="68.753593"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse183-9-0"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 68.753633,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path190-7-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-109.62 239.5,-119.62 246.5,-119.62 "
+         id="polygon192-3-4"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="140.75362"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse197-6-4"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 140.75363,283.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path204-1-4" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="315,-109.62 311.5,-119.62 318.5,-119.62 "
+         id="polygon206-2-7"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="212.75368"
+         cy="337.11313"
+         rx="27"
+         ry="18"
+         id="ellipse211-9-6"
+         style="fill:#aaccff;fill-opacity:1" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 155.67363,280.61314 c 9.85,9.58 22.93998,22.31 34.10998,33.16"
+         id="path218-3-3" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="371.02,-106.54 361.41,-111 366.29,-116.02 "
+         id="polygon220-1-1"
+         transform="translate(-174.24637,427.11314)" />
+      <ellipse
+         fill="none"
+         stroke="#000000"
+         cx="-3.2463934"
+         cy="409.1131"
+         rx="27"
+         ry="18"
+         id="ellipse267-9-7"
+         style="fill:#aaccff" />
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m -3.2463672,355.41314 c 0,7.29 0,15.97 0,24.16"
+         id="path274-4-5" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="171,-37.62 167.5,-47.62 174.5,-47.62 "
+         id="polygon276-7-9"
+         transform="translate(-174.24637,427.11314)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.2889px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-247.4048"
+       y="-34.429829"
+       id="text38431"><tspan
+         sodipodi:role="line"
+         id="tspan38429"
+         style="font-size:11.2889px;stroke-width:0.264583px"
+         x="-247.4048"
+         y="-34.429829">High level language</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:11.2889px;stroke-width:0.264583px"
+         x="-247.4048"
+         y="-20.318703"
+         id="tspan63808">Interpreter</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:11.2889px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="-91.421371"
+       y="-34.429829"
+       id="text38431-6"><tspan
+         sodipodi:role="line"
+         id="tspan38429-2"
+         style="font-size:11.2889px;stroke-width:0.264583px"
+         x="-91.421371"
+         y="-34.429829">Low level language</tspan><tspan
+         sodipodi:role="line"
+         style="font-size:11.2889px;stroke-width:0.264583px"
+         x="-91.421371"
+         y="-20.318703"
+         id="tspan66630">Compiler</tspan></text>
+    <g
+       id="g68948"
+       transform="matrix(0,-0.35277777,0.35277777,0,-192.3435,300.22285)">
+      <path
+         fill="none"
+         stroke="#000000"
+         d="m 784.88366,512.09502 c 0,14.09598 0,30.87967 0,46.7159"
+         id="path36-1"
+         style="stroke-width:3.93344" />
+      <polygon
+         fill="#000000"
+         stroke="#000000"
+         points="243,-253.62 239.5,-263.62 246.5,-263.62 "
+         id="polygon38-7"
+         transform="matrix(8.0015921,0,0,1.933605,-1159.5032,1068.3932)" />
+    </g>
+    <g
+       id="g69080"
+       transform="matrix(0.23205214,0,0,0.19298312,-43.159104,-124.1656)">
+      <g
+         id="g6"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g4">
+          <path
+             d="m 249.429,214.144 c -3.968,-1.685 -8.576,-0.747 -11.627,2.304 l -21.333,21.333 c -4.16,4.16 -4.16,10.923 0,15.083 4.16,4.16 10.923,4.16 15.083,0 l 3.115,-3.115 V 288 c 0,5.888 4.779,10.667 10.667,10.667 5.888,0 10.666,-4.779 10.687,-10.667 v -64 c 0,-4.309 -2.602,-8.213 -6.592,-9.856 z"
+             id="path2" />
+        </g>
+      </g>
+      <g
+         id="g12"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g10">
+          <path
+             d="m 313.429,214.144 c -3.947,-1.685 -8.576,-0.747 -11.627,2.304 l -21.333,21.333 c -4.16,4.16 -4.16,10.923 0,15.083 4.16,4.16 10.923,4.16 15.083,0 l 3.115,-3.115 V 288 c 0,5.888 4.779,10.667 10.667,10.667 5.888,0 10.666,-4.779 10.687,-10.667 v -64 c 0,-4.309 -2.602,-8.213 -6.592,-9.856 z"
+             id="path8" />
+        </g>
+      </g>
+      <g
+         id="g18"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g16">
+          <path
+             d="m 377.429,214.144 c -3.968,-1.685 -8.555,-0.747 -11.627,2.304 l -21.333,21.333 c -4.16,4.16 -4.16,10.923 0,15.083 4.16,4.16 10.923,4.16 15.083,0 l 3.115,-3.115 V 288 c 0,5.888 4.779,10.667 10.667,10.667 5.888,0 10.667,-4.779 10.688,-10.667 v -64 c -10e-4,-4.309 -2.603,-8.213 -6.593,-9.856 z"
+             id="path14" />
+        </g>
+      </g>
+      <g
+         id="g24"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g22">
+          <path
+             d="m 181.333,213.333 h -42.667 c -5.888,0 -10.667,4.779 -10.667,10.667 v 64 c 0,5.888 4.779,10.667 10.667,10.667 h 42.667 C 187.221,298.667 192,293.888 192,288 v -64 c 0,-5.888 -4.779,-10.667 -10.667,-10.667 z m -10.666,64 h -21.333 v -42.667 h 21.333 z"
+             id="path20" />
+        </g>
+      </g>
+      <g
+         id="g30"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g28">
+          <path
+             d="m 313.429,342.144 c -3.947,-1.664 -8.576,-0.747 -11.627,2.304 l -21.333,21.333 c -4.16,4.16 -4.16,10.923 0,15.083 4.16,4.16 10.923,4.16 15.083,0 l 3.115,-3.115 V 416 c 0,5.888 4.779,10.667 10.667,10.667 5.888,0 10.666,-4.779 10.687,-10.667 v -64 c 0,-4.309 -2.602,-8.213 -6.592,-9.856 z"
+             id="path26" />
+        </g>
+      </g>
+      <g
+         id="g36"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g34">
+          <path
+             d="m 377.429,342.144 c -3.968,-1.664 -8.555,-0.747 -11.627,2.304 l -21.333,21.333 c -4.16,4.16 -4.16,10.923 0,15.083 4.16,4.16 10.923,4.16 15.083,0 l 3.115,-3.115 V 416 c 0,5.888 4.779,10.667 10.667,10.667 5.888,0 10.667,-4.779 10.688,-10.667 v -64 c -10e-4,-4.309 -2.603,-8.213 -6.593,-9.856 z"
+             id="path32" />
+        </g>
+      </g>
+      <g
+         id="g42"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g40">
+          <path
+             d="m 164.096,342.144 c -3.968,-1.664 -8.576,-0.747 -11.627,2.304 l -21.333,21.333 c -4.16,4.16 -4.16,10.923 0,15.083 4.16,4.16 10.923,4.16 15.083,0 l 3.115,-3.115 V 416 c 0,5.888 4.779,10.667 10.667,10.667 5.888,0 10.667,-4.779 10.688,-10.667 v -64 c -0.001,-4.309 -2.604,-8.213 -6.593,-9.856 z"
+             id="path38" />
+        </g>
+      </g>
+      <g
+         id="g48"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g46">
+          <path
+             d="m 245.333,341.333 h -42.667 c -5.888,0 -10.667,4.779 -10.667,10.667 v 64 c 0,5.888 4.779,10.667 10.667,10.667 h 42.667 C 251.221,426.667 256,421.888 256,416 v -64 c 0,-5.888 -4.779,-10.667 -10.667,-10.667 z m -10.666,64 h -21.333 v -42.667 h 21.333 z"
+             id="path44" />
+        </g>
+      </g>
+      <g
+         id="g54"
+         transform="matrix(0.35567536,0,0,0.35567536,277.83113,679.57398)">
+        <g
+           id="g52">
+          <path
+             d="M 437.333,0 H 202.667 c -1.429,0 -2.837,0.299 -4.139,0.832 -0.405,0.171 -0.704,0.491 -1.067,0.725 -0.811,0.469 -1.664,0.896 -2.347,1.557 l -128,128 c -0.491,0.491 -0.768,1.152 -1.152,1.728 -0.384,0.576 -0.875,1.067 -1.131,1.707 -0.533,1.301 -0.832,2.688 -0.832,4.117 V 501.333 C 64,507.221 68.779,512 74.667,512 h 362.667 c 5.888,0 10.667,-4.779 10.667,-10.667 V 10.667 C 448,4.779 443.221,0 437.333,0 Z M 192,36.416 V 128 H 100.416 Z M 426.667,490.667 H 85.333 V 149.333 h 117.333 c 5.888,0 10.667,-4.779 10.667,-10.667 V 21.333 h 213.333 v 469.334 z"
+             id="path50-7" />
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
