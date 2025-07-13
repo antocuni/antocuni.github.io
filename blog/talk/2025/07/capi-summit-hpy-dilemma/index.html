@@ -17,21 +17,5 @@
     pyreveal.show('slides.md.txt', js.fetch_inline_svg)
   </script>
 
-  <script>
-      function fetch_inline_svg() {
-        console.log("fetch_inline_svg")
-        Reveal.on('ready', () => {
-          console.log("fetch_inline_svg ready")
-          fetch('ast.svg')
-            .then(res => res.text())
-            .then(svgText => {
-              document.getElementById('ast-svg').innerHTML = svgText;
-              // Re-initialize fragments after dynamic insertion
-              Reveal.sync();
-            });
-        });
-      }
-  </script>
-
 </body>
 </html>
