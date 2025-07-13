@@ -31,12 +31,90 @@
 </style>
 
 
-# Talk
+# The HPy dilemma
+
+## A **personal** retrospective
 
 ---
 
-## Slide 1
+### Disclaimer
+
+## This is not a rant 🥰
+
+- Everybody does their best to make Python even more awesome
+
+- The aim is to sparkle some conversation
 
 ---
 
-## Slide 2
+# s/HPy/.*
+
+> If it walks like HPy and quacks like HPy, then it's a good C API
+
+---
+
+> "Too bad that HPy is no longer make any problem, I had lots of hopes for it"
+
+(many people at conferences)
+
+---
+
+## What went well
+
+- Gathered together many bright minds
+
+- Proof that it's technically feasible
+
+  * ~0 overhead on CPython
+
+  * good speedups on PyPy and GraalPy
+
+  * Universal binaries
+
+- Some design patterns stick
+
+---
+
+## What went wrong
+
+- PyPy is less active and relevant than in the past
+
+- Everyone had a different view of what "C API" means
+
+  - PyPy/GraalPy: interpreter/extension HARD boundary
+
+  - CPython: internal everyday API, soft permeable boundary w.r.t extensions
+
+- Underestimated conservatory forces (again)
+
+  - --> Hofstadter law
+
+- ...
+
+---
+
+# The HPy dilemma
+
+- The Python ecosystem would be in a better place with HPy (or equivalent)
+
+- For each individual actor it makes more sense to invest in the status quo
+
+  * aka "let's improve step by step"
+
+---
+
+## My personal take
+
+- Python lacks a product manager
+
+- Design by commitee is problematic
+
+  * but also many advantages, of course
+
+- Only small steps can be taken
+
+  * ==> Cannot "leap forward"
+
+- How to improve?
+
+  * I don't know 🤷‍♂️
