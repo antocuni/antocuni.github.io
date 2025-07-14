@@ -1,0 +1,717 @@
+<style>
+
+  :root {
+    --r-main-font-size: 40px;  /* the default is 40px */
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal pre code {
+    padding: 5px;
+    overflow: auto;
+    max-height: 600px;
+    word-wrap: normal;
+  }
+
+  .big {
+    font-size: 2.5em;
+  }
+
+  .main-size {
+    font-size: var(--r-main-font-size);
+  }
+</style>
+
+
+# SPy 🥸
+
+---
+
+## One year ago...
+
+<a href="https://youtu.be/ir5ShHRi5lw?si=fR2xj64TlNX0iX_K"><img src="myths-and-fairy-tales.png"></a>
+
+https://youtu.be/ir5ShHRi5lw?si=fR2xj64TlNX0iX_K
+
+---
+
+## Python is slow, TL;DR
+
+* Everything is dynamic
+
+  - The world can change at any time
+
+* Compilers have a hard time
+
+  - performance cliffs
+
+  - unpredictable performance
+
+  - optimization chasing
+
+* ... but we like dynamicity
+
+---
+
+# ...Today
+
+---
+
+## Thought experiment
+
+How much dynamicity we can remove from Python while still feeling Pythonic?
+
+---
+
+## Humans vs compilers
+
+```python
+
+import numpy as np
+
+N = 10
+
+def calc(v: np.ndarray[float], k: float) -> float:
+  return (v * k).sum() + N
+
+```
+
+---
+
+## Motivation
+
+- In practice we *already* use subset of Python
+
+- People want/like static typing but:
+
+  - it doesn't help performance
+
+  - it's not really safe anyway
+
+- SPy rules and typesystem designed to match how Python is actually
+  used in practice
+
+---
+
+## The two language problem
+
+- High level, easy, nice, slow
+
+  - Python
+
+- Low level, harder, fast
+
+  - C / C++ / rust / cython / ...
+
+---
+
+### Goals
+
+- Easy to understand. Pythonic.
+
+- Easy to implement
+
+- Predictable performance
+
+- One language, two levels
+
+### Non-goals
+
+- 100% compatibility with CPython.
+
+---
+
+## Python-like languages
+
+- Numba, RPython, cython, pytorch JIT, mypyc, ...
+
+<a href="https://xkcd.com/927/"><img src="https://imgs.xkcd.com/comics/standards.png"></a>
+
+- <!-- .element: class="fragment" --> SPy as common frontend for specialized compilers
+
+---
+
+## Current status: WIP!
+
+- ✅ What works
+
+  - ➜ fully contained exe
+
+  - ➜ CPython extensions (via CFFI)
+
+  - `@struct`, super simple, incomplete, half-broken `array`
+
+- <!-- .element: class="fragment" --> ❌ What doesn't work
+
+  - everything else
+
+  - no `list`, no `dict`
+
+  - not really usable for anything
+
+---
+
+# Demo
+
+<a href="https://antocuni.pyscriptapps.com/sobel/latest/"><img src="qrcode-sobel.png"></a>
+
+<div style="font-size: 0.5em">
+
+https://antocuni.pyscriptapps.com/sobel/latest/
+
+https://github.com/spylang/demos/tree/main/sobel
+
+</div>
+
+---
+
+# Deep dive into SPy internals
+
+---
+
+## General architecture
+
+* Interpreter: AST-based
+
+  - Written in Python, super slow (for now)
+
+* Magic 🧙
+
+* Compiler
+
+  - AST ➜ C ➜ `cc`
+
+  - ➜ Python extensions via CFFI
+
+---
+
+## Hello world
+
+```python
+# hello.spy
+
+def add(x: int, y: int) -> int:
+    return x + y
+
+def main() -> void:
+    print("Hello world")
+    print(add(40, 2))
+```
+
+---
+
+```
+❯ spy hello.spy   # interpreter
+Hello world
+42
+
+❯ spy --compile hello.spy  # compile to native
+==> build/hello
+
+❯ file build/hello
+build/hello: ELF 64-bit [...]
+
+❯ ./build/hello
+Hello world
+42
+```
+
+---
+
+```
+# compile to other targets
+
+❯ spy --compile --target emscripten hello.spy
+==> build/hello.mjs
+
+❯ node build/hello.mjs
+Hello world
+42
+
+❯ spy --compile --target wasi hello.spy
+==> build/hello.wasm
+
+❯ wasmtime build/hello.wasm
+Hello world
+42
+```
+
+---
+
+## General architecture
+
+* Interpreter: AST-based
+
+* <!-- .element: class="fragment fade-out" data-fragment-index="0" --> Magic 🧙
+
+* <!-- .element: class="fragment" data-fragment-index="0" --> <b>Redshift</b>
+
+  - AST -> partial evaluation -> lowered AST
+
+  - <span style="color: blue">blue</span> / <span style="color: red">red</span> ➜ <span style="color: red">red</span>
+
+* Compiler
+
+  - <span class="fragment" data-fragment-index="0">lowered</span> AST ➜ C ➜ `cc`
+
+---
+
+```python
+❯ spy --redshift --full-fqn hello.spy
+
+def `hello::add`(x: `builtins::i32`, y: `builtins::i32`) -> `builtins::i32`:
+    return `operator::i32_add`(x, y)
+
+def `hello::main`() -> `builtins::void`:
+    `builtins::print_str`('Hello world')
+    `builtins::print_i32`(`hello::add`(40, 2))
+```
+
+---
+
+## Blue code
+
+- Literal
+
+- Constants
+
+- Pure functions
+
+- `@blue`
+
+---
+
+```python [1-3, 20-26]
+@blue
+def pi():
+    "Compute an approximation of PI using the Leibniz series"
+    tol = 0.001
+    pi_approx = 0.0
+    k = 0
+    term = 1.0  # Initial term to enter the loop
+
+    while fabs(term) > tol:
+        if k % 2 == 0:
+            term = 1.0 / (2 * k + 1)
+        else:
+            term = -1 * 1.0 / (2 * k + 1)
+
+        pi_approx = pi_approx + term
+        k = k + 1
+
+    return 4 * pi_approx
+
+def circumference(r: float) -> float:
+    return 2 * pi() * r
+
+def main() -> void:
+    p = pi()
+    print(p)
+    print(circumference(10))
+```
+
+---
+
+```
+❯ spy --redshift blue.spy
+
+def circumference(r: f64) -> f64:
+    return 6.287177319171578 * r
+
+def main() -> void:
+    p: f64
+    p = 3.143588659585789
+    print_f64(p)
+    print_f64(`blue::circumference`(`operator::i32_to_f64`(10)))
+```
+
+---
+
+## Redshifting
+
+- AST nodes are colored
+
+  - "Blue": safe to partially evaluate
+
+  - "Red": depend on runtime data
+
+- Interpreter: blue and red
+
+- Compiler: only red
+
+- *Redshift*: red/blue AST ➜ red AST
+
+---
+
+```python
+def circumference(r: float) -> float:
+    return 2 * pi() * r
+```
+<div id="ast-svg"></div>
+
+---
+
+## Interpreter vs compiler
+
+* In fully-interpreted mode:
+  - "import time": interpreted
+  - "blue code": interpreted
+  - "runtime": interpreted
+
+* In compiled mode:
+  - "import time": interpreted
+  - "blue code": interpreted
+  - "runtime": *compiled*
+
+---
+
+# "Full" Python is 99% red
+
+---
+
+## Tweak: execution phases
+
+* Import time
+
+  - Statically resolve modules and imports
+
+  - Everything is mutable "as usual"
+
+  - Metaclasses, decorators, monkey-patching, ...
+
+* --- FREEZE ---
+
+* <!-- .element: class="fragment" --> (Redshift)
+
+* Runtime
+
+---
+
+## Blue closures
+
+```python
+# make_adder.spy
+
+@blue
+def make_adder(x: int):
+  def adder(y: int) -> int:
+    return x + y
+  return adder
+
+
+add5 = make_adder(5)
+add7 = make_adder(7)
+
+def main() -> void:
+    x = 3
+    print(add5(x) + add7(x))
+```
+
+---
+
+```
+❯ spy --redshift make_adder.spy
+
+def `make_adder::make_adder::adder`(y: i32) -> i32:
+    return 5 + y
+
+def `make_adder::make_adder::adder#1`(y: i32) -> i32:
+    return 7 + y
+
+def main() -> void:
+    x: i32
+    x = 3
+    print_i32(`make_adder::add5`(x) + `make_adder::add7`(x))
+
+```
+
+---
+
+## Generics (ugly)
+
+```
+# generics_ugly.spy
+
+@blue
+def make_adder(T):
+  def adder(x: T, y: T) -> T:
+    return x + y
+  return adder
+
+
+add_int = make_adder(int)
+add_str = make_adder(str)
+
+def main() -> void:
+    print(add_str("The answer", " is"))
+    print(add_int(40, 2))
+```
+
+---
+
+## Generics (better)
+
+```
+# generics_better.spy
+
+@blue.generic
+def add(T):
+  def impl(x: T, y: T) -> T:
+    return x + y
+  return impl
+
+# Syntax sugar (not implemented yet)
+# def add[T](x: T, y: T) -> T:
+
+
+def main() -> void:
+    print(add[str]("The answer", " is"))
+    print(add[int](40, 2))
+
+```
+
+---
+
+```
+❯ spy --redshift generics_better.spy
+
+def main() -> void:
+    print_str(`generics_better::add[str]::impl`('The answer', ' is'))
+    print_i32(`generics_better::add[i32]::impl`(40, 2))
+
+def `generics_better::add[str]::impl`(x: str, y: str) -> str:
+    return `operator::str_add`(x, y)
+
+def `generics_better::add[i32]::impl`(x: i32, y: i32) -> i32:
+    return x + y
+```
+
+---
+
+## Tweak: Type checking
+
+```python
+# typeerror.spy
+
+def inc(x: int) -> int:
+  return x + 1
+
+def main() -> void:
+  if True:
+     print(inc(41))
+  else:
+     print(inc("hello"))
+```
+
+---
+
+## Lazy type errors
+
+```
+❯ spy --redshift --error-mode=lazy typeerror.spy
+
+def inc(x: int) -> int:
+    return x + 1
+
+def main() -> void:
+    if True:
+        print_i32(`typeerror::inc`(41))
+    else:
+        raise TypeError('mismatched types') # /.../astframe.py:397
+```
+
+---
+
+## Eager type errors (default)
+
+```
+❯ spy --redshift --error-mode=eager typeerror.spy
+
+TypeError: mismatched types
+   --> typeerror.spy:8:16
+  8 |      print(inc("hello"))
+    |                |_____| expected `i32`, got `str`
+
+   --> typeerror.spy:1:1
+  1 | def inc(x: int) -> i32:
+    | |____________________| function defined here
+
+   --> typeerror.spy:8:12
+  8 |      print(inc("hello"))
+    |            |__________| operator::CALL called here
+```
+
+---
+
+## Tweak: op dispatch
+
+```python
+# python
+x + y
+
+➜
+
+operator.add(x, y)
+
+➜ (simplified)
+
+Tx = type(x)      # dynamic type
+Tx.__add__(x, y)
+```
+
+```python
+# SPy 🥸
+x + y
+
+➜
+
+xT = STATIC_TYPE(x)					# blue
+yT = STATIC_TYPE(y)					# blue
+impl = operator.ADD(xT, yT)	# blue
+impl(x, y)									# red
+```
+<!-- .element: class="fragment" -->
+
+
+---
+
+```
+# opdispatch.spy
+
+from operator import ADD
+def main() -> void:
+    x = 0
+    print(STATIC_TYPE(x))
+    print(ADD(int, int))
+    print(ADD(str, str))
+```
+
+```
+❯ spy opdispatch.spy
+
+<spy type 'i32'>
+<spy adapter `def(i32, i32) -> i32` for `operator::i32_add`>
+<spy adapter `def(str, str) -> str` for `operator::str_add`>
+```
+<!-- .element: class="fragment" -->
+
+
+---
+
+## Custom operators
+
+```python
+class T:
+
+    @blue
+    def __ADD__(...): ...
+
+    @blue
+    def __GETITEM(...): ...
+
+    @blue
+    def __GETATTR__(...): ...
+
+    ...
+```
+
+---
+
+## Two levels
+
+```python
+from unsafe import gc_alloc, ptr
+
+@blue.generic
+def array1d(DTYPE):
+
+    @struct
+    class ArrayData:
+        l: i32
+        items: ptr[DTYPE]
+
+    @typelift
+    class ndarray:
+        __ll__: ptr[ArrayData]
+
+        def __new__(l: i32) -> ndarray:
+            data = gc_alloc(ArrayData)(1)
+            data.l = l
+            data.items = gc_alloc(DTYPE)(l)
+            return ndarray.__lift__(data)
+
+        def __getitem__(self: ndarray, i: i32) -> DTYPE:
+            ll = self.__ll__
+            if i >= ll.l:
+                raise IndexError
+            return ll.items[i]
+
+        def __setitem__(self: ndarray, i: i32, v: DTYPE) -> void:
+            ...
+
+    return ndarray
+```
+
+---
+
+## Static dispatch of overloads
+
+```python
+    @typelift
+    class ndarray:
+        __ll__: ptr[ArrayData]
+
+        @blue
+        def __GETITEM__(v_arr: OpArg, v_i: OpArg) -> OpImpl:
+
+            if v_i.static_type == int:
+                def getitem_int(arr: ndarray, i: int) -> DTYPE:
+                    ...
+                return OpImpl(getitem_int)
+
+            elif v_i.static_type == slice:
+                def getitem_slice(arr: ndarray, a: int, b: int) -> DTYPE:
+                    ...
+                return OpImpl(getitem_slice, ...)
+
+            else:
+                raise TypeError(...)
+
+```
+
+---
+
+## SPy as a two-levels language
+
+- ✅ SPy low-level core
+
+  - `from unsafe import gc_alloc, ptr`
+
+- stdlib WIP
+
+  - `array.spy`
+
+  - 🔜 `list.spy`, `dict.spy`, ...
+
+  - Contributions are welcome
+
+
+---
+
+## Q&A
+
+- 🙏 Anaconda
+
+- @antocuni
+
+    - github, linkedin, bsky, mastodon
+
+- https://github.com/spylang/spy
+
+- http://antocuni.eu/

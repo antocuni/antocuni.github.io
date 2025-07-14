@@ -1,0 +1,607 @@
+<!-- -*- mode: markdown -*- -->
+
+<style>
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal pre code {
+    padding: 5px;
+    overflow: auto;
+    max-height: 600px;
+    word-wrap: normal;
+  }
+
+  .big {
+    font-size: 2.5em;
+  }
+
+  .small {
+    font-size: 0.5em;
+  }
+
+  .tiny {
+    font-size: 0.3em;
+  }
+
+  .main-size {
+    font-size: var(--r-main-font-size);
+  }
+</style>
+
+
+# Myths and fairy tales around Python performance
+
+<p class="small">
+<a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/">
+antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/
+</a>
+</p>
+
+---
+
+# Myths
+
+---
+
+# It's not slow
+
+---
+
+### It's just a glue language
+
+### Only the GPU matters nowadays
+
+---
+
+<!-- .slide: data-transition="none" -->
+
+<img src="venn1.svg">
+
+---
+
+<!-- .slide: data-transition="none" -->
+
+<img src="venn2.svg">
+
+---
+
+<!-- .slide: data-transition="none" -->
+
+<img src="venn3.svg">
+
+---
+
+<h1>You just need to rewrite the hot parts in
+<span class="fragment strike" data-fragment-index="1">C/C++</span>
+<span class="fragment" data-fragment-index="1">Rust</span>
+</h1>
+
+---
+
+### Pareto principle
+
+<!-- .slide: data-transition="none" -->
+
+<img src="pareto1.png" style="width: 65%">
+
+---
+
+### Pareto principle
+
+<!-- .slide: data-transition="none" -->
+
+<img src="pareto2.png" style="width: 65%">
+
+---
+
+### Amdahl's law
+
+> The overall performance improvement gained by optimizing a single part of a
+> system is limited by the fraction of time that the improved part is actually
+> used.
+
+---
+
+<img src="amdahls-law.svg">
+
+---
+
+# It's slow because it's interpreted
+
+➡️
+
+---
+
+# Project `X` will be fast because it uses LLVM
+
+---
+
+### C, C++, rust...
+
+```python
+p.x * 2
+```
+
+* 1 load
+* 1 mul
+* 1 store
+
+---
+
+### Python
+
+```python
+p.x * 2
+```
+
+<div class="fragment small">
+
+* find the type of `p`
+
+* call `__getattribute__`
+
+* find the type of `p.x`
+
+* call `__mul__` (or maybe `__rmul__`?)
+
+* unbox `p.x`
+
+* unbox `2`
+
+* multiply
+
+* box the result (malloc!)
+
+</div>
+
+---
+
+# Static types ❤️
+
+```python
+def add(x: int, y: int) -> int:
+  return x + y
+
+print(add(2, 3))
+```
+
+---
+
+# Static types ❤️‍🩹
+
+```python
+def foo(x: int, y: int) -> int:
+  return x + y
+
+print(add('hello ', 'world')) # type: ignore
+```
+
+---
+
+# Static types 💔
+
+```python
+class MyClass:
+  def __add__(self, other):
+    ...
+
+def foo(x: MyClass, y: MyClass) -> MyClass:
+  return x + y
+
+del MyClass.__add__
+```
+
+---
+
+# A JIT compiler can solve all your problems
+
+---
+
+<!-- .slide: data-transition="none" -->
+<img src="jit-tradeoff-1.svg">
+
+---
+
+<!-- .slide: data-transition="none" -->
+<img src="jit-tradeoff-2.svg">
+
+---
+
+## Optimization chasing
+
+<ol>
+  <li class="fragment">Slow language</li>
+  <li class="fragment">Optimize "the fast path"</li>
+  <li class="fragment">Same speed or faster! 🥰</li>
+  <li class="fragment">Now I start to <b>rely</b> on it</li>
+  <li class="fragment">Is my code still fast? 🤔</li>
+  <li class="fragment">Unrelated change ➡️ 2x slowdown 🥹</li>
+</ol>
+
+---
+
+### Part two
+
+# The actual problem
+
+---
+
+## Humans vs compilers
+
+```python
+
+import numpy as np
+
+N = 10
+
+def calc(v: np.ndarray[float], k: float) -> float:
+  return (v * k).sum() + N
+
+```
+
+---
+
+### Dynamicity
+
+<ul>
+  <li>Makes Python slow</li>
+  <li class="fragment">Makes Python awesome</li>
+</ul>
+
+---
+
+# The compiler game
+
+---
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+def foo(p: Point):
+    assert isinstance(p, Point)
+    print(p.name) # ???
+```
+
+<div class="fragment">
+
+```python
+def bar():
+    p = Point(1, 2)
+    p.name = 'P0'
+    foo(p)
+```
+
+</div>
+
+---
+
+```python
+import random
+
+class Evil:
+    if random.random() > 0.5:
+        def hello(self):
+            print('hello world')
+
+Evil().hello() # 🤷🏻‍♂️
+```
+
+---
+
+```python
+class Student:
+    def __init__(self, name):
+        self.name = name
+
+    def study(self):
+        print(f'{self.name} is studying...')
+```
+
+<div class="fragment">
+
+```python
+class Berliner:
+    def study(self):
+        print(f'{self.name} is partying...')
+
+def foo():
+    p = Person("Bob")
+    go_to_berlin(p)
+    p.study()
+```
+
+</div>
+
+<div class="fragment">
+
+```python
+def go_to_berlin(p)
+    p.__class__ = Student  # 🤯😱
+```
+
+</div>
+
+---
+<!-- .slide: data-transition="none" -->
+
+```python
+class Person:
+    ...
+    ...
+    ...
+    ...
+    ...
+    ...
+    ...
+    ...
+
+class Student:
+    pass
+
+def foo():
+    p = Person('Alice', 16)
+    print(p.name, p.age)
+    assert isinstance(p, Person) # <<<
+```
+
+---
+<!-- .slide: data-transition="none" -->
+
+```python
+class Person:
+    def __new__(cls, name, age):
+        if age < 18:
+            p = object.__new__(Student)
+        else:
+            p = object.__new__(Person)
+        p.name = name
+        p.age = age
+        return p
+
+class Student:
+    pass
+
+def foo():
+    p = Person('Alice', 16)
+    print(p.name, p.age)
+    assert isinstance(p, Person) # <<<
+```
+
+
+---
+```python
+N = 10
+
+## @magic
+## def foo():
+##     return N
+
+def foo():
+   return N
+
+bar = magic(foo)
+
+assert foo.__code__ == bar.__code__
+assert bar.__module__ == '__main__'
+assert bar.__closure__ is None
+
+assert foo() == 10
+assert bar() == 20 # 🤯😱
+```
+
+<div class="fragment">
+
+```python
+def rebind_globals(func, newglobals):
+    newfunc = types.FunctionType(
+        func.__code__,
+        newglobals,
+        func.__name__,
+        func.__defaults__,
+        func.__closure__)
+    newfunc.__module__ = func.__module__
+    return newfunc
+
+bar = rebind_globals(foo, {'N': 20})
+```
+
+</div>
+
+---
+
+<img src="pdbpp.png">
+
+<a class="small" href="https://github.com/pdbpp/pdbpp/blob/master/src/pdbpp.py#L114-L134">https://github.com/pdbpp/pdbpp/blob/master/src/pdbpp.py#L114-L134</a>
+
+---
+
+<img src="pdbpp2.png">
+
+---
+
+# Abstraction are not free
+
+---
+
+### Python to Python
+
+```python
+def algo(points: list[tuple[float, float]]):
+    res = 0
+    for x, y in points:
+        res += x**2 * y + 10
+    return
+```
+
+---
+
+### Python to Python
+
+```python
+def fn(x, y):
+    return x**2 * y + 10
+
+def algo(points: list[tuple[float, float]]):
+    res = 0
+    for x, y in points:
+        res += fn(x, y)
+    return
+```
+
+---
+
+### Python to Python
+
+```python
+@dataclass
+class Point:
+    x: float
+    y: float
+
+def fn(p):
+    return p.x**2 * p.y + 10
+
+def algo(items: list[Point]):
+    res = 0
+    for p in items:
+        res += fn(p)
+    return
+```
+
+---
+
+### Python to C
+
+```python
+# written in C, for "speed"
+from _speedup import fn
+
+def algo(items: list[Point]):
+    res = 0
+    for p in items:
+        res += fn(p)
+    return
+```
+
+---
+
+## The elephant in the room 🐘
+
+<h1 class="fragment">Memory managment</h1>
+
+---
+
+### CPU-bound vs memory bound
+
+- On modern HW computation is "cheap"
+
+- L1/L2/L3 caches are fast
+
+- RAM is horribly slow
+
+- Cache misses are a disaster
+
+---
+
+### Memory speed
+
+<video src="memory-latency.mp4" controls>
+
+---
+
+### Python memory layout
+
+```python
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+p = [Person('Alice', 16), Person('Bob', 21)]
+```
+
+---
+
+<img class="stretch" src="python-objects.png">
+
+<p class="small">
+See this code on <a href="https://pythontutor.com/render.html#code=class%20Person%3A%0A%20%20%20%20def%20__init__%28self,%20name,%20age%29%3A%0A%20%20%20%20%20%20%20%20self.name%20%3D%20name%0A%20%20%20%20%20%20%20%20self.age%20%3D%20age%0A%20%20%20%20%0Ap%20%3D%20%5BPerson%28'Alice',%2016%29,%20Person%28'Bob',%2021%29%5D%0Adel%20Person&cumulative=false&curInstr=11&heapPrimitives=true&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false">PyTutor</a>
+</p>
+
+---
+
+# Python is inherently cache-unfriendly
+
+---
+
+### The sad truth
+
+<h1 class="fragment">Python cannot be (super) fast</h1>
+
+<h3 class="fragment">without breaking compatibility</h3>
+
+---
+
+# The end <span class="fragment">?</span>
+
+# 😢💔🥹
+
+---
+
+### How to move forward?
+
+- Tweak the language semantics
+
+- Keep the dynamicity where it's actually useful
+
+- Performance-oriented type system
+
+- Zero cost abstractions: one lang, two levels
+
+- Remove the Python/C barrier
+
+- **Stay Pythonic**
+
+---
+
+### SPy 🥸
+
+- Super WIP, R&D, standard disclaimer apply
+
+- https://antocuni.eu/2025/05/31/spy--pycon-it-2025/
+
+- https://github.com/spylang/spy
+
+---
+
+# Demo
+
+<a href="https://antocuni.pyscriptapps.com/sobel/latest/"><img src="qrcode-sobel.png"></a>
+
+<div style="font-size: 0.5em">
+
+https://antocuni.pyscriptapps.com/sobel/latest/
+
+https://github.com/spylang/demos/tree/main/sobel
+
+</div>
+
+---
+
+# Thank you
+
+- https://antocuni.eu
+
+- https://github.com/spylang/spy
+
+  * Contributions welcome!
+
+- https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/
