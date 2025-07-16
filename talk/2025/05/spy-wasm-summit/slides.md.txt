@@ -117,3 +117,11 @@ How much dynamicity we can remove from Python while still feeling Pythonic?
   - `from unsafe import gc_alloc, ptr`
 
 - Most of builtin types can (now) be implemented in SPy itself
+
+---
+
+## Links
+
+- https://github.com/spylang/spy
+
+- https://antocuni.eu/2025/05/31/spy--pycon-it-2025/
