@@ -34,10 +34,12 @@
 </style>
 
 
-# Myths and fairy tales around Python performance
+### Myths and fairy tales around Python performance
 
 <p class="small">
 <a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/">
+<img src="qrcode-slides.png">
+<br>
 antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/
 </a>
 </p>
@@ -313,7 +315,7 @@ class Berliner:
         print(f'{self.name} is partying...')
 
 def foo():
-    p = Person("Bob")
+    p = Student("Bob")
     go_to_berlin(p)
     p.study()
 ```
@@ -324,7 +326,7 @@ def foo():
 
 ```python
 def go_to_berlin(p)
-    p.__class__ = Student  # 🤯😱
+    p.__class__ = Berliner  # 🤯😱
 ```
 
 </div>
@@ -377,12 +379,32 @@ def foo():
 
 
 ---
+<!-- .slide: data-transition="none" -->
+
 ```python
 N = 10
 
-## @magic
-## def foo():
-##     return N
+@magic
+def foo():
+   return N
+
+...
+...
+...
+...
+...
+...
+...
+...
+```
+
+---
+<!-- .slide: data-transition="none" -->
+
+
+```python
+N = 10
+
 
 def foo():
    return N
@@ -397,7 +419,7 @@ assert foo() == 10
 assert bar() == 20 # 🤯😱
 ```
 
-<div class="fragment">
+---
 
 ```python
 def rebind_globals(func, newglobals):
@@ -410,7 +432,8 @@ def rebind_globals(func, newglobals):
     newfunc.__module__ = func.__module__
     return newfunc
 
-bar = rebind_globals(foo, {'N': 20})
+def magic(fn):
+    return rebind_globals(fn, {'N': 20})
 ```
 
 </div>
@@ -598,10 +621,14 @@ https://github.com/spylang/demos/tree/main/sobel
 
 # Thank you
 
+<div style="font-size: 0.5em">
+
 - https://antocuni.eu
 
 - https://github.com/spylang/spy
 
-  * Contributions welcome!
+[![](https://dcbadge.limes.pink/api/server/https://discord.gg/wRb29FGZpP)](https://discord.gg/wRb29FGZpP)
+<br>
+<img src="qrcode-discord.png">
 
-- https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/
+</div>
