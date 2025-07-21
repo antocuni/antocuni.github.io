@@ -1,0 +1,19 @@
+---
+draft: false
+date: 2025-07-21
+title: "Slides for my EuroPython 2025 talks"
+categories:
+  - Talk
+tags:
+  - mkdocs
+
+---
+
+# EuroPython 2025 slides
+
+Here are the slides for the three speeches which I gave at
+[EuroPython 2025](https://ep2025.europython.eu/):
+
+  - [The HPy dilemma](/talk/2025/07/capi-summit-hpy-dilemma/): this was given during the
+
+<!-- more -->

@@ -1,0 +1,15 @@
+---
+draft: true
+date: 2025-07-19
+title: "EuroPython 2025"
+categories:
+  - Post
+tags:
+  - conferences
+
+---
+
+# TODO
+
+
+<!-- more -->
