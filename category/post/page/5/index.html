@@ -359,6 +359,8 @@
       
         
       
+        
+      
     
     
       
@@ -623,6 +625,30 @@
   
   <span class="md-ellipsis">
     2008
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/1970/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    1970
     
   </span>
   
@@ -961,6 +987,57 @@ including <a class="reference" href="https://en.wikipedia.org/wiki/Windows_Forms
     
       <nav class="md-post__action">
         <a href="../../../../2008/01/19/improve-net-integration/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="1970-01-01 00:00:00+00:00">Jan 1, 1970</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              10 min read
+            
+          </li>
+        
+      </ul>
+      
+        <span class="md-draft">
+          Draft
+        </span>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="inside-cpythons-attribute-lookup"><a class="toclink" href="../../../../1970/01/01/inside-cpythons-attribute-lookup/">Inside CPython's attribute lookup</a></h2>
+<p>Python's attribute lookup logic seems pretty simple at a first glance: "first
+look in the instance <code>__dict__</code>, then look in its type".</p>
+<p>However, the actual logic is much more complex because it needs to take into
+account the descriptor protocol, the difference between lookups on instances
+vs types, and what happens in presence of metaclasses.</p>
+<p>Recently I implemented preliminary support for the descriptor protocol in SPy,
+and and because of that I investigated into CPython source code to get a
+better grasp on the details. This is a write up on what I found, with links to
+the actual C source code, to serve as a future reference.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../../../1970/01/01/inside-cpythons-attribute-lookup/">
           Continue reading
         </a>
       </nav>

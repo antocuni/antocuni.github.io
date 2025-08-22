@@ -1,0 +1,43 @@
+
+class C1:
+    x = 1
+
+    @property
+    def y(self):
+        return 2
+
+    def meth(self):
+        pass
+
+obj = C1()
+obj.x = 3
+
+print(f'{obj.x = }')
+print(f'{obj.y = }')
+print(f'{obj.meth = }')
+print()
+print(f'{C1.x = }')
+print(f'{C1.y = }')
+print(f'{C1.meth = }')
+print()
+pp('obj.__dict__', obj.__dict__)
+pp('C1.__dict__', C1.__dict__)
+print()
+
+obj_y = C1.y.__get__(obj, C1)
+obj_meth = C1.meth.__get__(obj, C1)
+print(f'{obj_y = }')
+print(f'{obj_meth = }')
+print()
+
+obj.meth = 'hello'
+print(f'{obj.meth = }')
+pp('obj.__dict__', obj.__dict__)
+print()
+
+# the following raises AttributeError
+#obj.y = 'hello'
+
+obj.__dict__['y'] = 'hello'
+print(f'{obj.y = }')
+pp('obj.__dict__', obj.__dict__)

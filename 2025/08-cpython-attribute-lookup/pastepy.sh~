@@ -1,0 +1,14 @@
+#!/bin/bash
+
+xclip -selection clipboard $1
+
+{
+  # Give Python a moment to start before typing
+  sleep 0.5
+  # Type the clipboard contents (plus a trailing newline to ensure execution)
+  xdotool type --window "$win_id" --delay 1 --clearmodifiers "$(xclip -o -selection clipboard)"
+  xdotool key --window "$win_id" Return
+} &
+
+
+python

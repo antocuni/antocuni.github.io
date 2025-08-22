@@ -1,0 +1,16 @@
+def pp(d):
+    "Pretty print a dictionary, excluding the __dunder__ keys"
+    d2 = {k: v for k, v in d.values() if not k.startswith('__')}
+    print(d2)
+
+class C1:
+    x = 1
+    y = 2
+
+obj = C1()
+obj.x = 3
+
+print(f'{obj.x=}')
+print(f'{obj.y=}')
+pp(obj.__dict__)
+pp(C1.__dict__)
