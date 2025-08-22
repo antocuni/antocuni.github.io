@@ -51,7 +51,15 @@ plugins:
       post_date_format: medium
       categories: true
 
-      draft: true # include drafts
+      # draft option:
+      #   - true:  drafts are always rendered AND included in the index
+      #   - false: drafts are rendered ONLY if you do `make serve`
+      #   https://github.com/squidfunk/mkdocs-material/issues/5826
+      #
+      # Hack hack hack for publishing drafts:
+      #   - set "draft: true" here
+      #   - set draft date to e.g. 1970-01-01
+      draft: false
 
   - search
   - tags
