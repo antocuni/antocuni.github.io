@@ -20,7 +20,7 @@ account the descriptor protocol, the difference between lookups on instances
 vs types, and what happens in presence of metaclasses.
 
 Recently I implemented preliminary support for the descriptor protocol in SPy,
-and and because of that I investigated into CPython source code to get a
+and because of that I investigated into CPython source code to get a
 better grasp on the details. This is a write up on what I found, with links to
 the actual C source code, to serve as a future reference.
 
@@ -199,13 +199,13 @@ which can be happily shadowed by the instance dict.
 
 ## Data vs non-data descriptors
 
-The answer is that Pyhon has the concept of "data descriptors" and "non data
+The answer is that Python has the concept of "data descriptors" and "non data
 descriptors". In short:
 
   - non-data descriptors are objects whose type define only `__get__`
 
   - data descriptors are objects whose type define also `__set__` and/or
-    `__del__`.
+    `__delete__`.
 
 The nuance is in the lookup order:
 
@@ -248,7 +248,7 @@ Time to look at some actual C code to see where all this complex logic come
 from.
 
 I am going to show the source code of *CPython 3.12.11*, even if it's a bit
-old. This is because 3.13 introduced many optimiations which makes it much
+old. This is because 3.13 introduced many optimizations which makes it much
 harder to follow the logic, whereas 3.12 is much simpler to read and
 understand.
 
@@ -338,7 +338,7 @@ Let's walk over its basic logic, step by step:
 The first thing we do is to lookup `name` *on the type* of `obj`. I'm not
 going to show the code for
 [_PyType_Lookup](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/typeobject.c#L4722-L4775),
-but what it does is to look up the give name _following the MRO_ of the type:
+but what it does is to look up the given name _following the MRO_ of the type:
 this is how we find attributes on base classes.
 
 If we find something *and* it's a data descriptor, we immediately call its
@@ -563,7 +563,7 @@ Let's look at the interesting parts of [_Py_type_getattro_impl](https://github.c
 # Bonus: pseudocode for PyObject_GenericGetAttr and _Py_type_getattro
 
 Not everyone is proficient in C, and the code is full of many details which
-draw attention aways from the main logic.
+draw attention away from the main logic.
 
 The following is an attempt to write the bulk of the logic in a more readable
 way. The code is not meant to be run and it's not tested at all, so it's
