@@ -20,7 +20,7 @@ account the descriptor protocol, the difference between lookups on instances
 vs types, and what happens in presence of metaclasses.
 
 Recently I implemented preliminary support for the descriptor protocol in SPy,
-and because of that I investigated into CPython source code to get a
+and because of that I investigated the CPython source code to get a
 better grasp on the details. This is a write up on what I found, with links to
 the actual C source code, to serve as a future reference.
 
@@ -193,7 +193,7 @@ Moreover, let's try to force `prop` inside `obj.__dict__`:
 ```
 
 Note that in this case, the `prop` inside `obj.__dict__` *does not shadow* the
-`prop` inside `C1.__dict__` 😱. Again, this is very different than `meth`,
+`prop` inside `C3.__dict__` 😱. Again, this is very different than `meth`,
 which can be happily shadowed by the instance dict.
 
 
@@ -244,7 +244,7 @@ True
 
 # Dive into CPython internals
 
-Time to look at some actual C code to see where all this complex logic come
+Time to look at some actual C code to see where all this complex logic comes
 from.
 
 I am going to show the source code of *CPython 3.12.11*, even if it's a bit
@@ -283,7 +283,7 @@ here:
 ```
 
 So, `LOAD_ATTR` directly calls
-[PyObject_GetAttr](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/object.c#L1047-L1079). Apart
+[PyObject_GetAttr](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/object.c#L1047-L1079). Apart from
 error checking and legacy code to support the old and deprecated `tp_getattr`
 slot, the bulk of the logic is here:
 
@@ -520,7 +520,7 @@ Let's look at the interesting parts of [_Py_type_getattro_impl](https://github.c
     }
 ```
 
-`3.` We couldn't find anything in the `__dict__`. If the metaclass have a
+`3.` We couldn't find anything in the `__dict__`. If the metaclass has a
    non-data descriptor, this is the time to call its `__get__`:
 
 ```c
@@ -585,7 +585,7 @@ def PyObject_GenericGetAttr(obj: object, name: str) -> object:
     descr = _PyType_Lookup(tp, name)
     f = NULL
 
-    # 1. is we find a data descriptor on the type, call it
+    # 1. if we find a data descriptor on the type, call it
     if descr is not NULL:
         f = _PyType_Lookup(type(descr), "__get__")
         if f is not None and PyDescr_IsData(descr):
