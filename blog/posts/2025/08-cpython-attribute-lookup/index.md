@@ -24,6 +24,8 @@ which led me to investigate the CPython source code to get a
 better grasp on the details. This is a write up on what I found, with links to
 the actual C source code, to serve as a future reference.
 
+Thanks to Hood Chatham and Siu Kwan Lam for the feedback on drafts.
+
 <!-- more -->
 
 # A quick recap on `getattr()` logic
@@ -247,12 +249,19 @@ True
 Time to look at some actual C code to see where all this complex logic comes
 from.
 
+!!!note
+    For those who are not proficient with C, I also rewrote the main bits of the
+    logic in [Python pseudocode](#bonus-python-pseudocode), shown at the end of
+    this post.
+
 I am going to show the source code of *CPython 3.12.11*, even if it's a bit
 old. This is because 3.13 introduced many optimizations which makes it much
-harder to follow the logic, whereas 3.12 is much simpler to read and
-understand.
+harder to follow the logic, whereas 3.12 is simpler to read and understand.
 
-The expression `obj.x` is compiled into a `LOAD_ATTR` opcode:
+Ultimately, the expression `obj.x` invokes `type(obj).__getattribute__(obj,
+"x")`. Let's see how.
+
+`obj.x` is compiled into a `LOAD_ATTR` opcode:
 ```python
 >>> import dis
 >>> def foo():
@@ -276,10 +285,10 @@ contains a lot of special cases for performance, but the fallback logic is
 here:
 
 ```c
-                /* Classic, pushes one value. */
-                res = PyObject_GetAttr(owner, name);
-                DECREF_INPUTS();
-                ERROR_IF(res == NULL, error);
+    /* Classic, pushes one value. */
+    res = PyObject_GetAttr(owner, name);
+    DECREF_INPUTS();
+    ERROR_IF(res == NULL, error);
 ```
 
 So, `LOAD_ATTR` directly calls
@@ -288,6 +297,8 @@ error checking and legacy code to support the old and deprecated `tp_getattr`
 slot, the bulk of the logic is here:
 
 ```c
+    PyTypeObject *tp = Py_TYPE(v);
+    /* ... */
     PyObject* result = NULL;
     if (tp->tp_getattro != NULL) {
         result = (*tp->tp_getattro)(v, name);
@@ -297,10 +308,11 @@ slot, the bulk of the logic is here:
 [tp_getattro](https://docs.python.org/3.12/c-api/typeobj.html#c.PyTypeObject.tp_getattro)
 is a slot on the C struct `PyTypeObject`, which corresponds to
 `__getattribute__`: each type can implement its own attribute lookup logic,
-but most of them just set the slot to
+but most of them, including the type `object`, just set the slot to
 [PyObject_GenericGetAttr](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/object.c#L1535-L1539),
 which according to the docs "implements the normal way of looking for object
-attributes".
+attributes".  This is the logic that you get when you define a new Python
+`class`, unless you explicitly override `__getattribute__`.
 
 ## Attribute lookup on instances
 
@@ -418,7 +430,7 @@ Look again at cases 3 and 6 (`obj.x` and `C2.x`).
 
 There, `obj.x` and `C2.x` follow slightly different rules: in the first case we
 do the recursive lookup *on the type of the obj*. In the second case we do the
-recursive lookup *on the object itself (C2)*.
+recursive lookup *on the object itself* `(C2)`.
 
 The lookup logic for `C2.x` depends on the type of C2, which is `type` itself,
 and in particular on its `tp_getattro` slot. The C definition of `type` is [PyType_Type](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/typeobject.c#L5322-L5367). Here is an excerpt of it:
@@ -560,7 +572,7 @@ Let's look at the interesting parts of [_Py_type_getattro_impl](https://github.c
 }
 ```
 
-# Bonus: pseudocode for PyObject_GenericGetAttr and _Py_type_getattro
+# Bonus: Python pseudocode
 
 Not everyone is proficient in C, and the code is full of many details which
 draw attention away from the main logic.
