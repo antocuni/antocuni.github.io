@@ -24,7 +24,7 @@ which led me to investigate the CPython source code to get a
 better grasp on the details. This is a write up on what I found, with links to
 the actual C source code, to serve as a future reference.
 
-Thanks to Hood Chatham and Siu Kwan Lam for the feedback on drafts.
+Thanks to Hood Chatham, Siu Kwan Lam and Justin Wood for the feedback on drafts.
 
 <!-- more -->
 
@@ -62,7 +62,12 @@ Each instance and class has a `__dict__` where it stores its attributes:
 {'x': 1, 'y': 2}
 ```
 
-First, let's see what happens when we get attributes *on the instance*:
+!!!note
+    This is an oversimplification. There are cases in which objects **do not**
+    have an associated `__dict__`. For the sake of simplicity, in this post we
+    assume that `__dict__` is always present.
+
+First, let's see what happens when we get attributes **on the instance**:
 
 ```python
 >>> obj.z   # case 1: found in obj.__dict__ (shadows C2.z)
@@ -75,7 +80,7 @@ First, let's see what happens when we get attributes *on the instance*:
 1
 ```
 
-Then, let's look at getattr *on the type*:
+Then, let's look at getattr **on the type**:
 
 ```python
 >>> C2.z    # case 4: found in C2.__dict__
@@ -194,7 +199,7 @@ Moreover, let's try to force `prop` inside `obj.__dict__`:
 2
 ```
 
-Note that in this case, the `prop` inside `obj.__dict__` *does not shadow* the
+Note that in this case, the `prop` inside `obj.__dict__` **does not shadow** the
 `prop` inside `C3.__dict__` 😱. Again, this is very different than `meth`,
 which can be happily shadowed by the instance dict.
 
@@ -254,7 +259,7 @@ from.
     logic in [Python pseudocode](#bonus-python-pseudocode), shown at the end of
     this post.
 
-I am going to show the source code of *CPython 3.12.11*, even if it's a bit
+I am going to show the source code of **CPython 3.12.11**, even if it's a bit
 old. This is because 3.13 introduced many optimizations which makes it much
 harder to follow the logic, whereas 3.12 is simpler to read and understand.
 
@@ -347,24 +352,24 @@ Let's walk over its basic logic, step by step:
     }
 ```
 
-The first thing we do is to lookup `name` *on the type* of `obj`. I'm not
+The first thing we do is to lookup `name` **on the type** of `obj`. I'm not
 going to show the code for
 [_PyType_Lookup](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/typeobject.c#L4722-L4775),
 but what it does is to look up the given name _following the MRO_ of the type:
 this is how we find attributes on base classes.
 
-If we find something *and* it's a data descriptor, we immediately call its
+If we find something **and** it's a data descriptor, we immediately call its
 `tp_get` slot (which corresponds to `__get__`). This is what happens e.g. when
 we looked up `obj.prop` in "case 8" above.
 
-It's worth noting what the values of `descr` and `f` are if we *did not* find a
+It's worth noting what the values of `descr` and `f` are if we **did not** find a
 data descriptor:
 
-  - if `f != NULL` it means that we found something on the type and that *it's
-    a non-data descriptor*; `f` contains its `tp_get`.
+  - if `f != NULL` it means that we found something on the type and that **it's
+    a non-data descriptor**; `f` contains its `tp_get`.
 
   - if `f == NULL && descr != NULL` it means that we found something on the
-    type and *it's not a descriptor*; `descr` contains that object (even
+    type and **it's not a descriptor**; `descr` contains that object (even
     though we know by now it's not a descriptor... naming is hard 🤷‍♂️).
 
 `2.` Look in `obj.__dict__`: if we find something, return it. This is what
@@ -429,8 +434,8 @@ happens for e.g. `obj.z` in "case 1".
 Look again at cases 3 and 6 (`obj.x` and `C2.x`).
 
 There, `obj.x` and `C2.x` follow slightly different rules: in the first case we
-do the recursive lookup *on the type of the obj*. In the second case we do the
-recursive lookup *on the object itself* `(C2)`.
+do the recursive lookup **on the type of the obj**. In the second case we do the
+recursive lookup **on the object itself** `(C2)`.
 
 The lookup logic for `C2.x` depends on the type of C2, which is `type` itself,
 and in particular on its `tp_getattro` slot. The C definition of `type` is [PyType_Type](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/typeobject.c#L5322-L5367). Here is an excerpt of it:
@@ -466,7 +471,7 @@ a full `_PyType_Lookup` along the whole MRO.
 Let's look at the interesting parts of [_Py_type_getattro_impl](https://github.com/python/cpython/blob/55fee9cf216abe4ec0d1139f94b1930fbd0c7644/Objects/typeobject.c#L4787-L4889) step by step:
 
 `1.` Before we are allowed to look into the `__dict__`, we need to take into
-   consideration the *metatype* (i.e., the type of our type). This is needed
+   consideration the **metatype** (i.e., the type of our type). This is needed
    because if the metatype defines a data descriptor, it must take the
    precedence over our `__dict__`. This is basically the same logic as for
    normal objects, but we need to replicate it here:
