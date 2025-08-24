@@ -20,7 +20,7 @@ account the descriptor protocol, the difference between lookups on instances
 vs types, and what happens in presence of metaclasses.
 
 Recently I implemented preliminary support for the descriptor protocol in SPy,
-and because of that I investigated the CPython source code to get a
+which led me to investigate the CPython source code to get a
 better grasp on the details. This is a write up on what I found, with links to
 the actual C source code, to serve as a future reference.
 
@@ -267,7 +267,7 @@ The expression `obj.x` is compiled into a `LOAD_ATTR` opcode:
              34 RETURN_CONST             0 (None)
 ```
 
-In modern CPython, individual opcodes are described by a DSL (very similar to
+In modern CPython, individual opcodes are described by a DSL (similar to
 C) in `Python/bytecodes.c`, and the main loop of the interpreter is
 automatically generated from that description. Here is the full implementation
 of
@@ -345,15 +345,15 @@ If we find something *and* it's a data descriptor, we immediately call its
 `tp_get` slot (which corresponds to `__get__`). This is what happens e.g. when
 we looked up `obj.prop` in "case 8" above.
 
-It's worth noting what is the state of `descr` and `f` if we *did not* find a
+It's worth noting what the values of `descr` and `f` are if we *did not* find a
 data descriptor:
 
   - if `f != NULL` it means that we found something on the type and that *it's
     a non-data descriptor*; `f` contains its `tp_get`.
 
   - if `f == NULL && descr != NULL` it means that we found something on the
-    type and *it's not a descriptor*; `descr` contains that object (even if by
-    now we know it's not a descriptor... naming is hard 🤷‍♂️).
+    type and *it's not a descriptor*; `descr` contains that object (even
+    though we know by now it's not a descriptor... naming is hard 🤷‍♂️).
 
 `2.` Look in `obj.__dict__`: if we find something, return it. This is what
 happens for e.g. `obj.z` in "case 1".
@@ -414,7 +414,7 @@ happens for e.g. `obj.z` in "case 1".
 
 ## Attribute lookup on types
 
-Look again at "case 3" and "case 6" (`obj.x` and `C2.x`).
+Look again at cases 3 and 6 (`obj.x` and `C2.x`).
 
 There, `obj.x` and `C2.x` follow slightly different rules: in the first case we
 do the recursive lookup *on the type of the obj*. In the second case we do the
