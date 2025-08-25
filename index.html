@@ -362,8 +362,6 @@
       
         
       
-        
-      
     
     
       
@@ -638,30 +636,6 @@
 
               
             
-              
-                
-  
-  
-  
-    
-  
-  
-    <li class="md-nav__item">
-      <a href="archive/1970/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    1970
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -801,6 +775,54 @@
       <header class="md-typeset">
         
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2025-08-25 00:00:00+00:00">Aug 25, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/post/" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              11 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="inside-cpythons-attribute-lookup"><a class="toclink" href="2025/08/25/inside-cpythons-attribute-lookup/">Inside CPython's attribute lookup</a></h2>
+<p>Python's attribute lookup logic seems pretty simple at a first glance: "first
+look in the instance <code>__dict__</code>, then look in its type".</p>
+<p>However, the actual logic is much more complex because it needs to take into
+account the descriptor protocol, the difference between lookups on instances
+vs types, and what happens in presence of metaclasses.</p>
+<p>Recently I implemented preliminary support for the descriptor protocol in SPy,
+which led me to investigate the CPython source code to get a
+better grasp on the details. This is a write up on what I found, with links to
+the actual C source code, to serve as a future reference.</p>
+<p>Thanks to Hood Chatham, Siu Kwan Lam and Justin Wood for the feedback on drafts.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="2025/08/25/inside-cpythons-attribute-lookup/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -1226,49 +1248,6 @@ what was accomplished during the sprint.
     
       <nav class="md-post__action">
         <a href="2019/12/18/hpy-kick-off-sprint-report/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2019-02-11 10:55:00+00:00">Feb 11, 2019</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/post/" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="pypy-v700-triple-release-of-27-35-and-36-alpha"><a class="toclink" href="2019/02/11/pypy-v700-triple-release-of-27-35-and-36-alpha/">PyPy v7.0.0: triple release of 2.7, 3.5 and 3.6-alpha</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2019/02/pypy-v700-triple-release-of-27-35-and-606875333356156076.html">PyPy blog</a>.</p>
-</div>
-<html><body>
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="2019/02/11/pypy-v700-triple-release-of-27-35-and-36-alpha/">
           Continue reading
         </a>
       </nav>
