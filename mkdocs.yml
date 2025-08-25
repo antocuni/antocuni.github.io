@@ -60,6 +60,7 @@ plugins:
       #   - set "draft: true" here
       #   - set draft date to e.g. 1970-01-01
       draft: false
+      #draft: true
 
   - search
   - tags

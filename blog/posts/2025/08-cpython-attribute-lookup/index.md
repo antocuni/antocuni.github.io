@@ -1,7 +1,6 @@
 ---
-draft: true
-#date: 2025-08-22
-date: 1970-01-01
+draft: false
+date: 2025-08-25
 title: "Inside CPython's attribute lookup"
 categories:
   - Post
