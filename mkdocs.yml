@@ -1,4 +1,5 @@
 site_name: Antonio Cuni's blog
+site_description: Antonio Cuni's blog
 # ' this is for emacs, else it messes up syntax highlighting
 site_url: https://antocuni.eu/
 docs_dir: blog
@@ -73,6 +74,7 @@ plugins:
       date_from_meta:
         as_creation: date.created
         as_update: date.updated
+      image: https://antocuni.eu/assets/logo.svg
 
   # redirects for the old antocuni.eu
   - redirects:
