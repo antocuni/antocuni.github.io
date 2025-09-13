@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+import gc
+import math
+import os
+import statistics as stats
+import sys
+import time
+from platform import python_implementation as impl
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+# --------- Workloads ---------
+def bench_construct_and_sum(n: int) -> int:
+    s = 0
+    for i in range(n):
+        p = Point(i, i + 1)
+        s += p.x + p.y
+    return s
+
+def bench_attribute_reads(n: int) -> int:
+    # Pre-build a pool so this isolates attribute reads / loop overhead
+    pts = [Point(i, i + 1) for i in range(10_000)]
+    s = 0
+    m = len(pts)
+    for i in range(n):
+        p = pts[i % m]
+        s += p.x + p.y
+    return s
+
+def bench_mutation(n: int) -> int:
+    p = Point(0, 0)
+    for _ in range(n):
+        p.x += 1
+        p.y += 2
+    return p.x ^ p.y  # keep result “used”
+
+# --------- Simple harness with warmup + repeats ---------
+def time_func(func, n, warmup_s=1.5, repeats=7):
+    # Warmup
+    deadline = time.perf_counter() + warmup_s
+    x = 0
+    while time.perf_counter() < deadline:
+        x ^= func(n // 10)  # smaller chunks during warmup
+    gc.collect()
+
+    times = []
+    results_checksum = 0
+    for _ in range(repeats):
+        gc.collect()
+        t0 = time.perf_counter()
+        results_checksum ^= func(n)
+        t1 = time.perf_counter()
+        times.append(t1 - t0)
+    return times, results_checksum
+
+def fmt_speed(sec, n):
+    ops_per_s = n / sec
+    if ops_per_s >= 1e7:
+        return f"{ops_per_s/1e6:.2f} Mops/s"
+    elif ops_per_s >= 1e4:
+        return f"{ops_per_s/1e3:.2f} kops/s"
+    else:
+        return f"{ops_per_s:.2f} ops/s"
+
+def main():
+    # Default sizes are chosen so CPython finishes in a reasonable time,
+    # while giving PyPy’s JIT enough heat.
+    N = int(os.environ.get("N", "5_000_000"))
+    WARMUP = float(os.environ.get("WARMUP_S", "1.5"))
+    REPEATS = int(os.environ.get("REPEATS", "7"))
+
+    print(f"Python: {impl()} {sys.version.split()[0]}")
+    print(f"N={N:,}  warmup={WARMUP}s  repeats={REPEATS}")
+    print()
+
+    cases = [
+        ("construct_and_sum", bench_construct_and_sum),
+        ("attribute_reads",   bench_attribute_reads),
+        ("mutation",          bench_mutation),
+    ]
+
+    results = []
+    for name, fn in cases:
+        times, chk = time_func(fn, N, warmup_s=WARMUP, repeats=REPEATS)
+        median = stats.median(times)
+        mad = stats.median([abs(t - median) for t in times])
+        results.append((name, median, mad, times, chk))
+
+    # Pretty print
+    name_w = max(len(n) for n, *_ in results)
+    print(f"{'benchmark'.ljust(name_w)}   median     MAD       best      worst     speed")
+    for name, median, mad, times, chk in results:
+        best = min(times)
+        worst = max(times)
+        print(f"{name.ljust(name_w)}   {median:8.4f}s  {mad:7.4f}s  {best:8.4f}s  {worst:8.4f}s  {fmt_speed(median, N)}")
+    print("\n(Checksum to defeat dead-code elimination:", sum(r[-1] for r in results), ")")
+
+if __name__ == "__main__":
+    main()

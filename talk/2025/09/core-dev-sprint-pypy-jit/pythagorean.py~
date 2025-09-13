@@ -1,0 +1,140 @@
+import argparse
+import math
+import statistics
+import sys
+import time
+from dataclasses import dataclass
+from itertools import product
+from typing import Callable, Iterable, Tuple
+
+
+def pythagorean_triples_gen(P: int) -> int:
+    # generator pipeline atop product for (m, n)
+    # Choose m_max so that base perimeter won't exceed P too wildly
+    # perimeter for primitive: p0 = 2*m*(m + n)
+    # m_max heuristic:  P >= 2*m*(m+1) -> m ~ O(sqrt(P/2))
+    m_max = int((math.isqrt(2 * P)))
+    count = 0
+    for m, n in product(range(2, m_max + 1), range(1, m_max + 1)):
+        if n >= m:
+            continue
+        if ((m - n) & 1) == 0:
+            continue
+        if math.gcd(m, n) != 1:
+            continue
+        a = m*m - n*n
+        b = 2*m*n
+        c = m*m + n*n
+        p0 = a + b + c
+        if p0 > P:
+            continue
+        k = 1
+        while k * p0 <= P:
+            # yield (k*a, k*b, k*c)
+            count += 1
+            k += 1
+    return count
+
+
+def pythagorean_triples_loop(P: int) -> int:
+    m_max = int((math.isqrt(2 * P)))
+    count = 0
+    gcd = math.gcd
+    for m in range(2, m_max + 1):
+        for n in range(1, m):
+            if ((m - n) & 1) and gcd(m, n) == 1:
+                a = m*m - n*n
+                b = 2*m*n
+                c = m*m + n*n
+                p0 = a + b + c
+                if p0 > P:
+                    continue
+                k = 1
+                while k * p0 <= P:
+                    count += 1
+                    k += 1
+    return count
+
+
+# 3) Lattice circle membership: x^2 + y^2 < R^2
+
+def lattice_circle_gen(N: int, R: int) -> int:
+    R2 = R * R
+    return sum(1 for x, y in product(range(N), repeat=2) if (x*x + y*y) < R2)
+
+
+def lattice_circle_loops(N: int, R: int) -> int:
+    R2 = R * R
+    s = 0
+    rg = range(N)
+    for x in rg:
+        xx = x * x
+        for y in rg:
+            if xx + y*y < R2:
+                s += 1
+    return s
+
+
+# -------------------------------
+# Runner
+# -------------------------------
+
+def main(argv: list[str]) -> int:
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--N', type=int, default=800, help='Grid size for coprime & lattice tasks (default: 800)')
+    parser.add_argument('--P', type=int, default=5000, help='Perimeter cap for Pythagorean triples (default: 5000)')
+    parser.add_argument('--R', type=int, default=600, help='Radius for lattice circle (default: 600)')
+    parser.add_argument('--warmup', type=int, default=3, help='Warmup runs before timing each variant (default: 3)')
+    parser.add_argument('--loops', type=int, default=2, help='Inner loops per timing sample to amplify signal (default: 2)')
+    parser.add_argument('--repeat', type=int, default=5, help='Number of timing samples per variant (default: 5)')
+    parser.add_argument('--check', action='store_true', help='Verify all variants agree on results')
+    args = parser.parse_args(argv)
+
+    N, P, R = args.N, args.P, args.R
+
+    benches: list[BenchResult] = []
+
+    # --- Coprime pairs ---
+    base = count_coprime_pairs_loops(N)
+    benches.append(run_bench(f"coprime_loops(N={N})", lambda: count_coprime_pairs_loops(N), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+    benches.append(run_bench(f"coprime_product_gen(N={N})", lambda: count_coprime_pairs_product_gen(N), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+    benches.append(run_bench(f"coprime_list(N={N})", lambda: count_coprime_pairs_list(N), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+
+    if args.check:
+        if count_coprime_pairs_product_gen(N) != base or count_coprime_pairs_list(N) != base:
+            print("[WARN] Coprime pair variants disagree!", file=sys.stderr)
+
+    # --- Pythagorean triples ---
+    base = pythagorean_triples_loop(P)
+    benches.append(run_bench(f"pytriple_loop(P={P})", lambda: pythagorean_triples_loop(P), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+    benches.append(run_bench(f"pytriple_gen(P={P})", lambda: pythagorean_triples_gen(P), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+
+    if args.check:
+        if pythagorean_triples_gen(P) != base:
+            print("[WARN] Pythagorean variants disagree!", file=sys.stderr)
+
+    # --- Lattice circle ---
+    base = lattice_circle_loops(N, R)
+    benches.append(run_bench(f"lattice_loops(N={N},R={R})", lambda: lattice_circle_loops(N, R), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+    benches.append(run_bench(f"lattice_gen(N={N},R={R})", lambda: lattice_circle_gen(N, R), warmup=args.warmup, loops=args.loops, repeat=args.repeat))
+
+    if args.check:
+        if lattice_circle_gen(N, R) != base:
+            print("[WARN] Lattice variants disagree!", file=sys.stderr)
+
+    # --- Report ---
+    print("\nResults (lower is faster):\n")
+    width = max(len(b.name) for b in benches) + 2
+    for b in benches:
+        print(f"{b.name.ljust(width)} best: {b.best*1e3:8.2f} ms | median: {b.median*1e3:8.2f} ms | mean: {b.mean*1e3:8.2f} ms")
+
+    print("\nNotes:")
+    print(" - On PyPy, try larger --N/--P/--R and a higher --warmup to showcase the JIT.")
+    print(" - The *loops* parameter repeats the function back-to-back per timing sample to reduce timer noise.")
+    print(" - Expect tight loops to often win on CPython; PyPy may close the gap or win once warmed up.")
+
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main(sys.argv[1:]))

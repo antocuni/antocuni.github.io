@@ -1,0 +1,55 @@
+# pypy_gen_bench.py
+# Compare: generator-based loop vs. non-generator loop (no list materialization)
+
+import time
+import sys
+
+MASK = (1 << 61) - 1   # keep integers bounded to avoid huge big-int costs
+DEFAULT_N = 5_000_000  # Fibonacci steps per run
+WARMUP = 2             # warmup runs (unmeasured)
+REPEAT = 5             # measured runs
+
+def fib_gen(n):
+    """Yield n bounded Fibonacci numbers."""
+    a = 0
+    b = 1
+    for _ in range(n):
+        a, b = b, (a + b) & MASK
+        yield a
+
+def bench_with_generator(n):
+    total = 0
+    for x in fib_gen(n):
+        total ^= x
+    return total
+
+def bench_no_generator(n):
+    total = 0
+    a = 0
+    b = 1
+    for _ in range(n):
+        a, b = b, (a + b) & MASK
+        total ^= a
+    return total
+
+def run(fn, n, label):
+    # warmup
+    for _ in range(WARMUP):
+        fn(n)
+
+    times = []
+    last = None
+    for _ in range(REPEAT):
+        t0 = time.perf_counter()
+        last = fn(n)
+        t1 = time.perf_counter()
+        times.append(t1 - t0)
+
+    print(f"{label}: min {min(times):.4f}s  median {sorted(times)[len(times)//2]:.4f}s  "
+          f"avg {sum(times)/len(times):.4f}s   (checksum={last})")
+
+if __name__ == "__main__":
+    n = int(sys.argv[1]) if len(sys.argv) > 1 else DEFAULT_N
+    print(f"N={n}, warmup={WARMUP}, repeat={REPEAT}")
+    run(bench_with_generator, n, "with generator")
+    run(bench_no_generator, n, "no generator")

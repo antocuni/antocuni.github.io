@@ -1,0 +1,63 @@
+from dataclasses import dataclass
+from random import random, seed
+from time import perf_counter
+import math
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+def dist2(a: Point, b: Point) -> float:
+    dx = a.x - b.x
+    dy = a.y - b.y
+    return dx*dx + dy*dy
+
+def knn_indices(points, i, k):
+    """Return indices of k nearest neighbors of points[i] (excluding i). Naive O(N)."""
+    p = points[i]
+    # collect (d2, j) for all j != i
+    djs = []
+    for j, q in enumerate(points):
+        if j == i:
+            continue
+        djs.append((dist2(p, q), j))
+    # partial sort: for clarity we just sort; for big N you can use nlargest/nsmallest
+    djs.sort(key=lambda x: x[0])
+    return [j for _, j in djs[:k]]
+
+def laplacian_smooth(points, k=8, iters=3):
+    """
+    Perform 'iters' rounds of kNN smoothing.
+    Each round creates a new list of Points (temporary results), O(N^2) per iteration.
+    """
+    pts = points
+    for _ in range(iters):
+        new_pts = []
+        for i in range(len(pts)):
+            nbr_idx = knn_indices(pts, i, k)
+            # average neighbors to create a NEW point
+            sx = 0.0
+            sy = 0.0
+            for j in nbr_idx:
+                sx += pts[j].x
+                sy += pts[j].y
+            inv = 1.0 / len(nbr_idx)
+            new_pts.append(Point(sx * inv, sy * inv))
+        pts = new_pts  # swap in the new (temporary) points
+    return pts
+
+def benchmark_knn_smoothing(n=2000, k=8, iters=3, seed_val=42):
+    seed(seed_val)
+    points = [Point(random(), random()) for _ in range(n)]
+    t0 = perf_counter()
+    out = laplacian_smooth(points, k=k, iters=iters)
+    t1 = perf_counter()
+    # Use results to prevent optimization dead code elimination (if you later Cythonize)
+    checksum = sum(p.x + p.y for p in out)
+    elapsed = t1 - t0
+    return elapsed, checksum
+
+if __name__ == "__main__":
+    elapsed, checksum = benchmark_knn_smoothing(n=1500, k=8, iters=4)
+    print(f"Elapsed: {elapsed:.3f}s  |  checksum: {checksum:.6f}")

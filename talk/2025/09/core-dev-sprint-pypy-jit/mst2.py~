@@ -1,0 +1,96 @@
+#!/usr/bin/env python3
+import argparse
+import math
+import random
+import statistics
+import time
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    # tiny methods to exercise attribute access & dispatch
+    def dist2(self, other):
+        dx = self.x - other.x
+        dy = self.y - other.y
+        return dx*dx + dy*dy
+
+def gen_points(n, seed=12345):
+    rnd = random.Random(seed)
+    return [Point(rnd.random(), rnd.random()) for _ in range(n)]
+
+def prim_mst_length(points):
+    """Naïve O(n^2) Prim on Euclidean graph; returns total MST length (not squared)."""
+    n = len(points)
+    if n <= 1:
+        return 0.0
+    in_tree = [False] * n
+    min_d2  = [float("inf")] * n
+
+    # start from vertex 0
+    in_tree[0] = True
+    p0 = points[0]
+    for v in range(1, n):
+        min_d2[v] = p0.dist2(points[v])
+
+    total = 0.0
+    for _ in range(1, n):
+        # pick closest non-tree vertex
+        best_v = -1
+        best_d2 = float("inf")
+        for v in range(n):
+            if not in_tree[v]:
+                d2 = min_d2[v]
+                if d2 < best_d2:
+                    best_d2 = d2
+                    best_v = v
+        # add it
+        u = best_v
+        in_tree[u] = True
+        total += math.sqrt(best_d2)
+
+        # relax neighbors (everyone, since graph is complete)
+        pu = points[u]
+        for v in range(n):
+            if not in_tree[v]:
+                d2 = pu.dist2(points[v])
+                if d2 < min_d2[v]:
+                    min_d2[v] = d2
+    return total
+
+def run_once(n, seed):
+    pts = gen_points(n, seed)
+    return prim_mst_length(pts)
+
+def main():
+    ap = argparse.ArgumentParser(description="PyPy vs CPython: Prim MST benchmark")
+    ap.add_argument("-n", type=int, default=5000, help="number of points")
+    ap.add_argument("--seed", type=int, default=12345, help="PRNG seed")
+    ap.add_argument("--warmup", type=int, default=1, help="warmup runs (not timed)")
+    ap.add_argument("--repeats", type=int, default=3, help="timed runs")
+    args = ap.parse_args()
+
+    # Warmup to let PyPy's JIT optimize the hot loops
+    for _ in range(args.warmup):
+        _ = run_once(args.n, args.seed)
+
+    times = []
+    results = []
+    for i in range(args.repeats):
+        t0 = time.perf_counter()
+        total = run_once(args.n, args.seed + i)  # vary seed slightly across repeats
+        dt = time.perf_counter() - t0
+        times.append(dt)
+        results.append(total)
+
+    # A tiny checksum-ish print so results are “used”
+    # (helps avoid accidental dead code elimination if you tweak things)
+    checksum = round(sum(results), 6)
+
+    print(f"points={args.n} repeats={args.repeats} warmup={args.warmup}")
+    print(f"times: {', '.join(f'{t:.3f}s' for t in times)}")
+    print(f"best: {min(times):.3f}s  mean: {statistics.mean(times):.3f}s  stdev: {statistics.pstdev(times):.3f}s")
+    print(f"MST totals (per run): {', '.join(f'{r:.6f}' for r in results)}  | checksum={checksum}")
+
+if __name__ == "__main__":
+    main()

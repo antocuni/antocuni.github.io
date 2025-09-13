@@ -1,0 +1,104 @@
+import math
+import random
+import statistics as stats
+import time
+from dataclasses import dataclass
+from typing import Iterable, List, Tuple, Union
+
+Number = Union[int, float]
+
+@dataclass(frozen=True, slots=True)
+class Point:
+    x: float
+    y: float
+
+    def __add__(self, other: Union["Point", Number]) -> "Point":
+        """Translate this point by another point (vector) or by a scalar (both axes)."""
+        if isinstance(other, Point):
+            return Point(self.x + other.x, self.y + other.y)
+        elif isinstance(other, (int, float)):
+            return Point(self.x + other, self.y + other)
+        raise TypeError(f"unsupported operand type(s) for +: 'Point' and '{type(other).__name__}'")
+
+    def __radd__(self, other: Number) -> "Point":
+        # allow scalar + Point
+        return self.__add__(other)
+
+    def __sub__(self, other: "Point") -> float:
+        """Euclidean distance to another point."""
+        if not isinstance(other, Point):
+            raise TypeError(f"unsupported operand type(s) for -: 'Point' and '{type(other).__name__}'")
+        return math.hypot(self.x - other.x, self.y - other.y)
+
+    def translate(self, dx: Number, dy: Number) -> "Point":
+        return Point(self.x + dx, self.y + dy)
+
+
+def make_points(n: int, *, rng: random.Random) -> List[Point]:
+    return [Point(rng.random(), rng.random()) for _ in range(n)]
+
+
+def pairwise_nearest_neighbor(points: List[Point]) -> Tuple[float, List[float]]:
+    """
+    For each point, find the distance to its nearest neighbor using a naive O(N^2) scan.
+    Returns (average_distance, per_point_distances).
+    """
+    n = len(points)
+    if n < 2:
+        return 0.0, [0.0] * n
+
+    best: List[float] = [math.inf] * n
+    for i in range(n):
+        pi = points[i]
+        # Compare only with j > i and fill both ways to halve work and keep O(N^2)
+        for j in range(i + 1, n):
+            d = pi - points[j]   # uses __sub__ (Euclidean distance)
+            if d < best[i]:
+                best[i] = d
+            if d < best[j]:
+                best[j] = d
+    avg = sum(best) / n
+    return avg, best
+
+
+def sanity_ops(points: List[Point]) -> None:
+    """
+    Small O(N) routine using __add__ just to show the operator in action without
+    dominating the runtime of the benchmark.
+    """
+    origin_shift = Point(0.5, -0.25)
+    _ = [(p + origin_shift) + 1 for p in points]  # translate by a vector, then by a scalar
+
+
+def run_once(n: int, seed: int = 42) -> Tuple[float, float]:
+    rng = random.Random(seed)
+    points = make_points(n, rng=rng)
+
+    # Warm-up small O(N) work so the benchmark demonstrates both operators
+    sanity_ops(points)
+
+    t0 = time.perf_counter()
+    avg_d, _ = pairwise_nearest_neighbor(points)
+    t1 = time.perf_counter()
+    return (t1 - t0), avg_d
+
+
+def benchmark(sizes: Iterable[int], repeats: int = 5) -> None:
+    print("Point nearest-neighbor benchmark (naive O(N^2))")
+    print("sizes =", list(sizes), "| repeats =", repeats)
+    print(f"{'N':>7}  {'time (s) median':>16}  {'mad':>7}  {'avg NN dist':>12}")
+    for n in sizes:
+        times = []
+        avg_ds = []
+        for r in range(repeats):
+            dt, avg_d = run_once(n, seed=1337 + r)
+            times.append(dt)
+            avg_ds.append(avg_d)
+        med = stats.median(times)
+        mad = stats.median([abs(t - med) for t in times])  # robust spread
+        print(f"{n:7d}  {med:16.6f}  {mad:7.6f}  {stats.mean(avg_ds):12.6f}")
+
+
+if __name__ == "__main__":
+    # Pick sizes that visibly show super-linear growth without taking forever.
+    benchmark(sizes=[250, 500, 1000, 2000], repeats=3)

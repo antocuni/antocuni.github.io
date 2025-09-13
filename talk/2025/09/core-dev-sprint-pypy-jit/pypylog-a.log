@@ -1,0 +1,388 @@
+[f2b12438f9] {jit-log-opt-loop
+# Loop 1 (get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL) : loop with 131 ops
+[p0, p1]
++315: i2 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_last_instr 40>)
++326: p3 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_pycode 64>)
++330: i4 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_valuestackdepth 72>)
++334: p5 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_debugdata 16>)
++338: p6 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_lastblock 48>)
++342: p7 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_locals_cells_stack_w 56>)
++346: p9 = getarrayitem_gc_r(p7, 0, descr=<ArrayP 8>)
++350: p11 = getarrayitem_gc_r(p7, 1, descr=<ArrayP 8>)
++354: p13 = getarrayitem_gc_r(p7, 2, descr=<ArrayP 8>)
++358: p15 = getarrayitem_gc_r(p7, 3, descr=<ArrayP 8>)
++362: p17 = getarrayitem_gc_r(p7, 4, descr=<ArrayP 8>)
++366: p19 = getarrayitem_gc_r(p7, 5, descr=<ArrayP 8>)
++370: p21 = getarrayitem_gc_r(p7, 6, descr=<ArrayP 8>)
++374: label(p0, p1, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, descr=TargetToken(131054792226720))
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++416: guard_value(i4, 4, descr=<Guard0x7731925ac160>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++426: guard_isnull(p5, descr=<Guard0x773192591e88>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++442: guard_value(p3, ConstPtr(ptr23), descr=<Guard0x773192591ec0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++451: guard_not_invalidated(descr=<Guard0x773192591ef8>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#18 LOAD_FAST')
++451: guard_nonnull_class(p15, ConstClass(W_FloatObject), descr=<Guard0x7731925ac1b0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#20 CALL_FUNCTION')
++471: f25 = getfield_gc_f(p15, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++477: f26 = float_abs(f25)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#22 LOAD_FAST')
++492: guard_nonnull_class(p9, ConstClass(W_FloatObject), descr=<Guard0x7731925ac200>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#24 COMPARE_OP')
++511: f28 = getfield_gc_f(p9, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++517: i29 = float_gt(f26, f28)
++521: guard_true(i29, descr=<Guard0x773192591f30>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#26 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#28 LOAD_FAST')
++527: guard_nonnull_class(p13, ConstClass(W_IntObject), descr=<Guard0x7731925ac250>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#30 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#32 BINARY_MODULO')
++547: i31 = getfield_gc_i(p13, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++552: i33 = int_eq(i31, -9223372036854775808)
++552: i35 = int_and(i31, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#34 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#36 COMPARE_OP')
++559: i36 = int_is_zero(i35)
++562: guard_true(i36, descr=<Guard0x773192591f68>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#38 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#40 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#42 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#44 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#46 BINARY_MULTIPLY')
++568: i38 = int_mul_ovf(2, i31)
++578: guard_no_overflow(descr=<Guard0x773192591fa0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#48 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#50 BINARY_ADD')
++584: i40 = int_add_ovf(i38, 1)
++588: guard_no_overflow(descr=<Guard0x7731925b8020>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#52 BINARY_TRUE_DIVIDE')
++594: f41 = cast_int_to_float(i40)
++599: i43 = float_eq(f41, 0.000000)
++620: guard_false(i43, descr=<Guard0x7731925b8058>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++626: f45 = float_truediv(1.000000, f41)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#54 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#56 JUMP_FORWARD')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#74 LOAD_FAST')
++645: guard_nonnull_class(p11, ConstClass(W_FloatObject), descr=<Guard0x7731925ac2a0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#76 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#78 BINARY_ADD')
++664: f47 = getfield_gc_f(p11, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++670: f48 = float_add(f47, f45)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#80 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#82 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#84 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#86 BINARY_ADD')
++674: i50 = int_add(i31, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#88 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-41~#90 JUMP_ABSOLUTE')
++678: i52 = getfield_raw_i(131054865027712, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++691: i54 = int_lt(i52, 0)
++695: guard_false(i54, descr=<Guard0x7731925b8090>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++701: label(p0, p1, p6, p9, f48, i50, f45, f28, descr=TargetToken(131054792226784))
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++720: guard_not_invalidated(descr=<Guard0x7731925ac2f0>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#18 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#20 CALL_FUNCTION')
++720: f55 = float_abs(f45)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#22 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#24 COMPARE_OP')
++739: i56 = float_gt(f55, f28)
++743: guard_true(i56, descr=<Guard0x7731925b80c8>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#26 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#28 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#30 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#32 BINARY_MODULO')
++749: i58 = int_eq(i50, -9223372036854775808)
++749: i60 = int_and(i50, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#34 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#36 COMPARE_OP')
++756: i61 = int_is_zero(i60)
++759: guard_true(i61, descr=<Guard0x7731925b8100>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#38 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#40 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#42 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#44 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#46 BINARY_MULTIPLY')
++765: i63 = int_mul_ovf(2, i50)
++775: guard_no_overflow(descr=<Guard0x7731925b8138>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#48 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#50 BINARY_ADD')
++781: i65 = int_add_ovf(i63, 1)
++785: guard_no_overflow(descr=<Guard0x7731925b8170>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#52 BINARY_TRUE_DIVIDE')
++791: f66 = cast_int_to_float(i65)
++796: i68 = float_eq(f66, 0.000000)
++811: guard_false(i68, descr=<Guard0x7731925b81a8>) [p0, p6, p9, p1, f45, i50, f48]
++817: f70 = float_truediv(1.000000, f66)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#54 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#56 JUMP_FORWARD')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#74 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#76 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#78 BINARY_ADD')
++836: f71 = float_add(f48, f70)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#80 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#82 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#84 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#86 BINARY_ADD')
++844: i73 = int_add(i50, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#88 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-41~#90 JUMP_ABSOLUTE')
++848: i75 = getfield_raw_i(131054865027712, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++855: i77 = int_lt(i75, 0)
++859: guard_false(i77, descr=<Guard0x7731925b81e0>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++865: jump(p0, p1, p6, p9, f71, i73, f70, f28, descr=TargetToken(131054792226784))
++896: --end of the loop--
+[f2b131597e] jit-log-opt-loop}
+[f2b164b30e] {jit-log-opt-bridge
+# bridge out of Guard 0x7731925b8100 with 53 ops
+[p0, p1, p2, p3, f4, i5, f6]
++78: guard_not_invalidated(descr=<Guard0x7731925ac340>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#18 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#20 CALL_FUNCTION')
++78: f7 = float_abs(f4)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#22 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#24 COMPARE_OP')
++98: f8 = getfield_gc_f(p2, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++111: i9 = float_gt(f7, f8)
++116: guard_true(i9, descr=<Guard0x7731925b8480>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#26 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#28 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#30 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#32 BINARY_MODULO')
++122: i11 = int_eq(i5, -9223372036854775808)
++122: i13 = int_and(i5, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#34 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#36 COMPARE_OP')
++129: i14 = int_is_zero(i13)
++132: guard_false(i14, descr=<Guard0x7731925b84b8>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#38 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#58 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#60 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#64 BINARY_MULTIPLY')
++138: i16 = int_mul_ovf(2, i5)
++148: guard_no_overflow(descr=<Guard0x7731925b84f0>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#66 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#68 BINARY_ADD')
++154: i18 = int_add_ovf(i16, 1)
++158: guard_no_overflow(descr=<Guard0x7731925b8528>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#70 BINARY_TRUE_DIVIDE')
++164: f19 = cast_int_to_float(i18)
++169: i21 = float_eq(f19, 0.000000)
++184: guard_false(i21, descr=<Guard0x7731925b8560>) [p0, p1, p2, p3, f4, i5, f6]
++190: f23 = float_truediv(-1.000000, f19)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#72 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#74 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#76 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#78 BINARY_ADD')
++210: f24 = float_add(f6, f23)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#80 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#82 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#84 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#86 BINARY_ADD')
++220: i26 = int_add_ovf(i5, 1)
++227: guard_no_overflow(descr=<Guard0x7731925b8598>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#88 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-41~#90 JUMP_ABSOLUTE')
++233: i28 = getfield_raw_i(131054865027712, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++240: i30 = int_lt(i28, 0)
++244: guard_false(i30, descr=<Guard0x7731925b85d0>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++250: jump(p0, p3, p1, p2, f24, i26, f23, f8, descr=TargetToken(131054792226784))
++288: --end of the loop--
+[f2b16b8ef0] jit-log-opt-bridge}
+[f2b5bb4845] {jit-log-opt-loop
+# Loop 3 (get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL) : loop with 131 ops
+[p0, p1]
++331: i2 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_last_instr 40>)
++342: p3 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_pycode 64>)
++346: i4 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_valuestackdepth 72>)
++350: p5 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_debugdata 16>)
++354: p6 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_lastblock 48>)
++358: p7 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_locals_cells_stack_w 56>)
++362: p9 = getarrayitem_gc_r(p7, 0, descr=<ArrayP 8>)
++366: p11 = getarrayitem_gc_r(p7, 1, descr=<ArrayP 8>)
++370: p13 = getarrayitem_gc_r(p7, 2, descr=<ArrayP 8>)
++374: p15 = getarrayitem_gc_r(p7, 3, descr=<ArrayP 8>)
++378: p17 = getarrayitem_gc_r(p7, 4, descr=<ArrayP 8>)
++382: p19 = getarrayitem_gc_r(p7, 5, descr=<ArrayP 8>)
++386: p21 = getarrayitem_gc_r(p7, 6, descr=<ArrayP 8>)
++390: label(p0, p1, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, descr=TargetToken(131054792227680))
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++432: guard_value(i4, 4, descr=<Guard0x7731925ac390>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++442: guard_isnull(p5, descr=<Guard0x7731925b8c28>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++458: guard_value(p3, ConstPtr(ptr23), descr=<Guard0x7731925b8c60>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++467: guard_not_invalidated(descr=<Guard0x7731925b8c98>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#18 LOAD_FAST')
++467: guard_nonnull_class(p15, ConstClass(W_FloatObject), descr=<Guard0x7731925ac3e0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#20 CALL_FUNCTION')
++487: f25 = getfield_gc_f(p15, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++493: f26 = float_abs(f25)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#22 LOAD_FAST')
++508: guard_nonnull_class(p9, ConstClass(W_FloatObject), descr=<Guard0x7731925ac430>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#24 COMPARE_OP')
++527: f28 = getfield_gc_f(p9, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++533: i29 = float_gt(f26, f28)
++537: guard_true(i29, descr=<Guard0x7731925b8cd0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#26 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#28 LOAD_FAST')
++543: guard_nonnull_class(p13, ConstClass(W_IntObject), descr=<Guard0x7731925ac480>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#30 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#32 BINARY_MODULO')
++563: i31 = getfield_gc_i(p13, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++568: i33 = int_eq(i31, -9223372036854775808)
++568: i35 = int_and(i31, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#34 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#36 COMPARE_OP')
++575: i36 = int_is_zero(i35)
++578: guard_false(i36, descr=<Guard0x7731925b8d08>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#38 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#58 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#60 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#64 BINARY_MULTIPLY')
++584: i38 = int_mul_ovf(2, i31)
++594: guard_no_overflow(descr=<Guard0x7731925b8d40>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#66 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#68 BINARY_ADD')
++600: i40 = int_add_ovf(i38, 1)
++604: guard_no_overflow(descr=<Guard0x7731925b8d78>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#70 BINARY_TRUE_DIVIDE')
++610: f41 = cast_int_to_float(i40)
++615: i43 = float_eq(f41, 0.000000)
++636: guard_false(i43, descr=<Guard0x7731925b8db0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
++642: f45 = float_truediv(-1.000000, f41)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#72 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#74 LOAD_FAST')
++661: guard_nonnull_class(p11, ConstClass(W_FloatObject), descr=<Guard0x7731925ac4d0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#76 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#78 BINARY_ADD')
++680: f47 = getfield_gc_f(p11, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++686: f48 = float_add(f47, f45)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#80 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#82 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#84 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#86 BINARY_ADD')
++690: i50 = int_add_ovf(i31, 1)
++694: guard_no_overflow(descr=<Guard0x7731925b8de8>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#88 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-41~#90 JUMP_ABSOLUTE')
++700: i52 = getfield_raw_i(131054865027712, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++713: i54 = int_lt(i52, 0)
++717: guard_false(i54, descr=<Guard0x7731925b8e20>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p1]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++723: label(p0, p1, p6, p9, f48, i50, f45, f28, descr=TargetToken(131054792227744))
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++736: guard_not_invalidated(descr=<Guard0x7731925ac520>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#18 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#20 CALL_FUNCTION')
++736: f55 = float_abs(f45)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#22 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#24 COMPARE_OP')
++755: i56 = float_gt(f55, f28)
++759: guard_true(i56, descr=<Guard0x7731925b8e58>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#26 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#28 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#30 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#32 BINARY_MODULO')
++765: i58 = int_eq(i50, -9223372036854775808)
++765: i60 = int_and(i50, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#34 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#36 COMPARE_OP')
++772: i61 = int_is_zero(i60)
++775: guard_false(i61, descr=<Guard0x7731925b9558>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#38 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#58 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#60 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#64 BINARY_MULTIPLY')
++781: i63 = int_mul_ovf(2, i50)
++791: guard_no_overflow(descr=<Guard0x7731925b9520>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#66 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#68 BINARY_ADD')
++797: i65 = int_add_ovf(i63, 1)
++801: guard_no_overflow(descr=<Guard0x7731925b94e8>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#70 BINARY_TRUE_DIVIDE')
++807: f66 = cast_int_to_float(i65)
++812: i68 = float_eq(f66, 0.000000)
++827: guard_false(i68, descr=<Guard0x7731925b94b0>) [p0, p6, p9, p1, f45, i50, f48]
++833: f70 = float_truediv(-1.000000, f66)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-36~#72 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#74 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#76 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#78 BINARY_ADD')
++852: f71 = float_add(f48, f70)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#80 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#82 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#84 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#86 BINARY_ADD')
++860: i73 = int_add_ovf(i50, 1)
++867: guard_no_overflow(descr=<Guard0x7731925b9478>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#88 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-41~#90 JUMP_ABSOLUTE')
++873: i75 = getfield_raw_i(131054865027712, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++880: i77 = int_lt(i75, 0)
++884: guard_false(i77, descr=<Guard0x7731925b9440>) [p0, p6, p9, p1, f45, i50, f48]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++890: jump(p0, p1, p6, p9, f71, i73, f70, f28, descr=TargetToken(131054792227744))
++912: --end of the loop--
+[f2b5d9d2ed] jit-log-opt-loop}
+[f2b5f4c162] {jit-log-opt-bridge
+# bridge out of Guard 0x7731925b9558 with 53 ops
+[p0, p1, p2, p3, f4, i5, f6]
++78: guard_not_invalidated(descr=<Guard0x7731925ad420>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#18 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#20 CALL_FUNCTION')
++78: f7 = float_abs(f4)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#22 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#24 COMPARE_OP')
++98: f8 = getfield_gc_f(p2, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++111: i9 = float_gt(f7, f8)
++116: guard_true(i9, descr=<Guard0x7731923cf1a0>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#26 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#28 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#30 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#32 BINARY_MODULO')
++122: i11 = int_eq(i5, -9223372036854775808)
++122: i13 = int_and(i5, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#34 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#36 COMPARE_OP')
++129: i14 = int_is_zero(i13)
++132: guard_true(i14, descr=<Guard0x7731923cf1d8>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-33~#38 POP_JUMP_IF_FALSE')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#40 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#42 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#44 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#46 BINARY_MULTIPLY')
++138: i16 = int_mul_ovf(2, i5)
++148: guard_no_overflow(descr=<Guard0x7731923cf210>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#48 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#50 BINARY_ADD')
++154: i18 = int_add_ovf(i16, 1)
++158: guard_no_overflow(descr=<Guard0x7731923cf248>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#52 BINARY_TRUE_DIVIDE')
++164: f19 = cast_int_to_float(i18)
++169: i21 = float_eq(f19, 0.000000)
++184: guard_false(i21, descr=<Guard0x7731923cf280>) [p0, p1, p2, p3, f4, i5, f6]
++190: f23 = float_truediv(1.000000, f19)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#54 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-34~#56 JUMP_FORWARD')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#74 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#76 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#78 BINARY_ADD')
++210: f24 = float_add(f6, f23)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-38~#80 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#82 LOAD_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#84 LOAD_CONST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#86 BINARY_ADD')
++220: i26 = int_add(i5, 1)
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-39~#88 STORE_FAST')
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-41~#90 JUMP_ABSOLUTE')
++224: i28 = getfield_raw_i(131054865027712, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++231: i30 = int_lt(i28, 0)
++235: guard_false(i30, descr=<Guard0x7731923cf2b8>) [p0, p1, p2, p3, f4, i5, f6]
+debug_merge_point(0, 0, 'get_pi;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/pi.py:23-32~#16 LOAD_GLOBAL')
++241: jump(p0, p3, p1, p2, f24, i26, f23, f8, descr=TargetToken(131054792227744))
++272: --end of the loop--
+[f2b5f6c90c] jit-log-opt-bridge}

@@ -1,0 +1,35 @@
+import math
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+def dist2(a: Point, b: Point) -> float:
+    dx = a.x - b.x
+    dy = a.y - b.y
+    return dx*dx + dy*dy
+
+def euclidean_mst_weight(points):
+    n = len(points)
+    in_tree = [False]*n
+    min_d2 = [float("inf")]*n
+    min_d2[0] = 0.0
+    total = 0.0
+    for _ in range(n):
+        # pick next vertex
+        u = -1
+        best = float("inf")
+        for i in range(n):
+            if not in_tree[i] and min_d2[i] < best:
+                best = min_d2[i]; u = i
+        in_tree[u] = True
+        total += math.sqrt(best) if best != 0.0 else 0.0
+        # relax
+        pu = points[u]
+        for v in range(n):
+            if not in_tree[v]:
+                d2 = dist2(pu, points[v])
+                if d2 < min_d2[v]:
+                    min_d2[v] = d2
+    return total

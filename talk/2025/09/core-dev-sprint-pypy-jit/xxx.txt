@@ -1,0 +1,11 @@
+# Context
+
+- High Frequency Trading firm (sport betting)
+
+  * every ms counts
+
+- Python 2.7
+
+- Multi process system: stateful server + dispatcher + stateless workers (long running processes)
+
+- "big" messages passed around
