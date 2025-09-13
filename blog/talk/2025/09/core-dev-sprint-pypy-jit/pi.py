@@ -1,18 +1,18 @@
 import time
 import pypyjit
 
-def empty(term, pi_approx, k):
+def empty():
     # the JIT cannot enter here
     pass
 
-def residual_call(term, pi_approx, k):
-    pypyjit.residual_call(empty, term, pi_approx, k)
+def hic_sunt_leones():
+    pypyjit.residual_call(empty)
 
 def get_pi():
     """
     Compute an approximation of PI using the Leibniz series
     """
-    tol = 0.00000001
+    tol = 0.0000001
     pi_approx = 0.0
     k = 0
     term = 1.0  # Initial term to enter the loop
@@ -30,7 +30,7 @@ def get_pi():
             n += 1
 
         k = k + 1
-        #residual_call(term, pi_approx, k)
+        hic_sunt_leones()
 
     return 4 * pi_approx
 

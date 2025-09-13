@@ -24,7 +24,7 @@ def fn(v=None, a=None, b=None, c=None, d=None, e=None, f=None, g=None, h=None):
     return y
 
 def main():
-    N = 1000000
+    N = 100000
 
     def rnd():
         return random.choice([None, random.random()])

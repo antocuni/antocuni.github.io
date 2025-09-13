@@ -68,7 +68,7 @@ def count_triples_iter(P):
 
 
 def main():
-    N = 10000000
+    N = 1000000
 
     a = time.time()
     res = count_triples_loop(N)
