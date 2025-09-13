@@ -85,11 +85,29 @@
 
 ---
 
-## Problem 1: trace blockers
+## PyPy JIT 101
+
+- Interpreter written in RPython
+
+- RPython -> `*.c` -> gcc -> `./pypy`
+
+- RPython -> "jit codegen" -> "jitcodes" (~RPython IR)
+
+- RPython jitcodes ~= CPython microops
+
+  * Lower level than C, higher level than assembly
+
+- Tracing means *executing jitcodes*
+
+  * we have an interpreter for that, super slow
+
+---
+
+### Problem 1: trace blockers
 
 <!-- .slide: data-transition="none" -->
 
-```python
+```python [1-100]
 def get_pi():
 	"""
 	Compute an approximation of PI using the Leibniz series
@@ -114,11 +132,11 @@ def get_pi():
 
 ---
 
-## Problem 1: trace blockers
+### Problem 1: trace blockers
 
 <!-- .slide: data-transition="none" -->
 
-```python
+```python [18]
 def get_pi():
 	"""
 	Compute an approximation of PI using the Leibniz series
@@ -135,7 +153,7 @@ def get_pi():
 			term = -1 * 1.0 / (2 * k + 1)
 
 		pi_approx = pi_approx + term
-		k = k + 1f
+		k = k + 1
 		hic_sunt_leones() # the JIT cannot enter here
 
 	return 4 * pi_approx
@@ -175,7 +193,7 @@ def hic_sunt_leones():
 
 ---
 
-## Problem 2: data driven control flow
+### Problem 2: data driven control flow
 
 ```
 def fn(v=None, a=None, b=None, c=None, d=None, e=None, f=None, g=None, h=None):
@@ -197,7 +215,7 @@ def main():
 
 ---
 
-## Problem 2: data driven control flow
+### Problem 2: data driven control flow
 
 ```
 ❯ python3.13 data_driven.py
@@ -250,7 +268,7 @@ x = (x < 0)*100 + (x >= 0)*x
 
 ---
 
-## Problem 3: generators (and async?)
+### Problem 3: generators (and async?)
 
 ```
 def count_triples_loop(P):
@@ -271,7 +289,7 @@ def count_triples_loop(P):
 
 ---
 
-## Problem 3: generators (and async?)
+### Problem 3: generators (and async?)
 
 ```
 def range_product(a, b):
@@ -293,7 +311,7 @@ def count_triples_gen(P):
 
 ---
 
-## Problem 3: generators (and async?)
+### Problem 3: generators (and async?)
 
 ```
 class RangeProductIter:
@@ -318,7 +336,7 @@ class RangeProductIter:
 
 ---
 
-## Problem 3: generators (and async?)
+### Problem 3: generators (and async?)
 
 ```
 ❯ python3.13 pythagorean.py
