@@ -59,6 +59,20 @@
 
 ---
 
+# Context
+
+- High Frequency Trading firm (sport betting)
+
+  * every ms counts
+
+- Python 2.7
+
+- Multi process system: stateful server + dispatcher + stateless workers (long running processes)
+
+- "big" messages passed around
+
+---
+
 ## PyPy JIT 101
 
 - Interpreter written in RPython
@@ -69,7 +83,7 @@
 
 - RPython jitcodes ~= CPython microops
 
-  * Lower level than C, higher level than assembly
+  * Slightly higher level than C
 
 - Tracing means *executing jitcodes*
 

@@ -15,7 +15,7 @@ import struct
 import random
 
 def main():
-    N = 300000
+    N = 1000000
 
     with open('poly.bin', 'wb') as f:
         for i in range(N):

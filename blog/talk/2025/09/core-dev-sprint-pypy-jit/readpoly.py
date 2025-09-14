@@ -31,7 +31,6 @@ def read_loop():
             tot_y += (ay + by + cy)
             n += 1
 
-    print(n)
     x = tot_x/n
     y = tot_y/n
     return x, y
@@ -56,7 +55,6 @@ def read_proto():
     x = tot_x/n
     y = tot_y/n
     return x, y
-
 
 
 class Triangle:
@@ -98,12 +96,12 @@ def main():
     a = time.time()
     x, y = read_loop()
     b = time.time()
-    print(f'bare loop: {b-a:.4f} secs ({x}, {y})')
+    print(f'read_loop:     {b-a:.4f} secs ({x}, {y})')
 
     a = time.time()
     x, y = read_proto()
     b = time.time()
-    print(f'protocol : {b-a:.4f} secs ({x}, {y})')
+    print(f'read_proto:    {b-a:.4f} secs ({x}, {y})')
 
 
 if __name__ == '__main__':
