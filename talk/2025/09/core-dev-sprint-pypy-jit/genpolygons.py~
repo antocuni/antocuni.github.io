@@ -1,0 +1,31 @@
+"""
+struct Point {
+    double x;
+    double y;
+};
+
+struct Polygon {
+    long n;
+    Point p[n];
+};
+"""
+
+import struct
+import random
+
+def main():
+    N = 10000
+
+    N = 1
+
+    with open('poly.bin', 'w') as f:
+        n = random.randint(3, 20)
+        ps = [random.random() for _ in range(n*2)]
+        fmt = 'l' + 'd'*n
+        data = struct.pack(fmt, *[n]+ps)
+        f.write(data)
+
+
+
+if __name__ == '__main__':
+    main()

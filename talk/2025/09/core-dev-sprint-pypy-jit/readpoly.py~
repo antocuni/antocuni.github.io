@@ -1,0 +1,18 @@
+import struct
+
+
+
+def main():
+    tot_x = 0
+    tot_y = 0
+    tot_n = 0
+
+    with open('poly.bin', 'rb') as f:
+        n = struct.read_from(f, 'l')
+        fmt = 'd'*(n*2)
+        points = strct.read_from(f, fmt)
+        xs = points[::2]
+        ys = points[1::2]
+        tot_x += sum(xs)
+        tot_y += sum(ys)
+        tot_n += n

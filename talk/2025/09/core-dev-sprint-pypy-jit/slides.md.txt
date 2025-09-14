@@ -59,6 +59,20 @@
 
 ---
 
+# Context
+
+- High Frequency Trading firm (sport betting)
+
+  * every ms counts
+
+- Python 2.7
+
+- Multi process system: stateful server + dispatcher + stateless workers (long running processes)
+
+- "big" messages passed around
+
+---
+
 ## PyPy JIT 101
 
 - Interpreter written in RPython
@@ -69,7 +83,7 @@
 
 - RPython jitcodes ~= CPython microops
 
-  * Lower level than C, higher level than assembly
+  * Slightly higher level than C
 
 - Tracing means *executing jitcodes*
 
@@ -349,3 +363,112 @@ iter: 0.1264 secs (1.05x)
        if n > 12345:
            pypyjit.disable()
     ```
+
+---
+
+## Bonus slides
+
+### (Avoid) allocations is all your need
+
+---
+
+### Task
+
+- Compute baricenter of a series of triangles serialized according to a binary
+  protocol
+
+- Simulate protobuf, capnproto, etc.
+
+```
+struct Point {
+    double x;
+    double y;
+};
+
+struct Triangle {
+    Point a;
+    Point b;
+    Point c;
+};
+```
+
+---
+
+### Bare loop
+
+```
+def read_loop():
+    fmt = 'dddddd'
+    size = struct.calcsize(fmt)
+    tot_x = 0
+    tot_y = 0
+    n = 0
+    with open('poly.bin', 'rb') as f:
+        while True:
+            buf = f.read(size)
+            if not buf:
+                break
+            points = struct.unpack_from(fmt, buf)
+            ax, ay, bx, by, cx, cy = points
+            tot_x += (ax + bx + cx)
+            tot_y += (ay + by + cy)
+            n += 1
+
+    print(n)
+    x = tot_x/n
+    y = tot_y/n
+    return x, y
+```
+
+---
+
+### Schema-aware protocol
+
+```
+class Triangle:
+    def __init__(self, buf, offset):
+        self.buf = buf
+        self.offset = offset
+
+    @property
+    def a(self):
+        return Point(self.buf, 0)
+
+[...]
+
+class Point:
+    def __init__(self, buf, offset):
+        self.buf = buf
+        self.offset = offset
+
+    @property
+    def x(self):
+        return struct.unpack_from('d', self.buf, self.offset)[0]
+```
+
+---
+
+### Schema-aware protocol
+
+```
+        while True:
+            buf = f.read(size)
+            if not buf:
+                break
+            t = Triangle(buf, 0)
+            tot_x += t.a.x + t.b.x + t.c.x
+            tot_y += t.a.y + t.b.y + t.c.y
+            n += 1
+```
+
+---
+
+```
+❯ python3.13 readpoly.py
+read_loop:     0.5444 secs
+read_proto:    3.0307 secs
+
+❯ pypy readpoly.py
+read_loop:     0.2945 secs
+read_proto:    0.1183 secs
+```
