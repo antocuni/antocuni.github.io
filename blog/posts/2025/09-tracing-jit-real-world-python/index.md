@@ -117,7 +117,7 @@ for CPython, and I wanted to share my experience to make sure that CPython
 core devs are aware of them.
 
 One lesson which I learnt is that the set of benchmarks in `pyperformance` are
-a good starting point, but they are not entierly representative of what you
+a good starting point, but they are not entirely representative of what you
 find in the wild.
 
 The main goal of the talk is not to present *solutions* to these problems,
@@ -135,7 +135,7 @@ Assumption
 </div>
 
 Until now CPython's performance have been particularly predictable, there are
-well estabilished "performance tricks" to make code faster, and generally
+well established "performance tricks" to make code faster, and generally
 speaking you can mostly reason about the speed of a given piece of code
 "locally".
 
@@ -149,8 +149,8 @@ program, for two reasons:
      from that code, and it becomes much harder to reason "locally" about
      speed.
 
-The end result is that modifiying a single line of code "here" can have a big
-inpact on code which looks totally unrelated, for multiple reasons.  This
+The end result is that modifying a single line of code "here" can have a big
+impact on code which looks totally unrelated, for multiple reasons.  This
 effect becomes bigger as the JIT becomes "smarter".
 
 The CPython JIT is still pretty new and doesn’t give huge speedups yet. I
@@ -250,7 +250,7 @@ code:
     executable).
 
 In a way, RPython's jitcodes are equivalent to CPython's microops, as they are
-a low-level represenation of the logic of each opcode.
+a low-level representation of the logic of each opcode.
 
 When the interpreter detects a hot loop, it enters **trace recording** mode,
 which is essentially an interpreter which executes the jitcodes: the result is
@@ -387,7 +387,7 @@ conservative.
 I fear that for CPython, this will turn out to be a much bigger problem than
 for PyPy, for two reasons:
 
-  1. nowadays is that it's virtually impossible to run Python code without
+  1. nowadays it's virtually impossible to run Python code without
      using any C extension, either directly or indirectly.
 
   2. by construction, PyPy's JIT can see much more than CPython's
@@ -460,7 +460,7 @@ Let's see what happens when we execute on CPython and PyPy:
 </div>
 
 PyPy without JIT is "only" 2.3x slower than CPython, but when we enable the
-JIT, it becomes **much worse**. This happens becase of an exponential
+JIT, it becomes **much worse**. This happens because of an exponential
 explosion of code paths seen by the JIT.
 
 In a normal compiler, an `if` statement is compiled as a diamond, and the
@@ -588,7 +588,7 @@ contributes to the problem, not only `if`s. In Python, this includes any kind
 of dynamic dispatch, exceptions, etc.
 
 One possible solution for CPython's JIT is to try to merge (some) traces to
-avoid or limit the exponentail explosion. However, it is worth underling that
+avoid or limit the exponential explosion. However, it is worth underlining that
 tracing JITs shine precisely when they can optimize a long linear trace: if
 you try to compile shorter traces, you might quickly end up in a situation
 which is equivalent to the "trace blocker" problem described earlier.
@@ -908,7 +908,7 @@ read_proto:    0.1183 secs
 </div>
 
 As expected, on CPython `read_proto` is much slower than the bare one,
-roughtly 6x slower.  However, PyPy can fully optimize away all the the
+roughly 6x slower.  However, PyPy can fully optimize away all the the
 abstraction overhead introduced by `Triangle` and `Point`.
 
 In PyPy jargon we call this form of allocation removal "virtuals" (because we

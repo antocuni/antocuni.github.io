@@ -83,15 +83,14 @@ tags:
 def create_css():
     """Create the CSS for slide styling."""
     return """<style>
-.slide-container {
+.slide {
   border: 2px solid #ddd;
   border-radius: 8px;
   margin: 2em 0;
   background: #f9f9f9;
   max-width: 100%;
-}
 
-.slide {
+  /* Slide content box */
   aspect-ratio: 16 / 9;
   box-sizing: border-box;
   padding: 2em;
@@ -106,34 +105,15 @@ def create_css():
   margin-top: 0;
   color: #333;
 }
-
-.annotation {
-  padding: 1.5em;
-  background: #f9f9f9;
-  color: #666;
-}
-
-.annotation h4 {
-  margin-top: 0;
-  color: #444;
-  font-style: normal;
-}
 </style>
 """
 
 def create_slide_div(slide_content):
-    """Create a slide container div with annotation section."""
-    return f"""<div class="slide-container" markdown="1">
+    """Create a slide container div."""
+    return f"""---
 <div class="slide" markdown="1">
 {slide_content}
-</div>
-<div class="annotation" markdown="1">
-
-#### Annotation
-
-</div>
 </div>"""
-
 
 def convert_slides_to_blog(slides_path, output_path=None):
     """Convert slides.md.txt to a blog post format."""
