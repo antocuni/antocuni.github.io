@@ -134,7 +134,7 @@ Assumption
 - ==> Some results are surprising
 </div>
 
-Until now CPython's performance have been particularly predictable, there are
+Until now CPython's performance has been particularly predictable, there are
 well established "performance tricks" to make code faster, and generally
 speaking you can mostly reason about the speed of a given piece of code
 "locally".
@@ -145,13 +145,13 @@ program, for two reasons:
   1. JITted code can be very fast if your code conforms to the heuristics
      applied by the JIT compiler, but unexpectedly slow(-ish) otherwise;
 
-  2. the speed of a given piece might depend a lot on what happens "very far"
-     from that code, and it becomes much harder to reason "locally" about
-     speed.
+  2. the speed of a given piece of code might depend heavily on what happens
+     elsewhere in the program, making it much harder to reason about
+     performance locally.
 
-The end result is that modifying a single line of code "here" can have a big
-impact on code which looks totally unrelated, for multiple reasons.  This
-effect becomes bigger as the JIT becomes "smarter".
+The end result is that modifying a single line of code can significantly
+impact seemingly unrelated code. This effect becomes more pronounced as the
+JIT becomes more sophisticated.
 
 The CPython JIT is still pretty new and doesn’t give huge speedups yet. I
 expect that as it gets faster, its performance will start looking more and
@@ -908,7 +908,7 @@ read_proto:    0.1183 secs
 </div>
 
 As expected, on CPython `read_proto` is much slower than the bare one,
-roughly 6x slower.  However, PyPy can fully optimize away all the the
+roughly 6x slower.  However, PyPy can fully optimize away all the
 abstraction overhead introduced by `Triangle` and `Point`.
 
 In PyPy jargon we call this form of allocation removal "virtuals" (because we
