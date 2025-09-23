@@ -42,7 +42,6 @@ tags:
 .annotation {
   padding: 1.5em;
   background: #f9f9f9;
-  font-style: italic;
   color: #666;
 }
 
@@ -99,8 +98,6 @@ What follows is an annotated version of the slides.
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
-
 </div>
 </div>
 
@@ -118,7 +115,23 @@ What follows is an annotated version of the slides.
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+CPython's new JIT and PyPy's JIT share fundamental similarities, as they're both
+tracing JITs.
+
+I spent ~7 years of my career optimizing existing code for PyPy at a
+high-frequency trading firm, which makes me one of the few people in the world
+with actual experience in optimizing real world Python code for a tracing JIT.
+
+I expect that some of the challenges which I faced will still be valid also
+for CPython, and I wanted to share my experience to make sure that CPython
+core devs are aware of them.
+
+One lesson which I learnt is that the set of benchmarks in `pyperformance` are
+a good starting point, but they are not entierly representative of what you
+find in the wild.
+
+The main goal of the talk is not to present *solutions* to these problems,,
+but to raise awareness that they exist.
 
 </div>
 </div>
@@ -135,7 +148,27 @@ What follows is an annotated version of the slides.
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Until now CPython's performance have been particularly predictable, there are
+well estabilished "performance tricks" to make code faster, and generally
+speaking you can mostly reason about the local speed of a give piece of code.
+
+Adding a JIT completely changes how we reason about performance of a given
+program, for two reasons:
+
+  1. JITted code can be very fast if your code conforms to the heuristics
+     applied by the JIT compiler
+
+  2. The speed of a given piece might depend a lot on what happens "very far"
+     from that code, and it becomes much harder to reason "locally" about
+     speed
+
+The end result is that modifiying a single line of code "here" can have a big
+inpact on code which looks totally unrelated, for multiple reasons.  This
+effect becomes bigger as the JIT becomes "smarter".
+
+The CPython JIT is still pretty new and doesn’t give huge speedups yet. I
+expect that as it gets faster, its performance will start looking more and
+more like PyPy’s.
 
 </div>
 </div>
@@ -156,7 +189,11 @@ What follows is an annotated version of the slides.
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Let me give you some context about where this experience comes from. I worked
+at a high-frequency trading firm focused on sports betting, where every
+millisecond of latency matters for profitability. We were using Python 2.7 in
+a multi-process architecture with long-running processes - perfect for JIT
+warmup.
 
 </div>
 </div>
@@ -181,7 +218,67 @@ What follows is an annotated version of the slides.
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+I delivered this talk at the Core Dev Sprint: I expected my audience to be
+familiar with CPython's JIT, and wanted to draw parallels with PyPy's one.
+
+Since the audience of this blog is different, let me **briefly** explain
+CPython's JIT first.
+
+The explanation of both JITs are necessarily short, incomplete and highly
+simplified.
+
+#### CPython JIT 101 first
+
+Python source code is turned into bytecode. Bytecode is a sequence of
+"opcodes", and the CPython VM is an interpreter for those
+opcodes. Historically, VM was written by hand, and the main loop consisted of
+a big `switch` statement which executed the code corresponding to each opcode.
+
+Nowadays things are different: the opcodes are written in a special DSL and
+the main interpreter loop is automatically generated from this
+DSL. Additionally, the DSL describes how each opcode can be decomposed into
+multiple "microops".
+
+When the interpreter detects a "hot loop", it starts the JIT. The JIT
+retroactively looks at the opcodes which were executed in the last iteration
+of the loop, and creates a "linear trace" which contains the equivalent
+microops. This process is called **trace projection** and the result is an
+unoptimized trace of microops.
+
+Then, the JIT can produce an optimized trace, by reordering and removing
+redundant microops. Finally, the optimized trace is turned into executable
+code using the "copy & patch" technique.
+
+#### PyPy JIT 101
+
+CPython's Python interpreter is written in C, and then compiled into an
+executable by `gcc` (or any other C compiler).
+
+Similarly, PyPy's Python interpreter is written in RPython, and then compiled
+into an executable by `rpython`.
+
+Under the hood, `rpython` applies two separate transformations to the source
+code:
+
+  - it turns each function into C code, which is then fed to `gcc` to get the
+    final executable
+
+  - it turns each function into "jitcodes", which is a way to represent
+    RPython's IR (internal representation). For each RPython function, the
+    final `./pypy` executable contains its compiled representation (generated
+    by GCC) AND its jitcode representation (embedded as static data into the
+    executable).
+
+In a way, RPython's jitcodes are equivalent to CPython's microops, as they are
+a low-level represenation of the logic of each opcode.
+
+When the interpreter detects a hot loop, it enters **trace recording** mode,
+which is essentially an interpreter which executes the jitcodes: the result is
+a linear unoptimized trace of all the jitcodes which were actually executed.
+
+Similarly to CPython, PyPy then produces an optimized trace, which is then
+sent to the JIT backend for actual native code generation.
+
 
 </div>
 </div>
@@ -190,9 +287,7 @@ What follows is an annotated version of the slides.
 <div class="slide" markdown="1">
 ### Problem 1: trace blockers
 
-
-
-```python [1-100]
+```python
 def get_pi():
     """
     Compute an approximation of PI using the Leibniz series
@@ -214,21 +309,33 @@ def get_pi():
 
     return 4 * pi_approx
 ```
+
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Tracing JITs works by recording a trace of all microops which are
+executed. The optimize can then reason about what happens in the trace and
+remove unneeded operations.
+
+However, sometimes we encounter some operation which is a black box from the
+point of view of the tracer: we call them "trace blocker", because the tracing
+JIT cannot see through them.  In the case of CPython, this happens for
+example, whenever we call any function implemented in C (because it doesn't
+have any correspondent "microop").
+
+This is a simple function that computes `pi`, generated by ChatGPT.  Its
+precise content is not important: what matters is that it's a nice purely
+numerical loop that the PyPy JIT can optimize very well.
 
 </div>
 </div>
 
 <div class="slide-container" markdown="1">
 <div class="slide" markdown="1">
+
 ### Problem 1: trace blockers
 
-
-
-```python [18]
+```python
 def get_pi():
     """
     Compute an approximation of PI using the Leibniz series
@@ -246,14 +353,18 @@ def get_pi():
 
         pi_approx = pi_approx + term
         k = k + 1
-        hic_sunt_leones() # the JIT cannot enter here
+        hic_sunt_leones() # <<<<<<<<<<<< the JIT cannot enter here
 
     return 4 * pi_approx
 ```
+
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Same function as above, with a call to `hic_sunt_leones()`. This is actually
+an **empty function** which does absolutely nothing, but annotated in a
+special way so that the PyPy JIT cannot "enter" it, so it effectively behaves
+as trace blocker.
 
 </div>
 </div>
@@ -278,7 +389,9 @@ def hic_sunt_leones():
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+In this example we use the special `pypyjit.residual_call` to simulate a trace
+blocker, but in real life we get it whenever we have a call to any
+non-traceable function, in particular with C extensions.
 
 </div>
 </div>
@@ -299,7 +412,30 @@ def hic_sunt_leones():
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+The clean version runs 42x faster on PyPy than CPython - that's the JIT
+working perfectly. But with just one untraceable function call added to the
+loop, PyPy slows down to only 1.8x faster than CPython. That single line
+destroyed most of the JIT's effectiveness!
+
+This happens because after the call the optimizer no longer know whether its
+assumptions about the world are still true, and thus must be much more
+conservative.
+
+I fear that for CPython, this will turn out to be a much bigger problem than
+for PyPy, for two reasons:
+
+The first is that it's virtually impossible to run Python code without using
+any C extension nowadays (either directly or indirectly)
+
+Moreover, by construction, PyPy's JIT can see much more than CPython's
+JIT. Remember he slide about "jitcodes": any RPython function gets a
+"jitcodes" equivalent, which means that the JIT can automatially trace inside
+builtins and internals of the interpreter, whereas CPython can trace only inside pure python code.
+
+For example, PyPy's JIT can trace through `range()`, `zip` and `enumerate()`
+automatically. CPython's JIT currently cannot because they are implemented in
+C. CPython *could* add special cases for these common functions, but the
+general approach doesn't scale.
 
 </div>
 </div>
@@ -308,7 +444,7 @@ def hic_sunt_leones():
 <div class="slide" markdown="1">
 ### Problem 2: data driven control flow
 
-```
+```python
 def fn(v=None, a=None, b=None, c=None, d=None, e=None, f=None, g=None, h=None):
     "Random nonsense computation generated by ChatGPT"
     if v is None: v = 0
@@ -328,7 +464,22 @@ def main():
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+The second big problem is what I call "data driven control flow". This example
+has been autogenerated by ChatGPT and it's completely silly, but it's a good
+representation of what happens in real life code.
+
+In this example, `fn` takes 9 variables, each of them can be `None` or a
+number. The function starts with a sequence of `if <var> is None: ...`. The
+function is then called repeatedly in a loop.
+
+One of the assumption of tracing JITs is that control flow tends to stay on
+the "hot path", and that it's enough to optimize that to get good performance.
+
+But in a case like this, each combination of `None`ness selects a different
+path, and if we assume the data is evenly distributed, we find out that
+**there is no hot path**.
+
+Let's see what happens when we execute on CPython and PyPy:
 
 </div>
 </div>
@@ -352,6 +503,73 @@ def main():
 
 #### Annotation
 
+PyPy without JIT is "only" 2.3x slower than CPython, but when we enable the
+JIT, it becomes **much worse**. This happens becase of an exponential
+explosion of code paths seen by the JIT.
+
+In a normal compiler, an `if` statement is compiled as a diamond, and the
+control flow merges together after each `if`:
+
+```
+        if a is None
+          /   \
+         /     \
+      a = 0    pass
+         \     /
+          \   /
+        if b is None
+          /   \
+         /     \
+      b = 0    pass
+         \     /
+          \   /
+           ...
+```
+
+After each `if`, the control flow "merges". A tracing JIT by definition
+follows what's happening during a concrete execution, so it sees only a
+concrete path in the control flow, with "guards" to ensure correctness:
+
+```
+        guard(a is None)
+          /
+         /
+      a = 0
+         \
+          \
+   guard(b not None)
+          /
+         /
+      b = 0
+         \
+          \
+
+```
+
+When `guard(a is None)` fails enough times, we create a "bridge" and record
+another linear trace, following again the *concrete control flow* that happens
+now:
+
+```
+          guard(a is None) ----> FAIL (side exit)
+            /                         \
+           /                           \
+        a = 0                          pass
+           \                             \
+            \                             \
+    guard(b not None)              guard(b not None)
+            /                             /
+           /                             /
+        b = 0                         b = 0
+           \                             \
+            \                             \
+           ...                           ...
+
+```
+
+Note how `b = 0` is effectively duplicated now. By design, PyPy's JIT *never
+merges execution flow*.
+
 </div>
 </div>
 
@@ -362,7 +580,7 @@ def main():
 - Every combination of "`None`ness" must be compiled separately
 
 ```
-❯ PYPYLOG=jit-summary:- pypy jit_explosion.py
+❯ PYPYLOG=jit-summary:- pypy data_driven.py
 1.6387 secs
 [a625ea04910] {jit-summary
 ...
@@ -374,7 +592,10 @@ Total # of bridges:	527
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Looking inside `PYPYLOG` confirms our theory: we get "exponential
+tracing". The JIT has to compile separate optimized code for every unique
+combination of which parameters are None and which aren't. With 9 parameters,
+that could be up to 512 different combinations!
 
 </div>
 </div>
@@ -402,8 +623,24 @@ x = (x < 0)*100 + (x >= 0)*x
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+One possible mitigation is to rewrite conditional code to be "branchless" -
+using arithmetic tricks instead of if statements. But this makes code ugly and
+unreadable, and it's not always possible.
 
+Despite years of working on this, never found a really good solution. This
+pattern happens quite a lot, although often is more subtle: in this silly
+example all the `if`s are nicely grouped together at the start, but in a long
+trace they can be scattered in multiple places, and _any_ kind of control flow
+contributes to the problem, not only `if`s. In Python, this includes any kind
+of dynamic dispatch, exceptions, etc.
+
+One possible solution for CPython's JIT is to try to merge (some) traces to
+avoid or limit the exponentail explosion. However, it is worth underling that
+tracing JITs shine precisely when they can optimize a long linear trace: if
+you try to compile shorter traces, you might quickly end up in a situation
+which is equivalent to the "trace blocker" problem described earlier.
+
+I suspect this might be a fundamental limitation of tracing JITs.
 </div>
 </div>
 
@@ -411,7 +648,7 @@ x = (x < 0)*100 + (x >= 0)*x
 <div class="slide" markdown="1">
 ### Problem 3: generators (and async?)
 
-```
+```python
 def count_triples_loop(P):
     """
     Counts how many integer right triangles (Pythagorean triples) have perimeter <= P.
@@ -432,6 +669,12 @@ def count_triples_loop(P):
 
 #### Annotation
 
+Compared to the other two problems, this is less serious, but it's worth
+mentioning because of prevalence of `async` (and thus implicitly generators)
+in modern Python.
+
+Here's another silly function that counts Pythagorean triples using nested
+loops. This is our baseline "good" version using plain loops.
 </div>
 </div>
 
@@ -439,7 +682,7 @@ def count_triples_loop(P):
 <div class="slide" markdown="1">
 ### Problem 3: generators (and async?)
 
-```
+```python
 def range_product(a, b):
     for i in range(*a):
         for j in range(*b):
