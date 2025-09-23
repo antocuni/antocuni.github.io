@@ -58,7 +58,7 @@ I had three main areas of focus:
     [C API summit at EuroPython](../07-europython-talks/index.md). The current
     C API is problematic, so we are exploring ideas for the development of
     [PyNI](https://github.com/py-ni) (Python Native Interface), whose design
-    will be likely be heavily inspired by [HPy](https://hpyproject.org/). It's
+    will likely be heavily inspired by [HPy](https://hpyproject.org/). It's
     important to underline that this is just the beginning and the entire
     process will require multiple PEPs.
 
@@ -67,14 +67,14 @@ I had three main areas of focus:
     [months ago](../02-over-the-clouds/over-the-clouds.md), to enable colorful
     tab completions within the Python REPL. I wrote the original version of
     [fancycompleter](https://github.com/pdbpp/fancycompleter) 15 years ago,
-    but colorful completions works only in combination with PyREPL. Now PyREPL
+    but colorful completions work only in combination with PyREPL. Now PyREPL
     is part of the standard library and enabled by default, so we can finally
     upstream it. I hope to see it merged soon.
 
   - "**JIT stuff**": I spent a considerable amount of time talking to the
     people who are working on the CPython JIT (in particular Mark, Brandt,
     Savannah, Ken Jit and Diego). Knowledge transfer worked in both ways: I
-    learnt a lot about the internal details of CPython's JIT, and conversely I
+    learned a lot about the internal details of CPython's JIT, and conversely I
     shared with them some of the experience, pain points and gut feelings
     which I got by working many years on PyPy.
 
@@ -101,7 +101,7 @@ What follows is an annotated version of the slides.
 
 - Real world code != pyperformance
 
-- Challenges & lesson learned
+- Challenges & lessons learned
 </div>
 
 CPython's new JIT and PyPy's JIT share fundamental similarities, as they're both
@@ -116,7 +116,7 @@ I expect that some of the challenges which I faced will still be valid also
 for CPython, and I wanted to share my experience to make sure that CPython
 core devs are aware of them.
 
-One lesson which I learnt is that the set of benchmarks in `pyperformance` are
+One lesson which I learned is that the set of benchmarks in `pyperformance` are
 a good starting point, but they are not entirely representative of what you
 find in the wild.
 
@@ -167,7 +167,7 @@ more like PyPy’s.
 
 - Python 2.7
 
-- Multi process system: stateful server + dispatcher + stateless workers (long running processes)
+- Multi process system: stateful server + dispatcher + stateless workers (long-running processes)
 
 - "big" messages passed around
 </div>
@@ -288,8 +288,8 @@ def get_pi():
 
 </div>
 
-Tracing JITs works by recording a trace of all microops which are
-executed. The optimize can then reason about what happens in the trace and
+Tracing JITs work by recording a trace of all microops which are
+executed. The optimizer can then reason about what happens in the trace and
 remove unneeded operations.
 
 However, sometimes we encounter some operation which is a black box from the
@@ -380,7 +380,7 @@ working perfectly. But with just one untraceable function call added to the
 loop, PyPy slows down to only 1.8x faster than CPython. That single line
 destroyed most of the JIT's effectiveness!
 
-This happens because after the call the optimizer no longer know whether its
+This happens because after the call the optimizer no longer knows whether its
 assumptions about the world are still true, and thus must be much more
 conservative.
 
@@ -396,7 +396,7 @@ for PyPy, for two reasons:
      inside builtins and internals of the interpreter, whereas CPython can
      trace only inside pure python code.
 
-For example, PyPy's JIT can trace through `range()`, `zip` and `enumerate()`
+For example, PyPy's JIT can trace through `range()`, `zip`, and `enumerate()`
 automatically. CPython's JIT currently cannot because they are implemented in
 C. CPython *could* add special cases for these common functions, but the
 general approach doesn't scale.
@@ -709,8 +709,8 @@ iterator class is much slower, as one would intuitively expect.
 
 However, on PyPy we see different results: `RangeProductIter` is basically
 same speed as the baseline, while the generator version is slower. This
-happens because in case of `RangeProductIter` the JIT is able to see the whole
-lifetime of the object and optimize it aways entirely: instance variables
+happens because in the case of `RangeProductIter` the JIT is able to see the whole
+lifetime of the object and optimize it away entirely: instance variables
 become local variables, the call to `__next__` is inlined and we get the
 equivalent of explicit nested loops.
 
@@ -747,11 +747,11 @@ speaking, we lack good support for tooling and profilers. CPython needs to
 have a good story to explain people how to understand what's happening when
 the JIT is enabled.
 
-Warmup is another big problem: in PyPy, very short programs tends to be slower
+Warmup is another big problem: in PyPy, very short programs tend to be slower
 than CPython because JITting costs. Moreover warmup is not an easily definable
 phase, as the linked paper shows.  This is an area where currently CPython
 shines, as its JIT is very fast.  I think that it will become slightly slower
-when it will try to optimize more aggressively, but hopefully warmup will
+when it tries to optimize more aggressively, but hopefully warmup will
 overall be a lesser problem than on PyPy.
 
 Moreover, it's very easy to accidentally make your code 2x, 5x or even 10x
@@ -777,7 +777,7 @@ case where a tracing JIT can shine: since the JIT sees a complete trace of an
 entire loop (including nested calls) it can easily removes a lot of temporary
 objects which usually penalize Python performance.
 
-In many cases, we can get the famous "zero costs abstractions".
+In many cases, we can get the famous "zero-cost abstractions".
 
 ---
 <div class="slide" markdown="1">
@@ -908,7 +908,7 @@ read_proto:    0.1183 secs
 </div>
 
 As expected, on CPython `read_proto` is much slower than the bare one,
-roughly 6x slower.  However, PyPy can fully optimize away all the
+roughly 6x slower. However, PyPy can fully optimize away all the
 abstraction overhead introduced by `Triangle` and `Point`.
 
 In PyPy jargon we call this form of allocation removal "virtuals" (because we
@@ -922,7 +922,7 @@ about this and I hope I convinced them that this is what they should aim for
 Note also that `read_proto` is actually **faster** than `read_loop`. This
 happens because in `read_loop` we do a single `struct.unpack_from('dddddd', ...)`,
 while in `read_proto` we do a succession of six individual
-`struct.unpack.from('d', ...)` . It turns out that the JIT is able to trace
+`struct.unpack_from('d', ...)`. It turns out that the JIT is able to trace
 into the second form but not into the first, which means that in `read_loop`
 we actually need to allocate a pseudo-tuple at each iteration.
 
