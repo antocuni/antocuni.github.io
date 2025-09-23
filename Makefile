@@ -1,8 +1,8 @@
 serve:
-	uv run --with-requirements requirements.txt mkdocs serve
+	uv run --with-requirements requirements.txt mkdocs serve --livereload
 
 serve-offline:
-	uv run --offline --with-requirements requirements.txt mkdocs serve
+	uv run --offline --with-requirements requirements.txt mkdocs serve --livereload
 
 build:
 	uv run --with-requirements requirements.txt mkdocs build
