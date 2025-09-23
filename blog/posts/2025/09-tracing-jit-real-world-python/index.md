@@ -20,13 +20,18 @@ tags:
   border-radius: 8px;
   margin: 2em 0;
   background: #f9f9f9;
+  max-width: 100%;
 }
 
 .slide {
+  aspect-ratio: 16 / 9;
+  box-sizing: border-box;
   padding: 2em;
   background: white;
   border-radius: 6px 6px 0 0;
   border-bottom: 2px solid #eee;
+  display: block;
+  width: 100%;
 }
 
 .slide h1, .slide h2, .slide h3 {
@@ -46,7 +51,6 @@ tags:
   color: #444;
   font-style: normal;
 }
-
 </style>
 
 Last week I got to take part in the CPython Core Developer Sprint in
