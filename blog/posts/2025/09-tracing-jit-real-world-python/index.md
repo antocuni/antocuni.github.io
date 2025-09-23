@@ -20,15 +20,14 @@ tags:
 <meta name="author" content="Antonio Cuni">
 
 <style>
-.slide-container {
+.slide {
   border: 2px solid #ddd;
   border-radius: 8px;
   margin: 2em 0;
   background: #f9f9f9;
   max-width: 100%;
-}
 
-.slide {
+  /* Slide content box */
   aspect-ratio: 16 / 9;
   box-sizing: border-box;
   padding: 2em;
@@ -42,18 +41,6 @@ tags:
 .slide h1, .slide h2, .slide h3 {
   margin-top: 0;
   color: #333;
-}
-
-.annotation {
-  padding: 1.5em;
-  background: #f9f9f9;
-  color: #666;
-}
-
-.annotation h4 {
-  margin-top: 0;
-  color: #444;
-  font-style: normal;
 }
 </style>
 
@@ -97,18 +84,14 @@ What follows is an annotated version of the slides.
 
 <!-- more -->
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## Tracing JIT and real world Python
 
 ### aka: what we can learn from PyPy
 </div>
-<div class="annotation" markdown="1">
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 # Motivation
 
@@ -120,14 +103,14 @@ What follows is an annotated version of the slides.
 
 - Challenges & lesson learned
 </div>
-<div class="annotation" markdown="1">
 
 CPython's new JIT and PyPy's JIT share fundamental similarities, as they're both
 tracing JITs.
 
 I spent ~7 years of my career optimizing existing code for PyPy at a
-high-frequency trading firm, which makes me one of the few people in the world
-with actual experience in optimizing real world Python code for a tracing JIT.
+high-frequency trading firm, and I realized that I'm probably one of the few
+people in the world with actual experience in optimizing real world Python
+code for a tracing JIT.
 
 I expect that some of the challenges which I faced will still be valid also
 for CPython, and I wanted to share my experience to make sure that CPython
@@ -137,15 +120,12 @@ One lesson which I learnt is that the set of benchmarks in `pyperformance` are
 a good starting point, but they are not entierly representative of what you
 find in the wild.
 
-The main goal of the talk is not to present *solutions* to these problems,,
+The main goal of the talk is not to present *solutions* to these problems,
 but to raise awareness that they exist.
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
-# Assumption
+Assumption
 
 - The JIT revolutionizes performance characteristics
 
@@ -153,21 +133,21 @@ but to raise awareness that they exist.
 
 - ==> Some results are surprising
 </div>
-<div class="annotation" markdown="1">
 
 Until now CPython's performance have been particularly predictable, there are
 well estabilished "performance tricks" to make code faster, and generally
-speaking you can mostly reason about the local speed of a give piece of code.
+speaking you can mostly reason about the speed of a given piece of code
+"locally".
 
 Adding a JIT completely changes how we reason about performance of a given
 program, for two reasons:
 
   1. JITted code can be very fast if your code conforms to the heuristics
-     applied by the JIT compiler
+     applied by the JIT compiler, but unexpectedly slow(-ish) otherwise;
 
-  2. The speed of a given piece might depend a lot on what happens "very far"
+  2. the speed of a given piece might depend a lot on what happens "very far"
      from that code, and it becomes much harder to reason "locally" about
-     speed
+     speed.
 
 The end result is that modifiying a single line of code "here" can have a big
 inpact on code which looks totally unrelated, for multiple reasons.  This
@@ -177,10 +157,7 @@ The CPython JIT is still pretty new and doesn’t give huge speedups yet. I
 expect that as it gets faster, its performance will start looking more and
 more like PyPy’s.
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 # Context
 
@@ -194,7 +171,6 @@ more like PyPy’s.
 
 - "big" messages passed around
 </div>
-<div class="annotation" markdown="1">
 
 Let me give you some context about where this experience comes from. I worked
 at a high-frequency trading firm focused on sports betting, where every
@@ -202,10 +178,7 @@ millisecond of latency matters for profitability. We were using Python 2.7 in
 a multi-process architecture with long-running processes - perfect for JIT
 warmup.
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## PyPy JIT 101
 
@@ -223,7 +196,6 @@ warmup.
 
   * we have an interpreter for that, super slow
 </div>
-<div class="annotation" markdown="1">
 
 I delivered this talk at the Core Dev Sprint: I expected my audience to be
 familiar with CPython's JIT, and wanted to draw parallels with PyPy's one.
@@ -231,15 +203,16 @@ familiar with CPython's JIT, and wanted to draw parallels with PyPy's one.
 Since the audience of this blog is different, let me **briefly** explain
 CPython's JIT first.
 
-The explanation of both JITs are necessarily short, incomplete and highly
+The explanations of both JITs are necessarily short, incomplete and highly
 simplified.
 
 #### CPython JIT 101 first
 
 Python source code is turned into bytecode. Bytecode is a sequence of
-"opcodes", and the CPython VM is an interpreter for those
-opcodes. Historically, VM was written by hand, and the main loop consisted of
-a big `switch` statement which executed the code corresponding to each opcode.
+"opcodes" (`LOAD_FAST`, `BINARY_OP`, etc.), and the CPython VM is an
+interpreter for those opcodes. Historically, VM was written by hand, and the
+main loop consisted of a big `switch` statement which executed the code
+corresponding to each opcode.
 
 Nowadays things are different: the opcodes are written in a special DSL and
 the main interpreter loop is automatically generated from this
@@ -268,12 +241,12 @@ Under the hood, `rpython` applies two separate transformations to the source
 code:
 
   - it turns each function into C code, which is then fed to `gcc` to get the
-    final executable
+    final executable;
 
   - it turns each function into "jitcodes", which is a way to represent
     RPython's IR (internal representation). For each RPython function, the
     final `./pypy` executable contains its compiled representation (generated
-    by GCC) AND its jitcode representation (embedded as static data into the
+    by GCC) **and** its jitcode representation (embedded as static data into the
     executable).
 
 In a way, RPython's jitcodes are equivalent to CPython's microops, as they are
@@ -286,11 +259,7 @@ a linear unoptimized trace of all the jitcodes which were actually executed.
 Similarly to CPython, PyPy then produces an optimized trace, which is then
 sent to the JIT backend for actual native code generation.
 
-
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 1: trace blockers
 
@@ -318,7 +287,6 @@ def get_pi():
 ```
 
 </div>
-<div class="annotation" markdown="1">
 
 Tracing JITs works by recording a trace of all microops which are
 executed. The optimize can then reason about what happens in the trace and
@@ -334,10 +302,7 @@ This is a simple function that computes `pi`, generated by ChatGPT.  Its
 precise content is not important: what matters is that it's a nice purely
 numerical loop that the PyPy JIT can optimize very well.
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 
 ### Problem 1: trace blockers
@@ -366,21 +331,17 @@ def get_pi():
 ```
 
 </div>
-<div class="annotation" markdown="1">
 
 Same function as above, with a call to `hic_sunt_leones()`. This is actually
 an **empty function** which does absolutely nothing, but annotated in a
 special way so that the PyPy JIT cannot "enter" it, so it effectively behaves
 as trace blocker.
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## Hic sunt leones
 
-```
+```python
 def empty():
     pass      # the JIT cannot enter here
 
@@ -394,16 +355,12 @@ def hic_sunt_leones():
 
 - (for PyPy): RPython instructions not understood by the JIT
 </div>
-<div class="annotation" markdown="1">
 
 In this example we use the special `pypyjit.residual_call` to simulate a trace
 blocker, but in real life we get it whenever we have a call to any
-non-traceable function, in particular with C extensions.
+non-traceable function, in particular C extensions.
 
-</div>
-</div>
-
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ```
 ❯ python3.13 pi.py
@@ -417,7 +374,6 @@ non-traceable function, in particular with C extensions.
 1.1808 secs, pi = 3.1415928535897395
 ```
 </div>
-<div class="annotation" markdown="1">
 
 The clean version runs 42x faster on PyPy than CPython - that's the JIT
 working perfectly. But with just one untraceable function call added to the
@@ -431,23 +387,22 @@ conservative.
 I fear that for CPython, this will turn out to be a much bigger problem than
 for PyPy, for two reasons:
 
-The first is that it's virtually impossible to run Python code without using
-any C extension nowadays (either directly or indirectly)
+  1. nowadays is that it's virtually impossible to run Python code without
+     using any C extension, either directly or indirectly.
 
-Moreover, by construction, PyPy's JIT can see much more than CPython's
-JIT. Remember he slide about "jitcodes": any RPython function gets a
-"jitcodes" equivalent, which means that the JIT can automatially trace inside
-builtins and internals of the interpreter, whereas CPython can trace only inside pure python code.
+  2. by construction, PyPy's JIT can see much more than CPython's
+     JIT. Remember the slide about "jitcodes": any RPython function gets a
+     "jitcodes" equivalent, which means that the JIT can automatially trace
+     inside builtins and internals of the interpreter, whereas CPython can
+     trace only inside pure python code.
 
 For example, PyPy's JIT can trace through `range()`, `zip` and `enumerate()`
 automatically. CPython's JIT currently cannot because they are implemented in
 C. CPython *could* add special cases for these common functions, but the
 general approach doesn't scale.
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 2: data driven control flow
 
@@ -469,7 +424,6 @@ def main():
         acc += fn(*row)
 ```
 </div>
-<div class="annotation" markdown="1">
 
 The second big problem is what I call "data driven control flow". This example
 has been autogenerated by ChatGPT and it's completely silly, but it's a good
@@ -488,10 +442,8 @@ path, and if we assume the data is evenly distributed, we find out that
 
 Let's see what happens when we execute on CPython and PyPy:
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 2: data driven control flow
 
@@ -506,16 +458,13 @@ Let's see what happens when we execute on CPython and PyPy:
 1.6414 secs
 ```
 </div>
-<div class="annotation" markdown="1">
-
-#### Annotation
 
 PyPy without JIT is "only" 2.3x slower than CPython, but when we enable the
 JIT, it becomes **much worse**. This happens becase of an exponential
 explosion of code paths seen by the JIT.
 
 In a normal compiler, an `if` statement is compiled as a diamond, and the
-control flow merges together after each `if`:
+control flow merges after each `if`:
 
 ```
         if a is None
@@ -533,9 +482,9 @@ control flow merges together after each `if`:
            ...
 ```
 
-After each `if`, the control flow "merges". A tracing JIT by definition
-follows what's happening during a concrete execution, so it sees only a
-concrete path in the control flow, with "guards" to ensure correctness:
+A tracing JIT by definition follows what's happening during a concrete
+execution, so it sees only a concrete path in the control flow, with "guards"
+to ensure correctness:
 
 ```
         guard(a is None)
@@ -550,7 +499,7 @@ concrete path in the control flow, with "guards" to ensure correctness:
       b = 0
          \
           \
-
+          ...
 ```
 
 When `guard(a is None)` fails enough times, we create a "bridge" and record
@@ -577,10 +526,8 @@ now:
 Note how `b = 0` is effectively duplicated now. By design, PyPy's JIT *never
 merges execution flow*.
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## Exponential tracing
 
@@ -597,17 +544,14 @@ Total # of bridges:	527
 [a625ea507bc] jit-summary}
 ```
 </div>
-<div class="annotation" markdown="1">
 
 Looking inside `PYPYLOG` confirms our theory: we get "exponential
 tracing". The JIT has to compile separate optimized code for every unique
 combination of which parameters are None and which aren't. With 9 parameters,
 that could be up to 512 different combinations!
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## Exponential tracing
 
@@ -628,15 +572,14 @@ x = (x < 0)*100 + (x >= 0)*x
 
 - *Fundamental problem of tracing JITs*?
 </div>
-<div class="annotation" markdown="1">
 
 One possible mitigation is to rewrite conditional code to be "branchless" -
 using arithmetic tricks instead of if statements. But this makes code ugly and
 unreadable, and it's not always possible.
 
-Despite years of working on this, never found a really good solution. There
+Despite years of working on this, I never found a really good solution. There
 were cases in which we had to continue running some piece of code on CPython
-becuase I never managed to make the PyPy version faster.
+because I never managed to make the PyPy version faster.
 
 This pattern happens quite a lot, although often is more subtle: in this silly
 example all the `if`s are nicely grouped together at the start, but in a long
@@ -651,10 +594,8 @@ you try to compile shorter traces, you might quickly end up in a situation
 which is equivalent to the "trace blocker" problem described earlier.
 
 I suspect this might be a fundamental limitation of tracing JITs.
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 3: generators (and async?)
 
@@ -675,9 +616,6 @@ def count_triples_loop(P):
     return count
 ```
 </div>
-<div class="annotation" markdown="1">
-
-#### Annotation
 
 Compared to the other two problems, this is less serious, but it's worth
 mentioning because of prevalence of `async` (and thus implicitly generators)
@@ -685,10 +623,8 @@ in modern Python.
 
 Here's another silly function that counts Pythagorean triples using nested
 loops. This is our baseline version using plain loops.
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 3: generators (and async?)
 
@@ -710,20 +646,17 @@ def count_triples_gen(P):
     return count
 ```
 </div>
-<div class="annotation" markdown="1">
 
 Here's the same algorithm refactored to use a generator function for the
 nested iteration. The "state of iteration" is implicitly stored inside the
 local variables of frame object associated to the `range_product` generator.
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 3: generators (and async?)
 
-```
+```python
 class RangeProductIter:
 
     def __init__(self, a, b):
@@ -744,17 +677,12 @@ class RangeProductIter:
         return value
 ```
 </div>
-<div class="annotation" markdown="1">
-
-#### Annotation
 
 Here's the same functionality implemented as a traditional iterator class. The
 "state of iteration" is explicitly stored as attributes of `RangeProductIter`.
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Problem 3: generators (and async?)
 
@@ -776,7 +704,6 @@ iter: 0.1264 secs (1.05x)
 
 - In real code, much worse slowdowns
 </div>
-<div class="annotation" markdown="1">
 On CPython, the generator version is ~29% slower than the explicit loops. The
 iterator class is much slower, as one would intuitively expect.
 
@@ -791,10 +718,8 @@ However, generators are *required* to create a frame object and represent a
 fundamental case in which the JIT cannot trace through them effectively. In
 more complex real-world scenarios, we saw much worse slowdowns than these
 examples show.
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## Other misc problems
 
@@ -804,7 +729,7 @@ examples show.
 
 - Performance instability
 
-   * [Virtual Machine Warmup Blows Hot and Cold](https://arxiv.org/abs/1602.00602) (paper)
+    * [Virtual Machine Warmup Blows Hot and Cold](https://arxiv.org/abs/1602.00602) (paper)
 
 - Long tail of jitting
 
@@ -816,7 +741,6 @@ examples show.
            pypyjit.disable()
     ```
 </div>
-<div class="annotation" markdown="1">
 
 This is a collection of other misc problems that I had to deal with. Generally
 speaking, we lack good support for tooling and profilers. CPython needs to
@@ -840,27 +764,22 @@ sufficiently long running program, all counters reach the threshold eventually
 and we end up JITting much more than necessary, using too much memory and/or
 thrashing the cache. In many cases I found beneficial to just disable the JIT
 "after a while", with manually tuned heuristics.
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ## Bonus slides
 
 ### (Avoid) allocations is all your need
 </div>
-<div class="annotation" markdown="1">
 
-These are slides which I didn't show during the live presentation, and shows a
+These are slides which I didn't show during the live presentation, and show a
 case where a tracing JIT can shine: since the JIT sees a complete trace of an
 entire loop (including nested calls) it can easily removes a lot of temporary
 objects which usually penalize Python performance.
 
 In many cases, we can get the famous "zero costs abstractions".
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Task
 
@@ -869,7 +788,7 @@ In many cases, we can get the famous "zero costs abstractions".
 
 - Simulate protobuf, capnproto, etc.
 
-```
+```c
 struct Point {
     double x;
     double y;
@@ -882,20 +801,17 @@ struct Triangle {
 };
 ```
 </div>
-<div class="annotation" markdown="1">
 
 Let's look at a concrete example. We need to compute the barycenter of
 triangles that are serialized in a binary format. Each triangle has three
 points, each point has x and y coordinates. This simulates real world
 protocols such as protobuf, capnproto, etc.
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Bare loop
 
-```
+```python
 def read_loop():
     fmt = 'dddddd'
     size = struct.calcsize(fmt)
@@ -919,17 +835,14 @@ def read_loop():
     return x, y
 ```
 </div>
-<div class="annotation" markdown="1">
 
 This is what we use a a baseline: a bare loop, using `struct.unpack_from` to read 6 floats at a time.
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Schema-aware protocol
 
-```
+```python
 class Triangle:
     def __init__(self, buf, offset):
         self.buf = buf
@@ -951,7 +864,6 @@ class Point:
         return struct.unpack_from('d', self.buf, self.offset)[0]
 ```
 </div>
-<div class="annotation" markdown="1">
 
 Here's the "proper" object-oriented approach, similar to how modern
 serialization libraries work. We create `Triangle` and `Point` classes that
@@ -959,14 +871,12 @@ provide a nice API for accessing the binary data. Each property access creates
 new objects and calls struct.unpack_from. This is much more readable and
 reusable, but creates many temporary objects.
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ### Schema-aware protocol
 
-```
+```python
         while True:
             buf = f.read(size)
             if not buf:
@@ -977,17 +887,14 @@ reusable, but creates many temporary objects.
             n += 1
 ```
 </div>
-<div class="annotation" markdown="1">
 
 Here's how you'd use the object-oriented API. The code is much cleaner and
 more readable than the bare loop version. But notice how many object creations
 are happening: one `Triangle` object, six `Point` objects, plus all the
 intermediate tuples from `struct.unpack_from`.
 
-</div>
-</div>
 
-<div class="slide-container" markdown="1">
+---
 <div class="slide" markdown="1">
 ```
 ❯ python3.13 readpoly.py
@@ -999,12 +906,9 @@ read_loop:     0.2945 secs
 read_proto:    0.1183 secs
 ```
 </div>
-<div class="annotation" markdown="1">
-
-#### Annotation
 
 As expected, on CPython `read_proto` is much slower than the bare one,
-roughtly 6x slower.  However, PyPy can fully optimize aways all the the
+roughtly 6x slower.  However, PyPy can fully optimize away all the the
 abstraction overhead introduced by `Triangle` and `Point`.
 
 In PyPy jargon we call this form of allocation removal "virtuals" (because we
@@ -1026,6 +930,3 @@ The funny part is that **I did not expect** to get this result. I had to take
 the time to analyze the JIT traces of both versions to understand why
 `read_loop` was slower.  This is probably the best explanation of how
 counterintuitive it is to reason about performance in a JITted world.
-
-</div>
-</div>
