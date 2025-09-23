@@ -73,7 +73,7 @@ I had three main areas of focus:
 
   - "**JIT stuff**": I spent a considerable amount of time talking to the
     people who are working on the CPython JIT (in particular Mark, Brandt,
-    Savannah, Ken Jit and Diego). Knowledge transfer worked in both ways: I
+    Savannah, Ken Jin and Diego). Knowledge transfer worked in both ways: I
     learned a lot about the internal details of CPython's JIT, and conversely I
     shared with them some of the experience, pain points and gut feelings
     which I got by working many years on PyPy.
