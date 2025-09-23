@@ -15,5 +15,6 @@ gh-deploy:
 edit-py:
 	e `uv run --with-requirements requirements.txt python -c 'import material; print(material.__file__)'`
 
-# aws-deploy: build
-# 	rsync -avz --delete site/ aws:/home/ubuntu/www/antocuni.eu/blog
+aws-preview-deploy: build
+	rsync -avz --delete site/ aws:/home/ubuntu/www/f.antocuni.eu/preview/
+	echo http://f.antocuni.eu/preview/

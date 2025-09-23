@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 date: 2025-09-23
 title: "Tracing JITs in the real world @ CPython Core Dev Sprint"
 categories:
