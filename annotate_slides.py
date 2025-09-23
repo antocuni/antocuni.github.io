@@ -110,7 +110,6 @@ def create_css():
 .annotation {
   padding: 1.5em;
   background: #f9f9f9;
-  font-style: italic;
   color: #666;
 }
 

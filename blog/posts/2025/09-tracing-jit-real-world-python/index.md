@@ -14,6 +14,11 @@ tags:
 
 # Tracing JITs in the real world @ CPython Core Dev Sprint
 
+<meta property="og:title" content="Tracing JITs in the real world @ CPython Core Dev Sprint">
+<meta property="og:description" content="My experience at the CPython Core Dev Sprint">
+<meta property="og:image" content="http://antocuni.eu/2025/09-tracing-jit-real-world-python/cpython-core-dev-sprint-2025-cambridge.jpg">
+<meta name="author" content="Antonio Cuni">
+
 <style>
 .slide-container {
   border: 2px solid #ddd;
@@ -58,24 +63,26 @@ Cambridge, hosted by ARM and brilliantly
 -- about ~50 core devs and guests were there, and I was excited to join as one
 of the guests.
 
+![CPython Core Dev Sprint 2025, ARM, Cambridge](cpython-core-dev-sprint-2025-cambridge.jpg)
+
 I had three main areas of focus:
 
   - **C API**: this was a follow up of what we discussed at the
     [C API summit at EuroPython](../07-europython-talks/index.md). The current
     C API is problematic, so we are exploring ideas for the development of
     [PyNI](https://github.com/py-ni) (Python Native Interface), whose design
-    will be likely be heavily inspired by HPy. It's important to underline
-    that this is just the beginning and the entire process will require
-    multiple PEPs.
+    will be likely be heavily inspired by [HPy](https://hpyproject.org/). It's
+    important to underline that this is just the beginning and the entire
+    process will require multiple PEPs.
 
   - **fancycompleter** This is a
     [small PR](https://github.com/python/cpython/pull/130473) which I started
-    months ago, to enable colorful tab completions within the Python REPL. I
-    wrote the original version of
+    [months ago](../02-over-the-clouds/over-the-clouds.md), to enable colorful
+    tab completions within the Python REPL. I wrote the original version of
     [fancycompleter](https://github.com/pdbpp/fancycompleter) 15 years ago,
-    but colorful completions works only in combination with PyREPL. Now
-    PyREPL is part of the standard library and enabled by default, so we can
-    finally upstream it. I hope to see it merged soon.
+    but colorful completions works only in combination with PyREPL. Now PyREPL
+    is part of the standard library and enabled by default, so we can finally
+    upstream it. I hope to see it merged soon.
 
   - "**JIT stuff**": I spent a considerable amount of time talking to the
     people who are working on the CPython JIT (in particular Mark, Brandt,
@@ -627,8 +634,11 @@ One possible mitigation is to rewrite conditional code to be "branchless" -
 using arithmetic tricks instead of if statements. But this makes code ugly and
 unreadable, and it's not always possible.
 
-Despite years of working on this, never found a really good solution. This
-pattern happens quite a lot, although often is more subtle: in this silly
+Despite years of working on this, never found a really good solution. There
+were cases in which we had to continue running some piece of code on CPython
+becuase I never managed to make the PyPy version faster.
+
+This pattern happens quite a lot, although often is more subtle: in this silly
 example all the `if`s are nicely grouped together at the start, but in a long
 trace they can be scattered in multiple places, and _any_ kind of control flow
 contributes to the problem, not only `if`s. In Python, this includes any kind
@@ -674,7 +684,7 @@ mentioning because of prevalence of `async` (and thus implicitly generators)
 in modern Python.
 
 Here's another silly function that counts Pythagorean triples using nested
-loops. This is our baseline "good" version using plain loops.
+loops. This is our baseline version using plain loops.
 </div>
 </div>
 
@@ -702,7 +712,9 @@ def count_triples_gen(P):
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Here's the same algorithm refactored to use a generator function for the
+nested iteration. The "state of iteration" is implicitly stored inside the
+local variables of frame object associated to the `range_product` generator.
 
 </div>
 </div>
@@ -736,6 +748,9 @@ class RangeProductIter:
 
 #### Annotation
 
+Here's the same functionality implemented as a traditional iterator class. The
+"state of iteration" is explicitly stored as attributes of `RangeProductIter`.
+
 </div>
 </div>
 
@@ -762,9 +777,20 @@ iter: 0.1264 secs (1.05x)
 - In real code, much worse slowdowns
 </div>
 <div class="annotation" markdown="1">
+On CPython, the generator version is ~29% slower than the explicit loops. The
+iterator class is much slower, as one would intuitively expect.
 
-#### Annotation
+However, on PyPy we see different results: `RangeProductIter` is basically
+same speed as the baseline, while the generator version is slower. This
+happens because in case of `RangeProductIter` the JIT is able to see the whole
+lifetime of the object and optimize it aways entirely: instance variables
+become local variables, the call to `__next__` is inlined and we get the
+equivalent of explicit nested loops.
 
+However, generators are *required* to create a frame object and represent a
+fundamental case in which the JIT cannot trace through them effectively. In
+more complex real-world scenarios, we saw much worse slowdowns than these
+examples show.
 </div>
 </div>
 
@@ -776,7 +802,9 @@ iter: 0.1264 secs (1.05x)
 
 - Warmup
 
-- Performance instability (link to paper?)
+- Performance instability
+
+   * [Virtual Machine Warmup Blows Hot and Cold](https://arxiv.org/abs/1602.00602) (paper)
 
 - Long tail of jitting
 
@@ -790,8 +818,28 @@ iter: 0.1264 secs (1.05x)
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+This is a collection of other misc problems that I had to deal with. Generally
+speaking, we lack good support for tooling and profilers. CPython needs to
+have a good story to explain people how to understand what's happening when
+the JIT is enabled.
 
+Warmup is another big problem: in PyPy, very short programs tends to be slower
+than CPython because JITting costs. Moreover warmup is not an easily definable
+phase, as the linked paper shows.  This is an area where currently CPython
+shines, as its JIT is very fast.  I think that it will become slightly slower
+when it will try to optimize more aggressively, but hopefully warmup will
+overall be a lesser problem than on PyPy.
+
+Moreover, it's very easy to accidentally make your code 2x, 5x or even 10x
+slower by changing seemingly innocent pieces of code. This is another reason
+why good tooling is essential.
+
+Finally, the "long tail of JITting": every loop and every guard gets a
+counter, and we start JITting when it reaches a threshold. Given a
+sufficiently long running program, all counters reach the threshold eventually
+and we end up JITting much more than necessary, using too much memory and/or
+thrashing the cache. In many cases I found beneficial to just disable the JIT
+"after a while", with manually tuned heuristics.
 </div>
 </div>
 
@@ -803,8 +851,12 @@ iter: 0.1264 secs (1.05x)
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+These are slides which I didn't show during the live presentation, and shows a
+case where a tracing JIT can shine: since the JIT sees a complete trace of an
+entire loop (including nested calls) it can easily removes a lot of temporary
+objects which usually penalize Python performance.
 
+In many cases, we can get the famous "zero costs abstractions".
 </div>
 </div>
 
@@ -812,7 +864,7 @@ iter: 0.1264 secs (1.05x)
 <div class="slide" markdown="1">
 ### Task
 
-- Compute baricenter of a series of triangles serialized according to a binary
+- Compute center of gravity of a series of triangles serialized according to a binary
   protocol
 
 - Simulate protobuf, capnproto, etc.
@@ -832,8 +884,10 @@ struct Triangle {
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
-
+Let's look at a concrete example. We need to compute the barycenter of
+triangles that are serialized in a binary format. Each triangle has three
+points, each point has x and y coordinates. This simulates real world
+protocols such as protobuf, capnproto, etc.
 </div>
 </div>
 
@@ -867,8 +921,7 @@ def read_loop():
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
-
+This is what we use a a baseline: a bare loop, using `struct.unpack_from` to read 6 floats at a time.
 </div>
 </div>
 
@@ -900,7 +953,11 @@ class Point:
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Here's the "proper" object-oriented approach, similar to how modern
+serialization libraries work. We create `Triangle` and `Point` classes that
+provide a nice API for accessing the binary data. Each property access creates
+new objects and calls struct.unpack_from. This is much more readable and
+reusable, but creates many temporary objects.
 
 </div>
 </div>
@@ -922,7 +979,10 @@ class Point:
 </div>
 <div class="annotation" markdown="1">
 
-#### Annotation
+Here's how you'd use the object-oriented API. The code is much cleaner and
+more readable than the bare loop version. But notice how many object creations
+are happening: one `Triangle` object, six `Point` objects, plus all the
+intermediate tuples from `struct.unpack_from`.
 
 </div>
 </div>
@@ -942,6 +1002,30 @@ read_proto:    0.1183 secs
 <div class="annotation" markdown="1">
 
 #### Annotation
+
+As expected, on CPython `read_proto` is much slower than the bare one,
+roughtly 6x slower.  However, PyPy can fully optimize aways all the the
+abstraction overhead introduced by `Triangle` and `Point`.
+
+In PyPy jargon we call this form of allocation removal "virtuals" (because we
+create "virtual objects" whose fields are represented as local variables) and
+it's probably the single most important optimization that PyPy does.
+
+During my week in Cambridge I talked extensively with the CPython JIT devs
+about this and I hope I convinced them that this is what they should aim for
+😊.
+
+Note also that `read_proto` is actually **faster** than `read_loop`. This
+happens because in `read_loop` we do a single `struct.unpack_from('dddddd', ...)`,
+while in `read_proto` we do a succession of six individual
+`struct.unpack.from('d', ...)` . It turns out that the JIT is able to trace
+into the second form but not into the first, which means that in `read_loop`
+we actually need to allocate a pseudo-tuple at each iteration.
+
+The funny part is that **I did not expect** to get this result. I had to take
+the time to analyze the JIT traces of both versions to understand why
+`read_loop` was slower.  This is probably the best explanation of how
+counterintuitive it is to reason about performance in a JITted world.
 
 </div>
 </div>
