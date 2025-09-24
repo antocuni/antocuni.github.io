@@ -1,0 +1,686 @@
+[3bc898e0d63c] {jit-log-opt-loop
+# Loop 1 (read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP) : loop with 358 ops
+[p0, p1]
++731: i2 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_last_instr 40>)
++742: p3 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_pycode 64>)
++746: i4 = getfield_gc_i(p0, descr=<FieldS pypy.interpreter.pyframe.PyFrame.inst_valuestackdepth 72>)
++750: p5 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_debugdata 16>)
++754: p6 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_lastblock 48>)
++758: p7 = getfield_gc_r(p0, descr=<FieldP pypy.interpreter.pyframe.PyFrame.inst_locals_cells_stack_w 56>)
++762: p9 = getarrayitem_gc_r(p7, 0, descr=<ArrayP 8>)
++766: p11 = getarrayitem_gc_r(p7, 1, descr=<ArrayP 8>)
++770: p13 = getarrayitem_gc_r(p7, 2, descr=<ArrayP 8>)
++774: p15 = getarrayitem_gc_r(p7, 3, descr=<ArrayP 8>)
++778: p17 = getarrayitem_gc_r(p7, 4, descr=<ArrayP 8>)
++782: p19 = getarrayitem_gc_r(p7, 5, descr=<ArrayP 8>)
++786: p21 = getarrayitem_gc_r(p7, 6, descr=<ArrayP 8>)
++797: p23 = getarrayitem_gc_r(p7, 7, descr=<ArrayP 8>)
++808: p25 = getarrayitem_gc_r(p7, 8, descr=<ArrayP 8>)
++819: p27 = getarrayitem_gc_r(p7, 9, descr=<ArrayP 8>)
++830: p29 = getarrayitem_gc_r(p7, 10, descr=<ArrayP 8>)
++841: p31 = getarrayitem_gc_r(p7, 11, descr=<ArrayP 8>)
++852: p33 = getarrayitem_gc_r(p7, 12, descr=<ArrayP 8>)
++863: p35 = getarrayitem_gc_r(p7, 13, descr=<ArrayP 8>)
++874: p37 = getarrayitem_gc_r(p7, 14, descr=<ArrayP 8>)
++888: p39 = getarrayitem_gc_r(p7, 15, descr=<ArrayP 8>)
++902: p41 = getarrayitem_gc_r(p7, 16, descr=<ArrayP 8>)
++916: p43 = getarrayitem_gc_r(p7, 17, descr=<ArrayP 8>)
++930: p45 = getarrayitem_gc_r(p7, 18, descr=<ArrayP 8>)
++944: p47 = getarrayitem_gc_r(p7, 19, descr=<ArrayP 8>)
++958: p49 = getarrayitem_gc_r(p7, 20, descr=<ArrayP 8>)
++972: p51 = getarrayitem_gc_r(p7, 21, descr=<ArrayP 8>)
++986: p53 = getarrayitem_gc_r(p7, 22, descr=<ArrayP 8>)
++1000: label(p0, p1, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, descr=TargetToken(128167249164896))
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP')
++1024: guard_value(i4, 17, descr=<Guard0x749143604700>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1034: guard_isnull(p5, descr=<Guard0x749143612c60>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#40 LOAD_FAST')
++1043: guard_nonnull_class(p19, ConstClass(W_BufferedReader), descr=<Guard0x749143604750>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#42 LOAD_METHOD')
++1069: guard_value(p3, ConstPtr(ptr56), descr=<Guard0x749143612c98>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1078: p57 = getfield_gc_r(p19, descr=<FieldP pypy.module._io.interp_iobase.W_IOBase.inst_w_dict 24>)
++1082: guard_isnull(p57, descr=<Guard0x749143612cd0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#44 LOAD_FAST')
++1091: guard_nonnull_class(p11, ConstClass(W_IntObject), descr=<Guard0x7491436047a0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#46 CALL_METHOD')
++1110: i59 = getfield_gc_i(p19, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst__fast_closed_check 128>)
++1118: guard_true(i59, descr=<Guard0x749143612d08>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1127: p60 = getfield_gc_r(p19, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_w_raw 104>)
++1131: i61 = getfield_gc_i(p60, descr=<FieldS pypy.module._io.interp_fileio.W_FileIO.inst_fd 48>)
++1135: i63 = int_ge(i61, 0)
++1139: guard_true(i63, descr=<Guard0x749143612d40>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1152: i65 = instance_ptr_eq(ConstPtr(ptr64), p11)
++1155: guard_false(i65, descr=<Guard0x749143612d78>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1161: i66 = getfield_gc_i(p11, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++1165: i68 = int_eq(i66, -1)
++1169: guard_false(i68, descr=<Guard0x749143612db0>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1175: i70 = int_ge(i66, 0)
++1179: guard_true(i70, descr=<Guard0x749143612de8>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1185: i71 = getfield_gc_i(p19, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst_readable 129>)
++1193: guard_true(i71, descr=<Guard0x749143612e20>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1202: i72 = getfield_gc_i(p19, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_read_end 88>)
++1206: i74 = int_ne(i72, -1)
++1210: guard_true(i74, descr=<Guard0x749143612e58>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1216: i75 = getfield_gc_i(p19, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++1220: i76 = int_sub(i72, i75)
++1223: i77 = int_le(i66, i76)
++1226: guard_true(i77, descr=<Guard0x749143612e90>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1232: i78 = int_add(i75, i66)
++1238: p79 = getfield_gc_r(p19, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_buffer 48>)
++1249: guard_class(p79, 128167305073296, descr=<Guard0x749143612ec8>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1262: p81 = getfield_gc_r(p79, descr=<FieldP rpython.rlib.buffer.ByteBuffer.inst_data 16 pure>)
++1273: i82 = getfield_gc_i(p81, descr=<FieldS list.length 8>)
++1277: i83 = int_lt(i78, i82)
++1280: guard_true(i83, descr=<Guard0x749143612f00>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1286: i84 = int_is_zero(i75)
++1289: guard_false(i84, descr=<Guard0x749143612f38>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1295: i85 = int_gt(i78, i82)
++1298: guard_false(i85, descr=<Guard0x749143612f70>) [p0, i2, p3, i4, p5, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p43, p45, p47, p49, p51, p53, p1]
++1304: p86 = new_array(i66, descr=<ArrayU 1>)
++1372: p87 = getfield_gc_r(p81, descr=<FieldP list.items 16>)
++1376: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p87, p86, i75, 0, i66, descr=<Callv 0 rriii EF=2 OS=1>)
++1441: p91 = call_r(ConstClass(ll_join_chars_trampoline__v1231___simple_call__function_), i66, p86, descr=<Callr 8 ir EF=5>)
++1531: guard_no_exception(descr=<Guard0x7491436047f0>) [p0, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p49, p51, p53, p1, i66, i78, p91]
++1545: setfield_gc(p19, i78, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++1563: guard_nonnull(p91, descr=<Guard0x749143604840>) [p0, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p49, p51, p53, p1, i66, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#48 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#50 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#52 POP_JUMP_IF_TRUE')
++1572: i92 = strlen(p91)
++1576: i93 = int_is_true(i92)
++1579: guard_true(i93, descr=<Guard0x749143612fa8>) [p0, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p49, p51, p53, p1, i66, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#56 LOAD_GLOBAL')
++1585: guard_not_invalidated(descr=<Guard0x749143612fe0>) [p0, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p49, p51, p53, p1, i66, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#58 LOAD_METHOD')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#60 LOAD_FAST')
++1585: guard_nonnull_class(p9, ConstClass(W_UnicodeObject), descr=<Guard0x749143604890>) [p0, p6, p9, p11, p13, p15, p17, p19, p21, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p49, p51, p53, p1, i66, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#64 CALL_METHOD')
++1612: p95 = getfield_gc_r(p9, descr=<FieldP pypy.objspace.std.unicodeobject.W_UnicodeObject.inst__utf8 24 pure>)
++1616: p96 = new_with_vtable(descr=<SizeDescr 24>)
++1653: setfield_gc(p96, 0, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++1661: call_n(ConstClass(interpret_trampoline__v707___simple_call__function_i), p96, p95, descr=<Callv 0 rr EF=5>)
++1741: guard_no_exception(descr=<Guard0x7491436048e0>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p95, p96, p91]
++1755: i99 = getfield_gc_i(p96, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++1766: i100 = int_lt(i92, i99)
++1769: guard_false(i100, descr=<Guard0x749143613018>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p95, p96, p91]
++1775: i102 = int_ge(i99, 0)
++1779: guard_true(i102, descr=<Guard0x749143613050>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p95, p96, p91]
++1785: p103 = force_token()
++1788: p104 = new_with_vtable(descr=<SizeDescr 48>)
++1829: p105 = new_with_vtable(descr=<SizeDescr 40>)
++1840: setfield_gc(p105, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++1848: p107 = new_with_vtable(descr=<SizeDescr 24>)
++1859: setfield_gc(p107, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++1867: setfield_gc(p107, p91, descr=<FieldP rpython.rlib.buffer.StringBuffer.inst_value 16 pure>)
++1878: setfield_gc(p105, p107, descr=<FieldP rpython.rlib.buffer.SubBuffer.inst_buffer 16 pure>)
++1882: setfield_gc(p105, 0, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_offset 24 pure>)
++1890: setfield_gc(p105, i99, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_size 32 pure>)
++1894: p110 = new(descr=<SizeDescr 24>)
++1905: setfield_gc(p110, 0, descr=<FieldS list.length 8>)
++1913: p113 = new_array_clear(0, descr=<ArrayP 8>)
++1932: setfield_gc(p110, p113, descr=<FieldP list.items 16>)
++1953: setfield_gc(p0, p103, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++1957: setfield_gc(p104, p105, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_buf 8>)
++1961: setfield_gc(p104, i99, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_length 16>)
++1965: setfield_gc(p104, 0, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_pos 24>)
++1973: setfield_gc(p104, p110, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++1977: call_may_force_n(ConstClass(interpret_trampoline__v732___simple_call__function_i), p104, p95, descr=<Callv 0 rr EF=7>)
++2064: guard_not_forced(descr=<Guard0x749143695990>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p104, p91]
++2075: guard_no_exception(descr=<Guard0x749143613088>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p104, p91]
++2089: p116 = getfield_gc_r(p104, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++2100: i117 = getfield_gc_i(p116, descr=<FieldS list.length 8>)
++2104: p118 = new_array_clear(i117, descr=<ArrayP 8>)
++2203: p119 = getfield_gc_r(p116, descr=<FieldP list.items 16>)
++2207: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p119, p118, 0, 0, i117, descr=<Callv 0 rriii EF=2 OS=1>)
++2239: i124 = int_eq(i117, 2)
++2243: guard_false(i124, descr=<Guard0x749143604930>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#66 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#68 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#70 UNPACK_SEQUENCE')
++2249: i126 = int_ne(i117, 6)
++2253: guard_false(i126, descr=<Guard0x7491436130c0>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2259: p128 = getarrayitem_gc_r(p118, 5, descr=<ArrayP 8>)
++2264: p130 = getarrayitem_gc_r(p118, 4, descr=<ArrayP 8>)
++2269: p132 = getarrayitem_gc_r(p118, 3, descr=<ArrayP 8>)
++2274: p134 = getarrayitem_gc_r(p118, 2, descr=<ArrayP 8>)
++2279: p136 = getarrayitem_gc_r(p118, 1, descr=<ArrayP 8>)
++2284: p138 = getarrayitem_gc_r(p118, 0, descr=<ArrayP 8>)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#72 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#74 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#76 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#78 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#80 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#82 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#84 LOAD_FAST')
++2289: guard_nonnull_class(p13, ConstClass(W_FloatObject), descr=<Guard0x749143604980>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#86 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#88 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#90 BINARY_ADD')
++2314: guard_class(p138, ConstClass(W_FloatObject), descr=<Guard0x7491436130f8>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2327: guard_class(p134, ConstClass(W_FloatObject), descr=<Guard0x749143613130>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2339: f142 = getfield_gc_f(p138, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2345: f143 = getfield_gc_f(p134, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2351: f144 = float_add(f142, f143)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#92 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#94 BINARY_ADD')
++2356: guard_class(p130, ConstClass(W_FloatObject), descr=<Guard0x749143613168>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2368: f146 = getfield_gc_f(p130, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2374: f147 = float_add(f144, f146)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#96 INPLACE_ADD')
++2379: f148 = getfield_gc_f(p13, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2385: f149 = float_add(f148, f147)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#98 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#100 LOAD_FAST')
++2390: guard_nonnull_class(p15, ConstClass(W_FloatObject), descr=<Guard0x7491436049d0>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#102 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#104 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#106 BINARY_ADD')
++2415: guard_class(p136, ConstClass(W_FloatObject), descr=<Guard0x7491436131a0>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2428: guard_class(p132, ConstClass(W_FloatObject), descr=<Guard0x7491436131d8>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2442: f153 = getfield_gc_f(p136, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2448: f154 = getfield_gc_f(p132, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2454: f155 = float_add(f153, f154)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#108 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#110 BINARY_ADD')
++2459: guard_class(p128, ConstClass(W_FloatObject), descr=<Guard0x749143613210>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2472: f157 = getfield_gc_f(p128, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2478: f158 = float_add(f155, f157)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#112 INPLACE_ADD')
++2483: f159 = getfield_gc_f(p15, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++2489: f160 = float_add(f159, f158)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#114 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#116 LOAD_FAST')
++2494: guard_nonnull_class(p17, ConstClass(W_IntObject), descr=<Guard0x749143604a20>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#118 LOAD_CONST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#120 INPLACE_ADD')
++2519: i162 = getfield_gc_i(p17, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++2523: i164 = int_add_ovf(i162, 1)
++2527: guard_no_overflow(descr=<Guard0x749143613248>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#122 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#124 JUMP_ABSOLUTE')
++2533: guard_not_invalidated(descr=<Guard0x749143613280>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
++2533: i166 = getfield_raw_i(128167321604736, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++2546: i168 = int_lt(i166, 0)
++2550: guard_false(i168, descr=<Guard0x7491436132b8>) [p0, p6, p9, p11, p13, p15, p17, p19, p23, p25, p27, p29, p31, p33, p35, p37, p39, p41, p51, p53, p1, p118, i117, p91]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP')
++2556: label(p0, p1, p6, p9, p11, f149, f160, i164, p19, p91, p118, p138, p136, p134, p132, p130, p128, p37, p39, p41, i66, p95, descr=TargetToken(128167249165472))
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#40 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#42 LOAD_METHOD')
++2608: p169 = getfield_gc_r(p19, descr=<FieldP pypy.module._io.interp_iobase.W_IOBase.inst_w_dict 24>)
++2619: guard_isnull(p169, descr=<Guard0x749143604a70>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#44 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#46 CALL_METHOD')
++2628: i170 = getfield_gc_i(p19, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst__fast_closed_check 128>)
++2636: guard_true(i170, descr=<Guard0x7491436132f0>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2645: p171 = getfield_gc_r(p19, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_w_raw 104>)
++2649: i172 = getfield_gc_i(p171, descr=<FieldS pypy.module._io.interp_fileio.W_FileIO.inst_fd 48>)
++2653: i174 = int_ge(i172, 0)
++2657: guard_true(i174, descr=<Guard0x749143613328>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2663: i175 = getfield_gc_i(p19, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst_readable 129>)
++2671: guard_true(i175, descr=<Guard0x749143613360>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2680: i176 = getfield_gc_i(p19, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_read_end 88>)
++2684: i178 = int_ne(i176, -1)
++2688: guard_true(i178, descr=<Guard0x7491434201a8>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2694: i179 = getfield_gc_i(p19, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++2698: i180 = int_sub(i176, i179)
++2701: i181 = int_le(i66, i180)
++2708: guard_true(i181, descr=<Guard0x749143420170>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2714: i182 = int_add(i179, i66)
++2724: p183 = getfield_gc_r(p19, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_buffer 48>)
++2728: guard_class(p183, 128167305073296, descr=<Guard0x749143420138>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2740: p185 = getfield_gc_r(p183, descr=<FieldP rpython.rlib.buffer.ByteBuffer.inst_data 16 pure>)
++2744: i186 = getfield_gc_i(p185, descr=<FieldS list.length 8>)
++2748: i187 = int_lt(i182, i186)
++2751: guard_true(i187, descr=<Guard0x749143420100>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2757: i188 = int_is_zero(i179)
++2760: guard_false(i188, descr=<Guard0x7491434200c8>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2766: i189 = int_gt(i182, i186)
++2769: guard_false(i189, descr=<Guard0x749143420090>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p169, p118, p91, i164, f160, f149]
++2775: p190 = new_array(i66, descr=<ArrayU 1>)
++2854: p191 = getfield_gc_r(p185, descr=<FieldP list.items 16>)
++2858: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p191, p190, i179, 0, i66, descr=<Callv 0 rriii EF=2 OS=1>)
++2912: p195 = call_r(ConstClass(ll_join_chars_trampoline__v1231___simple_call__function_), i66, p190, descr=<Callr 8 ir EF=5>)
++2977: guard_no_exception(descr=<Guard0x749143604c00>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, i66, i182, p195, p118, p91, i164, f160, f149]
++2991: setfield_gc(p19, i182, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++3002: guard_nonnull(p195, descr=<Guard0x749143604bb0>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, i66, p195, p118, p91, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#48 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#50 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#52 POP_JUMP_IF_TRUE')
++3011: i196 = strlen(p195)
++3015: i197 = int_is_true(i196)
++3018: guard_true(i197, descr=<Guard0x749143420020>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, i66, p195, p118, p91, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#56 LOAD_GLOBAL')
++3024: guard_not_invalidated(descr=<Guard0x749143613f68>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, i66, p195, p118, p91, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#58 LOAD_METHOD')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#60 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#64 CALL_METHOD')
++3024: p198 = new_with_vtable(descr=<SizeDescr 24>)
++3062: setfield_gc(p198, 0, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++3070: call_n(ConstClass(interpret_trampoline__v707___simple_call__function_i), p198, p95, descr=<Callv 0 rr EF=5>)
++3150: guard_no_exception(descr=<Guard0x749143604b60>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p95, p198, p195, p118, None, i164, f160, f149]
++3164: i202 = getfield_gc_i(p198, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++3175: i203 = int_lt(i196, i202)
++3178: guard_false(i203, descr=<Guard0x749143613f30>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p95, p198, p195, p118, None, i164, f160, f149]
++3184: i205 = int_ge(i202, 0)
++3188: guard_true(i205, descr=<Guard0x749143613ef8>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p95, p198, p195, p118, None, i164, f160, f149]
++3194: p206 = force_token()
++3197: p207 = new_with_vtable(descr=<SizeDescr 48>)
++3238: p208 = new_with_vtable(descr=<SizeDescr 40>)
++3249: setfield_gc(p208, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++3257: p210 = new_with_vtable(descr=<SizeDescr 24>)
++3268: setfield_gc(p210, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++3276: setfield_gc(p210, p195, descr=<FieldP rpython.rlib.buffer.StringBuffer.inst_value 16 pure>)
++3287: setfield_gc(p208, p210, descr=<FieldP rpython.rlib.buffer.SubBuffer.inst_buffer 16 pure>)
++3291: setfield_gc(p208, 0, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_offset 24 pure>)
++3299: setfield_gc(p208, i202, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_size 32 pure>)
++3303: p213 = new(descr=<SizeDescr 24>)
++3314: setfield_gc(p213, 0, descr=<FieldS list.length 8>)
++3322: p216 = new_array_clear(0, descr=<ArrayP 8>)
++3341: setfield_gc(p213, p216, descr=<FieldP list.items 16>)
++3363: setfield_gc(p0, p206, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++3367: setfield_gc(p207, p208, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_buf 8>)
++3371: setfield_gc(p207, i202, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_length 16>)
++3375: setfield_gc(p207, 0, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_pos 24>)
++3383: setfield_gc(p207, p213, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++3387: call_may_force_n(ConstClass(interpret_trampoline__v732___simple_call__function_i), p207, p95, descr=<Callv 0 rr EF=7>)
++3481: guard_not_forced(descr=<Guard0x749143695a40>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p207, p195, p118, None, i164, f160, f149]
++3492: guard_no_exception(descr=<Guard0x749143613ec0>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p207, p195, p118, None, i164, f160, f149]
++3506: p219 = getfield_gc_r(p207, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++3517: i220 = getfield_gc_i(p219, descr=<FieldS list.length 8>)
++3521: p221 = new_array_clear(i220, descr=<ArrayP 8>)
++3618: p222 = getfield_gc_r(p219, descr=<FieldP list.items 16>)
++3622: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p222, p221, 0, 0, i220, descr=<Callv 0 rriii EF=2 OS=1>)
++3654: i227 = int_eq(i220, 2)
++3658: guard_false(i227, descr=<Guard0x749143604b10>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#66 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#68 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#70 UNPACK_SEQUENCE')
++3664: i229 = int_ne(i220, 6)
++3668: guard_false(i229, descr=<Guard0x749143613e88>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3674: p231 = getarrayitem_gc_r(p221, 5, descr=<ArrayP 8>)
++3678: p233 = getarrayitem_gc_r(p221, 4, descr=<ArrayP 8>)
++3682: p235 = getarrayitem_gc_r(p221, 3, descr=<ArrayP 8>)
++3686: p237 = getarrayitem_gc_r(p221, 2, descr=<ArrayP 8>)
++3690: p239 = getarrayitem_gc_r(p221, 1, descr=<ArrayP 8>)
++3694: p241 = getarrayitem_gc_r(p221, 0, descr=<ArrayP 8>)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#72 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#74 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#76 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#78 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#80 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#82 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#84 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#86 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#88 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#90 BINARY_ADD')
++3698: guard_class(p241, ConstClass(W_FloatObject), descr=<Guard0x749143613e50>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3710: guard_class(p237, ConstClass(W_FloatObject), descr=<Guard0x749143613e18>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3722: f244 = getfield_gc_f(p241, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++3728: f245 = getfield_gc_f(p237, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++3734: f246 = float_add(f244, f245)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#92 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#94 BINARY_ADD')
++3739: guard_class(p233, ConstClass(W_FloatObject), descr=<Guard0x749143613de0>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3751: f248 = getfield_gc_f(p233, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++3757: f249 = float_add(f246, f248)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#96 INPLACE_ADD')
++3762: f250 = float_add(f149, f249)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#98 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#100 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#102 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#104 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#106 BINARY_ADD')
++3776: guard_class(p239, ConstClass(W_FloatObject), descr=<Guard0x749143613da8>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3789: guard_class(p235, ConstClass(W_FloatObject), descr=<Guard0x749143613d70>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3803: f253 = getfield_gc_f(p239, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++3809: f254 = getfield_gc_f(p235, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++3816: f255 = float_add(f253, f254)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#108 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#110 BINARY_ADD')
++3821: guard_class(p231, ConstClass(W_FloatObject), descr=<Guard0x749143613d38>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3834: f257 = getfield_gc_f(p231, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++3840: f258 = float_add(f255, f257)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#112 INPLACE_ADD')
++3845: f259 = float_add(f160, f258)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#114 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#116 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#118 LOAD_CONST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#120 INPLACE_ADD')
++3859: i261 = int_add_ovf(i164, 1)
++3870: guard_no_overflow(descr=<Guard0x749143613d00>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#122 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#124 JUMP_ABSOLUTE')
++3876: guard_not_invalidated(descr=<Guard0x749143613cc8>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
++3876: i263 = getfield_raw_i(128167321604736, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++3889: i265 = int_lt(i263, 0)
++3893: guard_false(i265, descr=<Guard0x749143613c90>) [p0, p6, p9, p11, p19, p138, p136, p134, p132, p130, p128, p37, p39, p41, p1, p221, i220, p195, p118, None, i164, f160, f149]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP')
++3899: jump(p0, p1, p6, p9, p11, f250, f259, i261, p19, p195, p221, p241, p239, p237, p235, p233, p231, p37, p39, p41, i66, p95, descr=TargetToken(128167249165472))
++3968: --end of the loop--
+[3bc898f3701a] jit-log-opt-loop}
+[3bc89a55739d] {jit-log-opt-bridge
+# bridge out of Guard 0x749143420170 with 158 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++270: guard_isnull(p15, descr=<Guard0x74914345a200>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#44 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#46 CALL_METHOD')
++279: i21 = getfield_gc_i(p4, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst__fast_closed_check 128>)
++287: guard_true(i21, descr=<Guard0x749143451440>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++296: p22 = getfield_gc_r(p4, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_w_raw 104>)
++300: i23 = getfield_gc_i(p22, descr=<FieldS pypy.module._io.interp_fileio.W_FileIO.inst_fd 48>)
++304: i25 = int_ge(i23, 0)
++308: guard_true(i25, descr=<Guard0x749143451478>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++314: i26 = getfield_gc_i(p3, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++325: i28 = int_eq(i26, -1)
++329: guard_false(i28, descr=<Guard0x7491434514b0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++335: i30 = int_ge(i26, 0)
++339: guard_true(i30, descr=<Guard0x7491434514e8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++345: i31 = getfield_gc_i(p4, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst_readable 129>)
++353: guard_true(i31, descr=<Guard0x749143451520>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++362: i32 = getfield_gc_i(p4, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_read_end 88>)
++366: i34 = int_ne(i32, -1)
++370: guard_true(i34, descr=<Guard0x749143451558>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++376: i35 = getfield_gc_i(p4, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++380: i36 = int_sub(i32, i35)
++383: i37 = int_le(i26, i36)
++386: guard_false(i37, descr=<Guard0x749143451590>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++392: p38 = getfield_gc_r(p4, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_lock 64>)
++396: p39 = getfield_gc_r(p38, descr=<FieldP pypy.module._io.interp_bufferedio.TryLock.inst_lock 8>)
++401: i40 = getfield_gc_i(p39, descr=<FieldU rpython.rlib.rthread.Lock.inst__lock 8 pure>)
++405: i44 = call_i(ConstClass(RPyThreadAcquireLockTimed), i40, 0, 0, descr=<Calli 4 iii EF=2>)
++458: i45 = int_is_true(i44)
+guard_true(i45, descr=<Guard0x74914345a250>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i45, i26, p38, p16, p17, i18, f19, f20]
++467: i48 = call_i(ConstClass(_ll_1_threadlocalref_get__SignedLlT_Signed), 56, descr=<Calli 8 i EF=1 OS=5>)
++479: p49 = force_token()
++482: setfield_gc(p38, i48, descr=<FieldS pypy.module._io.interp_bufferedio.TryLock.inst_owner 24>)
++505: setfield_gc(p0, p49, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++509: p51 = call_may_force_r(ConstClass(W_BufferedReader._read_generic), p4, i26, descr=<Callr 8 ri EF=7>)
++613: guard_not_forced(descr=<Guard0x749143434910>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p51, p38, p16, p17, i18, f19, f20]
++624: guard_no_exception(descr=<Guard0x7491434515c8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p51, p38, p16, p17, i18, f19, f20]
++638: p52 = getfield_gc_r(p38, descr=<FieldP pypy.module._io.interp_bufferedio.TryLock.inst_lock 8>)
++650: i53 = getfield_gc_i(p52, descr=<FieldU rpython.rlib.rthread.Lock.inst__lock 8 pure>)
++654: i55 = call_i(ConstClass(RPyThreadReleaseLock), i53, descr=<Calli 8 i EF=2>)
++667: setfield_gc(p38, 0, descr=<FieldS pypy.module._io.interp_bufferedio.TryLock.inst_owner 24>)
++676: i57 = int_is_true(i55)
++679: guard_false(i57, descr=<Guard0x74914345a2a0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i55, p51, p16, p17, i18, f19, f20]
++685: guard_nonnull(p51, descr=<Guard0x749143451600>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i55, p51, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#48 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#50 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#52 POP_JUMP_IF_TRUE')
++694: i58 = strlen(p51)
++698: i59 = int_is_true(i58)
++701: guard_true(i59, descr=<Guard0x749143451638>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i55, p51, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#56 LOAD_GLOBAL')
++707: guard_not_invalidated(descr=<Guard0x749143451670>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i55, p51, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#58 LOAD_METHOD')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#60 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#64 CALL_METHOD')
++707: p60 = getfield_gc_r(p2, descr=<FieldP pypy.objspace.std.unicodeobject.W_UnicodeObject.inst__utf8 24 pure>)
++719: p61 = new_with_vtable(descr=<SizeDescr 24>)
++756: setfield_gc(p61, 0, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++764: call_n(ConstClass(interpret_trampoline__v707___simple_call__function_i), p61, p60, descr=<Callv 0 rr EF=5>)
++844: guard_no_exception(descr=<Guard0x74914345a2f0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p60, p61, p51, p16, None, i18, f19, f20]
++858: i65 = getfield_gc_i(p61, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++869: i66 = int_lt(i58, i65)
++872: guard_false(i66, descr=<Guard0x7491434516a8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p60, p61, p51, p16, None, i18, f19, f20]
++878: i68 = int_ge(i65, 0)
++882: guard_true(i68, descr=<Guard0x7491434516e0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p60, p61, p51, p16, None, i18, f19, f20]
++888: p69 = force_token()
++891: p70 = new_with_vtable(descr=<SizeDescr 48>)
++932: p71 = new_with_vtable(descr=<SizeDescr 40>)
++943: setfield_gc(p71, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++951: p73 = new_with_vtable(descr=<SizeDescr 24>)
++962: setfield_gc(p73, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++970: setfield_gc(p73, p51, descr=<FieldP rpython.rlib.buffer.StringBuffer.inst_value 16 pure>)
++981: setfield_gc(p71, p73, descr=<FieldP rpython.rlib.buffer.SubBuffer.inst_buffer 16 pure>)
++985: setfield_gc(p71, 0, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_offset 24 pure>)
++993: setfield_gc(p71, i65, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_size 32 pure>)
++997: p76 = new(descr=<SizeDescr 24>)
++1008: setfield_gc(p76, 0, descr=<FieldS list.length 8>)
++1016: p79 = new_array_clear(0, descr=<ArrayP 8>)
++1035: setfield_gc(p76, p79, descr=<FieldP list.items 16>)
++1056: setfield_gc(p0, p69, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++1060: setfield_gc(p70, p71, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_buf 8>)
++1064: setfield_gc(p70, i65, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_length 16>)
++1068: setfield_gc(p70, 0, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_pos 24>)
++1076: setfield_gc(p70, p76, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++1080: call_may_force_n(ConstClass(interpret_trampoline__v732___simple_call__function_i), p70, p60, descr=<Callv 0 rr EF=7>)
++1167: guard_not_forced(descr=<Guard0x749143434968>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p70, p51, p16, None, i18, f19, f20]
++1178: guard_no_exception(descr=<Guard0x749143451718>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p70, p51, p16, None, i18, f19, f20]
++1192: p82 = getfield_gc_r(p70, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++1203: i83 = getfield_gc_i(p82, descr=<FieldS list.length 8>)
++1207: p84 = new_array_clear(i83, descr=<ArrayP 8>)
++1307: p85 = getfield_gc_r(p82, descr=<FieldP list.items 16>)
++1311: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p85, p84, 0, 0, i83, descr=<Callv 0 rriii EF=2 OS=1>)
++1343: i90 = int_eq(i83, 2)
++1347: guard_false(i90, descr=<Guard0x74914345a340>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#66 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#68 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#70 UNPACK_SEQUENCE')
++1353: i92 = int_ne(i83, 6)
++1357: guard_false(i92, descr=<Guard0x749143451750>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1363: p94 = getarrayitem_gc_r(p84, 5, descr=<ArrayP 8>)
++1367: p96 = getarrayitem_gc_r(p84, 4, descr=<ArrayP 8>)
++1371: p98 = getarrayitem_gc_r(p84, 3, descr=<ArrayP 8>)
++1375: p100 = getarrayitem_gc_r(p84, 2, descr=<ArrayP 8>)
++1379: p102 = getarrayitem_gc_r(p84, 1, descr=<ArrayP 8>)
++1383: p104 = getarrayitem_gc_r(p84, 0, descr=<ArrayP 8>)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#72 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#74 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#76 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#78 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#80 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#82 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#84 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#86 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#88 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#90 BINARY_ADD')
++1387: guard_class(p104, ConstClass(W_FloatObject), descr=<Guard0x749143451788>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1399: guard_class(p100, ConstClass(W_FloatObject), descr=<Guard0x7491434517c0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1412: f107 = getfield_gc_f(p104, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1418: f108 = getfield_gc_f(p100, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1424: f109 = float_add(f107, f108)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#92 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#94 BINARY_ADD')
++1429: guard_class(p96, ConstClass(W_FloatObject), descr=<Guard0x7491434517f8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1441: f111 = getfield_gc_f(p96, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1447: f112 = float_add(f109, f111)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#96 INPLACE_ADD')
++1452: f113 = float_add(f20, f112)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#98 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#100 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#102 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#104 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#106 BINARY_ADD')
++1466: guard_class(p102, ConstClass(W_FloatObject), descr=<Guard0x749143451830>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1479: guard_class(p98, ConstClass(W_FloatObject), descr=<Guard0x749143451868>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1491: f116 = getfield_gc_f(p102, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1497: f117 = getfield_gc_f(p98, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1503: f118 = float_add(f116, f117)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#108 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#110 BINARY_ADD')
++1508: guard_class(p94, ConstClass(W_FloatObject), descr=<Guard0x7491434518a0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1521: f120 = getfield_gc_f(p94, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1527: f121 = float_add(f118, f120)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#112 INPLACE_ADD')
++1532: f122 = float_add(f19, f121)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#114 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#116 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#118 LOAD_CONST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#120 INPLACE_ADD')
++1546: i124 = int_add_ovf(i18, 1)
++1557: guard_no_overflow(descr=<Guard0x7491434518d8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#122 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#124 JUMP_ABSOLUTE')
++1563: guard_not_invalidated(descr=<Guard0x749143451910>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
++1563: i126 = getfield_raw_i(128167321604736, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++1576: i128 = int_lt(i126, 0)
++1580: guard_false(i128, descr=<Guard0x749143451948>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p84, i83, p51, p16, None, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP')
++1586: jump(p0, p14, p1, p2, p3, f113, f122, i124, p4, p51, p84, p104, p102, p100, p98, p96, p94, p11, p12, p13, i26, p60, descr=TargetToken(128167249165472))
++1664: --end of the loop--
+[3bc89a5d5235] jit-log-opt-bridge}
+[3bc89b90cede] {jit-log-opt-bridge
+# bridge out of Guard 0x749143420100 with 155 ops
+[p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++270: guard_isnull(p15, descr=<Guard0x74914345a7a0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#44 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#46 CALL_METHOD')
++279: i21 = getfield_gc_i(p4, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst__fast_closed_check 128>)
++287: guard_true(i21, descr=<Guard0x749143464410>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++296: p22 = getfield_gc_r(p4, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_w_raw 104>)
++300: i23 = getfield_gc_i(p22, descr=<FieldS pypy.module._io.interp_fileio.W_FileIO.inst_fd 48>)
++304: i25 = int_ge(i23, 0)
++308: guard_true(i25, descr=<Guard0x749143464448>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++314: i26 = getfield_gc_i(p3, descr=<FieldS pypy.objspace.std.intobject.W_IntObject.inst_intval 8 pure>)
++325: i28 = int_eq(i26, -1)
++329: guard_false(i28, descr=<Guard0x749143464480>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++335: i30 = int_ge(i26, 0)
++339: guard_true(i30, descr=<Guard0x7491434644b8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++345: i31 = getfield_gc_i(p4, descr=<FieldU pypy.module._io.interp_bufferedio.W_BufferedReader.inst_readable 129>)
++353: guard_true(i31, descr=<Guard0x7491434644f0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++362: i32 = getfield_gc_i(p4, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_read_end 88>)
++366: i34 = int_ne(i32, -1)
++370: guard_true(i34, descr=<Guard0x749143464528>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++376: i35 = getfield_gc_i(p4, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++380: i36 = int_sub(i32, i35)
++383: i37 = int_le(i26, i36)
++386: guard_true(i37, descr=<Guard0x749143464560>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++392: i38 = int_add(i35, i26)
++398: p39 = getfield_gc_r(p4, descr=<FieldP pypy.module._io.interp_bufferedio.W_BufferedReader.inst_buffer 48>)
++402: guard_class(p39, 128167305073296, descr=<Guard0x749143464598>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++414: p41 = getfield_gc_r(p39, descr=<FieldP rpython.rlib.buffer.ByteBuffer.inst_data 16 pure>)
++418: i42 = getfield_gc_i(p41, descr=<FieldS list.length 8>)
++422: i43 = int_lt(i38, i42)
++425: guard_false(i43, descr=<Guard0x7491434645d0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++431: i44 = int_sub(i42, i35)
++434: i45 = int_is_zero(i35)
++437: guard_false(i45, descr=<Guard0x749143464608>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, i18, f19, f20]
++443: p46 = new_array(i44, descr=<ArrayU 1>)
++508: p47 = getfield_gc_r(p41, descr=<FieldP list.items 16>)
++512: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p47, p46, i35, 0, i44, descr=<Callv 0 rriii EF=2 OS=1>)
++574: p51 = call_r(ConstClass(ll_join_chars_trampoline__v1231___simple_call__function_), i44, p46, descr=<Callr 8 ir EF=5>)
++650: guard_no_exception(descr=<Guard0x74914345a7f0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i26, i38, p51, p16, p17, i18, f19, f20]
++664: setfield_gc(p4, i38, descr=<FieldS pypy.module._io.interp_bufferedio.W_BufferedReader.inst_pos 72>)
++675: guard_nonnull(p51, descr=<Guard0x74914345a840>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i26, p51, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-25~#48 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#50 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-26~#52 POP_JUMP_IF_TRUE')
++684: i52 = strlen(p51)
++688: i53 = int_is_true(i52)
++691: guard_true(i53, descr=<Guard0x749143464640>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i26, p51, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#56 LOAD_GLOBAL')
++697: guard_not_invalidated(descr=<Guard0x749143464678>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, i26, p51, p16, p17, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#58 LOAD_METHOD')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#60 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#62 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#64 CALL_METHOD')
++697: p54 = getfield_gc_r(p2, descr=<FieldP pypy.objspace.std.unicodeobject.W_UnicodeObject.inst__utf8 24 pure>)
++708: p55 = new_with_vtable(descr=<SizeDescr 24>)
++746: setfield_gc(p55, 0, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++754: call_n(ConstClass(interpret_trampoline__v707___simple_call__function_i), p55, p54, descr=<Callv 0 rr EF=5>)
++834: guard_no_exception(descr=<Guard0x74914345a890>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p54, p55, p51, p16, None, i18, f19, f20]
++848: i59 = getfield_gc_i(p55, descr=<FieldS rpython.rlib.rstruct.formatiterator.CalcSizeFormatIterator.inst_totalsize 8>)
++859: i60 = int_lt(i52, i59)
++862: guard_false(i60, descr=<Guard0x7491434646b0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p54, p55, p51, p16, None, i18, f19, f20]
++868: i62 = int_ge(i59, 0)
++872: guard_true(i62, descr=<Guard0x7491434646e8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p54, p55, p51, p16, None, i18, f19, f20]
++878: p63 = force_token()
++881: p64 = new_with_vtable(descr=<SizeDescr 48>)
++922: p65 = new_with_vtable(descr=<SizeDescr 40>)
++933: setfield_gc(p65, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++941: p67 = new_with_vtable(descr=<SizeDescr 24>)
++952: setfield_gc(p67, 1, descr=<FieldS rpython.rlib.buffer.Buffer.inst_readonly 8 pure>)
++960: setfield_gc(p67, p51, descr=<FieldP rpython.rlib.buffer.StringBuffer.inst_value 16 pure>)
++971: setfield_gc(p65, p67, descr=<FieldP rpython.rlib.buffer.SubBuffer.inst_buffer 16 pure>)
++975: setfield_gc(p65, 0, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_offset 24 pure>)
++983: setfield_gc(p65, i59, descr=<FieldS rpython.rlib.buffer.SubBuffer.inst_size 32 pure>)
++987: p70 = new(descr=<SizeDescr 24>)
++998: setfield_gc(p70, 0, descr=<FieldS list.length 8>)
++1006: p73 = new_array_clear(0, descr=<ArrayP 8>)
++1025: setfield_gc(p70, p73, descr=<FieldP list.items 16>)
++1046: setfield_gc(p0, p63, descr=<FieldP pypy.interpreter.pyframe.PyFrame.vable_token 8>)
++1050: setfield_gc(p64, p65, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_buf 8>)
++1054: setfield_gc(p64, i59, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_length 16>)
++1058: setfield_gc(p64, 0, descr=<FieldS pypy.module.struct.formatiterator.UnpackFormatIterator.inst_pos 24>)
++1066: setfield_gc(p64, p70, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++1070: call_may_force_n(ConstClass(interpret_trampoline__v732___simple_call__function_i), p64, p54, descr=<Callv 0 rr EF=7>)
++1164: guard_not_forced(descr=<Guard0x7491434349c0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p64, p51, p16, None, i18, f19, f20]
++1175: guard_no_exception(descr=<Guard0x749143464720>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p64, p51, p16, None, i18, f19, f20]
++1189: p76 = getfield_gc_r(p64, descr=<FieldP pypy.module.struct.formatiterator.UnpackFormatIterator.inst_result_w 32>)
++1200: i77 = getfield_gc_i(p76, descr=<FieldS list.length 8>)
++1204: p78 = new_array_clear(i77, descr=<ArrayP 8>)
++1301: p79 = getfield_gc_r(p76, descr=<FieldP list.items 16>)
++1305: call_n(ConstClass(ll_arraycopy__arrayPtr_arrayPtr_Signed_Signed_Signed), p79, p78, 0, 0, i77, descr=<Callv 0 rriii EF=2 OS=1>)
++1337: i84 = int_eq(i77, 2)
++1341: guard_false(i84, descr=<Guard0x74914345a8e0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-28~#66 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#68 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#70 UNPACK_SEQUENCE')
++1347: i86 = int_ne(i77, 6)
++1351: guard_false(i86, descr=<Guard0x749143464758>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1357: p88 = getarrayitem_gc_r(p78, 5, descr=<ArrayP 8>)
++1362: p90 = getarrayitem_gc_r(p78, 4, descr=<ArrayP 8>)
++1367: p92 = getarrayitem_gc_r(p78, 3, descr=<ArrayP 8>)
++1372: p94 = getarrayitem_gc_r(p78, 2, descr=<ArrayP 8>)
++1377: p96 = getarrayitem_gc_r(p78, 1, descr=<ArrayP 8>)
++1382: p98 = getarrayitem_gc_r(p78, 0, descr=<ArrayP 8>)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#72 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#74 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#76 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#78 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#80 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-29~#82 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#84 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#86 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#88 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#90 BINARY_ADD')
++1387: guard_class(p98, ConstClass(W_FloatObject), descr=<Guard0x749143464790>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1400: guard_class(p94, ConstClass(W_FloatObject), descr=<Guard0x7491434647c8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1412: f101 = getfield_gc_f(p98, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1418: f102 = getfield_gc_f(p94, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1424: f103 = float_add(f101, f102)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#92 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#94 BINARY_ADD')
++1429: guard_class(p90, ConstClass(W_FloatObject), descr=<Guard0x749143464800>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1441: f105 = getfield_gc_f(p90, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1447: f106 = float_add(f103, f105)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#96 INPLACE_ADD')
++1452: f107 = float_add(f20, f106)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-30~#98 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#100 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#102 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#104 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#106 BINARY_ADD')
++1466: guard_class(p96, ConstClass(W_FloatObject), descr=<Guard0x749143464838>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1479: guard_class(p92, ConstClass(W_FloatObject), descr=<Guard0x749143464870>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1491: f110 = getfield_gc_f(p96, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1497: f111 = getfield_gc_f(p92, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1503: f112 = float_add(f110, f111)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#108 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#110 BINARY_ADD')
++1508: guard_class(p88, ConstClass(W_FloatObject), descr=<Guard0x7491434648a8>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1521: f114 = getfield_gc_f(p88, descr=<FieldF pypy.objspace.std.floatobject.W_FloatObject.inst_floatval 8 pure>)
++1527: f115 = float_add(f112, f114)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#112 INPLACE_ADD')
++1532: f116 = float_add(f19, f115)
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-31~#114 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#116 LOAD_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#118 LOAD_CONST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#120 INPLACE_ADD')
++1546: i118 = int_add_ovf(i18, 1)
++1557: guard_no_overflow(descr=<Guard0x7491434648e0>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#122 STORE_FAST')
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-32~#124 JUMP_ABSOLUTE')
++1563: guard_not_invalidated(descr=<Guard0x749143464918>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
++1563: i120 = getfield_raw_i(128167321604736, descr=<FieldS pypysig_long_struct_inner.c_value 0>)
++1576: i122 = int_lt(i120, 0)
++1580: guard_false(i122, descr=<Guard0x749143464950>) [p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p78, i77, p51, p16, None, i18, f19, f20]
+debug_merge_point(0, 0, 'read_loop;/home/antocuni/pypy/misc/antocuni.github.io/blog/talk/2025/09/core-dev-sprint-pypy-jit/readpoly.py:17-24~#38 NOP')
++1586: jump(p0, p14, p1, p2, p3, f107, f116, i118, p4, p51, p78, p98, p96, p94, p92, p90, p88, p11, p12, p13, i26, p54, descr=TargetToken(128167249165472))
++1664: --end of the loop--
+[3bc89b97c711] jit-log-opt-bridge}

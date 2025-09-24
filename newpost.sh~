@@ -15,7 +15,7 @@ MONTH=$(echo $DATE | cut -d'-' -f2)
 read -p "Enter directory name: " DIR_NAME
 
 # Create the target directory
-TARGET_DIR="talk/$YEAR/$MONTH/$DIR_NAME"
+TARGET_DIR="posts/$YEAR/$MONTH/$DIR_NAME"
 mkdir -p "$TARGET_DIR"
 
 # Copy template files

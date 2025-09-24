@@ -795,6 +795,111 @@
     <div class="md-post__meta md-meta">
       <ul class="md-meta__list">
         <li class="md-meta__item">
+          <time datetime="2025-09-24 00:00:00+00:00">Sep 24, 2025</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="../../category/post/" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              15 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="tracing-jits-in-the-real-world-cpython-core-dev-sprint"><a class="toclink" href="../../2025/09/24/tracing-jits-in-the-real-world--cpython-core-dev-sprint/">Tracing JITs in the real world @ CPython Core Dev Sprint</a></h2>
+<p><meta property="og:title" content="Tracing JITs in the real world @ CPython Core Dev Sprint">
+<meta property="og:description" content="My experience at the CPython Core Dev Sprint">
+<meta property="og:image" content="http://antocuni.eu/2025/09-tracing-jit-real-world-python/cpython-core-dev-sprint-2025-cambridge.jpg">
+<meta name="author" content="Antonio Cuni"></p>
+<style>
+.slide {
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin: 2em 0;
+  background: #f9f9f9;
+  max-width: 100%;
+
+  /* Slide content box */
+  aspect-ratio: 16 / 9;
+  box-sizing: border-box;
+  padding: 2em;
+  background: white;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 2px solid #eee;
+  display: block;
+  width: 100%;
+}
+
+.slide h1, .slide h2, .slide h3 {
+  margin-top: 0;
+  color: #333;
+}
+</style>
+
+<p>Last week I got to take part in the CPython Core Developer Sprint in
+Cambridge, hosted by ARM and brilliantly
+<a href="https://www.linkedin.com/posts/diegor_yesterday-we-wrapped-up-thecpython-core-activity-7375230888177057792-GezI">organized by Diego Russo</a>
+-- about ~50 core devs and guests were there, and I was excited to join as one
+of the guests.</p>
+<p><img alt="CPython Core Dev Sprint 2025, ARM, Cambridge" src="../../2025/09-tracing-jit-real-world-python/cpython-core-dev-sprint-2025-cambridge.jpg"></p>
+<p>I had three main areas of focus:</p>
+<ul>
+<li>
+<p><strong>C API</strong>: this was a follow up of what we discussed at the
+    <a href="../../2025/07/21/slides-for-my-europython-2025-talks/">C API summit at EuroPython</a>. The current
+    C API is problematic, so we are exploring ideas for the development of
+    <a href="https://github.com/py-ni">PyNI</a> (Python Native Interface), whose design
+    will likely be heavily inspired by <a href="https://hpyproject.org/">HPy</a>. It's
+    important to underline that this is just the beginning and the entire
+    process will require multiple PEPs.</p>
+</li>
+<li>
+<p><strong>fancycompleter</strong> This is a
+    <a href="https://github.com/python/cpython/pull/130473">small PR</a> which I started
+    <a href="../../2025/02/26/over-the-clouds-cpython-pyodide-and-spy/">months ago</a>, to enable colorful
+    tab completions within the Python REPL. I wrote the original version of
+    <a href="https://github.com/pdbpp/fancycompleter">fancycompleter</a> 15 years ago,
+    but colorful completions work only in combination with PyREPL. Now PyREPL
+    is part of the standard library and enabled by default, so we can finally
+    upstream it. I hope to see it merged soon.</p>
+</li>
+<li>
+<p>"<strong>JIT stuff</strong>": I spent a considerable amount of time talking to the
+    people who are working on the CPython JIT (in particular Mark, Brandt,
+    Savannah, Ken Jin and Diego). Knowledge transfer worked in both ways: I
+    learned a lot about the internal details of CPython's JIT, and conversely I
+    shared with them some of the experience, pain points and gut feelings
+    which I got by working many years on PyPy.</p>
+</li>
+</ul>
+<p>In particular, on the first day I presented a talk titled <strong>Tracing JIT and real world Python</strong> (<a href="../../talk/2025/09/core-dev-sprint-pypy-jit/">slides</a> and <a href="https://github.com/antocuni/antocuni.github.io/tree/main/blog/talk/2025/09/core-dev-sprint-pypy-jit">source code</a>).</p>
+<p>What follows is an annotated version of the slides.</p>
+
+    
+      <nav class="md-post__action">
+        <a href="../../2025/09/24/tracing-jits-in-the-real-world--cpython-core-dev-sprint/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
           <time datetime="2025-08-25 00:00:00+00:00">Aug 25, 2025</time></li>
         
           <li class="md-meta__item">
