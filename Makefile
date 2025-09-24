@@ -1,15 +1,15 @@
 serve:
-	uv run --with-requirements requirements.txt --with-editable ./mkdocs_antocuni mkdocs serve --livereload
+	uv run --with-requirements requirements.txt mkdocs serve --livereload
 
 serve-offline:
-	uv run --offline --with-requirements requirements.txt --with-editable ./mkdocs_antocuni mkdocs serve --livereload
+	uv run --offline --with-requirements requirements.txt mkdocs serve --livereload
 
 build:
-	uv run --with-requirements requirements.txt --with-editable ./mkdocs_antocuni mkdocs build
+	uv run --with-requirements requirements.txt mkdocs build
 	find site -name "*~" -delete # delete all the emacs backup files
 
 gh-deploy:
-	uv run --with-requirements requirements.txt --with-editable ./mkdocs_antocuni mkdocs gh-deploy
+	uv run --with-requirements requirements.txt mkdocs gh-deploy
 
 # open mkdocs-material source code in the editor
 edit-py:

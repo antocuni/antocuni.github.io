@@ -3,3 +3,4 @@ mkdocs-material==9.6.3
 mkdocs-rss-plugin==1.17.1
 mkdocs-redirects==1.2.2
 mkdocs-glightbox
+-e ./mkdocs_antocuni
