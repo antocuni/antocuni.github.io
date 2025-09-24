@@ -149,7 +149,7 @@ program, for two reasons:
      elsewhere in the program, making it much harder to reason about
      performance locally.
 
-The end result is that modifying a single line of code can significantly
+The end result is that modifying a line of code can significantly
 impact seemingly unrelated code. This effect becomes more pronounced as the
 JIT becomes more sophisticated.
 
@@ -171,12 +171,6 @@ more like PyPy’s.
 
 - "big" messages passed around
 </div>
-
-Let me give you some context about where this experience comes from. I worked
-at a high-frequency trading firm focused on sports betting, where every
-millisecond of latency matters for profitability. We were using Python 2.7 in
-a multi-process architecture with long-running processes - perfect for JIT
-warmup.
 
 ---
 <div class="slide" markdown="1">
@@ -206,16 +200,16 @@ CPython's JIT first.
 The explanations of both JITs are necessarily short, incomplete and highly
 simplified.
 
-#### CPython JIT 101 first
+#### CPython JIT 101
 
 Python source code is turned into bytecode. Bytecode is a sequence of
 "opcodes" (`LOAD_FAST`, `BINARY_OP`, etc.), and the CPython VM is an
-interpreter for those opcodes. Historically, VM was written by hand, and the
+interpreter for those opcodes. Historically the VM was written by hand, and the
 main loop consisted of a big `switch` statement which executed the code
 corresponding to each opcode.
 
 Nowadays things are different: the opcodes are written in a special DSL and
-the main interpreter loop is automatically generated from this
+the main interpreter loop is generated from this
 DSL. Additionally, the DSL describes how each opcode can be decomposed into
 multiple "microops".
 
@@ -930,3 +924,9 @@ The funny part is that **I did not expect** to get this result. I had to take
 the time to analyze the JIT traces of both versions to understand why
 `read_loop` was slower.  This is probably the best explanation of how
 counterintuitive it is to reason about performance in a JITted world.
+
+## Acknowledgments
+
+Thanks to [Carl Friedrich Bolz-Tereick](https://cfbolz.de/) and
+[Hood Chatham](https://github.com/hoodmane) for feedback on the slides and the
+post.
