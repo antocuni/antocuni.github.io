@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mkdocs-antocuni"
+version = "0.3.0"
+description = "MkDocs plugin for antocuni.eu"
+readme = "README.md"
+authors = [{name = "Antonio Cuni", email = "anto.cuni@gmail.com"}]
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = ["mkdocs", "plugin"]
+requires-python = ">=3.8"
+dependencies = [
+    "mkdocs>=1.0",
+]
+
+[project.entry-points."mkdocs.plugins"]
+mkdocs_antocuni = "mkdocs_antocuni.plugin:MyPlugin"
+
+[project.urls]
+Homepage = "https://antocuni.eu"
+Repository = "https://github.com/antocuni/antocuni.github.io"

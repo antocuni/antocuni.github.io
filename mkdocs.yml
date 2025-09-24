@@ -44,6 +44,7 @@ theme:
 
 
 plugins:
+  - mkdocs_antocuni
   - blog:
       blog_dir: .
       post_excerpt: required
