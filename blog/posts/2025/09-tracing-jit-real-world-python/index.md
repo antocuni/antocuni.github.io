@@ -34,7 +34,6 @@ tags:
   border-bottom: 2px solid #eee;
   display: block;
 
-  /* Use min-height instead of aspect-ratio for better Safari compatibility */
   min-height: 400px;
   height: auto;
   overflow-y: auto;
@@ -44,23 +43,6 @@ tags:
 .slide h1, .slide h2, .slide h3 {
   margin-top: 0;
   color: #333;
-}
-
-/* For larger screens, try to maintain aspect ratio */
-@media (min-width: 768px) {
-  .slide {
-    min-height: 450px;
-  }
-}
-
-/* Use aspect-ratio only as enhancement for browsers that support it well */
-@supports (aspect-ratio: 16 / 9) {
-  @media (min-width: 768px) {
-    .slide {
-      aspect-ratio: 16 / 9;
-      min-height: auto;
-    }
-  }
 }
 </style>
 
