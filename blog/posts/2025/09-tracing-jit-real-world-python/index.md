@@ -3,7 +3,7 @@ draft: false
 date: 2025-09-24
 title: "Tracing JITs in the real world @ CPython Core Dev Sprint"
 categories:
-  - Post
+  - Talk
 tags:
   - slides
   - cpython

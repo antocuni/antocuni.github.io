@@ -5,7 +5,13 @@ title: "Slides for my EuroPython 2025 talks"
 categories:
   - Talk
 tags:
-  - mkdocs
+  - cpython
+  - pypy
+  - hpy
+  - c-api
+  - spy
+  - europython
+  - slides
 
 ---
 
