@@ -27,7 +27,7 @@ Yesterday I talked about [SPy](https://github.com/spylang/spy) at [PyCon Italy](
 
 Thanks to [Hugo van Kemenade](https://github.com/hugovk) for the picture.
 
-Slides are available [here](/talk/2025/05/spy-pycon-italy/).
+Slides are available [here](../../../talk/2025/05/spy-pycon-italy/index.html).
 
 The edited video is not available yet, but in the meantime it's possible to
 watch unedited version available inside the
