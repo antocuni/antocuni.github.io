@@ -1,6 +1,6 @@
 ---
 draft: false
-date: 2025-09-23
+date: 2025-09-24
 title: "Tracing JITs in the real world @ CPython Core Dev Sprint"
 categories:
   - Post
@@ -736,7 +736,7 @@ examples show.
     ```
 </div>
 
-This is a collection of other misc problems that I had to deal with. Generally
+This is a collection of other miscellaneous problems that I had to deal with. Generally
 speaking, we lack good support for tooling and profilers. CPython needs to
 have a good story to explain people how to understand what's happening when
 the JIT is enabled.
