@@ -89,18 +89,6 @@ fall into two categories:
      remove many (if not all) of the dynamic features which make Python hard to
      compile.
 
-
-!!! note "Subset vs Variant"
-
-    If a compiler implements a **subset** of Python, then all programs which can be
-    compiled can also run on top of CPython. If the compiler also add new features which
-    are not available on CPython, then it's a **variant**.
-
-    For example according to this definition, RPython is a subset and Cython is a
-    variant.  SPy is also a variant because it offers unique features, as we will see
-    later.
-
-
 The problem of JIT compilers is that sometimes they work very well and produce huge
 speedups, other times they don't produce any speedup at all, or might even introduce
 slowdowns, or they might use too much memory, or they are slow to "warm up".
@@ -116,6 +104,17 @@ Python "slow", but on the other hand it introduces *new* features which make it
 possible to implement and use the same pythonic patterns which we like.  How to achieve
 this result is not possible to explain in a few sentences, that's why we need a full
 series of posts :).
+
+!!! note "Subset vs Variant"
+
+    If a compiler implements a **subset** of Python, then all programs which can be
+    compiled can also run on top of CPython. If the compiler also add new features which
+    are not available on CPython, then it's a **variant**.
+
+    For example according to this definition, RPython is a subset and Cython is a
+    variant.  SPy is also a variant because it offers unique features, as we will see
+    later.
+
 
 ## The Zen of SPy
 
@@ -347,7 +346,7 @@ The second typical advantage of static typing is that the compiler can emit **mo
 efficient code**.  But since we cannot actually be sure that types are correct, we
 cannot use them to guide compilation.  There are projects like `mypyc` which go in this
 direction, but by doing so they break compatibility and limit dynamism, so we are back
-to the category of "compiler for python subset/variant".
+to the category of "compiler for a subset/variant of Python".
 
 Finally, another advantage of static typing is that **IDEs and tooling** can use type
 knowledge to assist development. I think this is actually a great success in Python and
@@ -464,7 +463,7 @@ language in which the PyPy interpreter is written in:
 RPython programs can usually run **unmodified** on CPython, and you get the same results
 as with the compiled version.  This means that you can use the CPython interpreter for
 development and debugging, and the RPython compiler for deployment -- the best of both
-worlds.
+worlds.  This pattern is used heavily to develop PyPy.
 
 Another interesting feature of RPython is its metaprogramming capabilities, which come
 directly from the way it is implemented.  The RPython compiler is written in Python, and
