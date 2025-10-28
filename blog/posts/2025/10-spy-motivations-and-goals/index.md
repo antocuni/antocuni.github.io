@@ -15,8 +15,10 @@ This is the first of a series of posts in which I will try to give a deep explan
 [SPy](https://github.com/spylang/spy), including motivations, goals, rules of the
 language, differences with Python and implementation details.
 
-This post covers motivations and goals, but first we need to answer a question: what is
-SPy?
+This post focuses primarily on **the problem space**: why Python is fundamentally hard
+to optimize, what compromises existing solutions require, and where current approaches
+fall short. Subsequent posts in this series will explore the solutions in depth. For
+now, let's start with the essential question: what is SPy?
 
 <!-- more -->
 
@@ -184,13 +186,10 @@ years.  Others come from insights which I gained while doing my professional act
 which for years consisted in trying to optimize real world Python code used in
 production.  Finally, some come from observing how Python is actually used in practice.
 
-Ultimately, SPy represents the language and tools which I would have liked to have
-during all these years.
-
-What follows is a collection of loosely connected facts, opinions and personal
-experiences. They might be seem a bit chaotic, but each of them is a piece of the puzzle
-which motivates the design of SPy.
-
+Throughout this post, we'll see variations on a theme: Python developers already write
+in constrained subsets of the language (for readability, for the JIT, for the type
+checker), but these subsets are informal and poorly specified. SPy formalizes these
+constraints and gives you powerful tools in return.
 
 ### Why Python is slow
 
@@ -381,9 +380,9 @@ In the section "Why Python is slow", we listed three problems:
   3. cache unfriendliness
 
 The PyPy JIT actually solves (1) and (2) very well, by taking advantage of what we
-realized in "Subset of Python": a lot of the "crazy things" don't actually
-happen in practice, or happen very rarely. The essence is that it speculatively assumes
-conditions such as:
+realized in [RealPython is a subset of Python](#real-python-is-a-subset-of-python): a
+lot of the "crazy things" don't actually happen in practice, or happen very rarely. The
+essence is that it speculatively assumes conditions such as:
 
   - the types of variables in a given piece of code are stable
 
@@ -414,8 +413,7 @@ If you want maximum performance, you need to **write code which complies with th
 heuristics**: it's yet another subset of Python, but this time it is very loosely
 specified and often requires deep knowledge of the JIT internals to know exactly what
 you can and cannot do; let's call this `JITPython`. It becomes very hard to reason about
-performance and to predict whether a given piece of code will be fast or slow.  I call
-this situation **Performance Chasing**.
+performance and to predict whether a given piece of code will be fast or slow.
 
 Moreover, there are other problems with JITs. In random order:
 
@@ -671,5 +669,14 @@ terms of performance, type safety and so on.
 SPy attempts to fix those problems by constraining the dynamicity into well defined
 places, without hurting performance.
 
-The next posts of this series will explain in bigger detail how the language works, and
-will dive deeply into the implementation of the interpreter and the compiler. Stay tuned!
+In the next posts of this series, we'll dive deep into how this actually works: the type
+system, the blue/red evaluation model, static dispatch, and the implementation of both
+the interpreter and the compiler. We'll see concrete examples of SPy code and explore
+how features like zero-cost abstractions are achieved in practice.
+
+**Want to explore SPy yourself?** Visit the [SPy repository on
+GitHub](https://github.com/spylang/spy) to see the code, try out examples, and follow
+the project's development. If you have questions, want to discuss design decisions, or
+are interested in contributing, join us on the [SPy Discord
+server](https://discord.gg/wRb29FGZpP).  SPy is still early in development, and this is a
+great time to get involved and help shape its future.
