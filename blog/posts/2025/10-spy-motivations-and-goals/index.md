@@ -196,7 +196,7 @@ which motivates the design of SPy.
 
 Thanks to my work on PyPy, I came to the conclusion that Python is fundamentally
 impossible to optimize to the level of performance which I aim for.  There are some
-features of the language which make Python "intrisically slow": I have talked about it
+features of the language which make Python "intrinsically slow": I have talked about it
 extensively in my EuroPython talk **Myths and fairy tales around Python performance**
 ([video](https://www.youtube.com/watch?v=X3QbMaEIpt0),
 [slides](https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/) and
@@ -270,7 +270,7 @@ so a compliant Python implementation cannot do that.
     instructions per second when they operate on cached data. Normally on modern systems
     we have three levels of cache: L1, L2 and L3. L1 is the smallest and fastest, then
     each level is bigger and slower than the previous; the RAM is the slowest.  Loading
-    an address of memory which is the cache is a **cache hit**, else it's a **cache
+    an address of memory which is in the cache is a **cache hit**, else it's a **cache
     miss**.
 
     For multiple reasons which I cannot explain in this box, if the address `A` is in
@@ -395,7 +395,7 @@ conditions such as:
 
 Then it generates code which is very fast **as long as those assumptions
 hold**. Moreover, it generates extra code and guards to check that the assumptions are
-stil valid, and deoptimize when they are not.
+still valid, and deoptimize when they are not.
 
 This high-level overview is correct not only for PyPy, but for all Python JIT compilers
 that I know of, although then the actual low-level details can vary **a lot** depending
@@ -444,8 +444,8 @@ There is another problem with JIT compilers: the C API is completely opaque to a
 
 Huge parts of the Python ecosystem are written in compiled languages (C, C++, Rust,
 Cython, ...) and they communicate with the Python interpreter through the C API.  As
-soon as the JIT needs to call into a C extension, it looses track of what's going on and
-has to assume that "everything changed", which often needs to deoptimize and/or doing
+soon as the JIT needs to call into a C extension, it loses track of what's going on and
+has to assume that "everything changed", which often needs to deoptimize and/or do
 expensive sanity checks.
 
 In an ideal world, we would like to have an optimizer which is able to see the whole
@@ -488,7 +488,7 @@ the RPython program can use the full power of Python to do metaprogramming, incl
 using decorators, metaclasses, code generation, etc.  This works because the RPython
 compiler kicks in only *after* this phase ends.
 
-Inside PyPy, RPython is just a tool to be able to write the "full Python" which is we
+Inside PyPy, RPython is just a tool to be able to write the "full Python" which we
 give the end users. RPython was never meant to be used by final users, and thus its
 ergonomics is very bad: it happens quite often that if you try to compile an RPython
 program which contains a type error, you end up with an `AssertionError` inside the
@@ -545,14 +545,14 @@ metaprogramming** and other "pythonic" patterns **in a type safe way**.
 
 ### Import time vs runtime
 
-Before launching a program SPy analyzes the source code and **statically determine the
+Before launching a program SPy analyzes the source code and **statically determines the
 set of modules** which will be imported.
 
 After that, we enter what we call the **import time** phase and we import all the needed
-modules. Things as decorators, metaclasses and module-level initialization run in this
+modules. Things such as decorators, metaclasses and module-level initialization run in this
 phase and the world is "mutable as usual".
 
-Then we **freeze** the world: all global contants are frozen and become immutable,
+Then we **freeze** the world: all global constants are frozen and become immutable,
 including modules and classes.
 
 Finally, at **runtime** the program runs "as usual", inside an immutable world.
@@ -586,7 +586,7 @@ inside the frozen class hierarchy is a blue operation and it's optimized away, l
 just a direct call as a result.
 
 So far, this is not different than usual constant folding, with the difference that it's
-guaranteed to happen.  What makes it more powerful is the ability of mark some functions
+guaranteed to happen.  What makes it more powerful is the ability to mark some functions
 as `@blue`.
 
 Calling a `@blue` function is always a blue operation, and the function body is executed
@@ -652,7 +652,7 @@ def foo(x: float, y: float) -> float:
     return `operator::f64_add(x, y)`
 ```
 
-This is a big deperature from Python semantics, because we operate on the **static
+This is a big departure from Python semantics, because we operate on the **static
 type** of the operands, as opposed to the actual types at runtime. I believe this covers
 the majority of use cases. For those cases in which you really need full dynamic
 dispatch, you can opt-in by using the type `dynamic`.
