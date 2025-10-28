@@ -54,7 +54,7 @@ libraries from SPy, and SPy modules from Python.
 
     At this point, SPy is still not usable for anything bigger than demos. The most
     complex piece of code written in SPy is probably the
-    [raytracing example](https://github.com/spylang/demos/tree/main/raytracing), whis is
+    [raytracing example](https://github.com/spylang/demos/tree/main/raytracing), which is
     **200x faster than CPython**.
 
 
@@ -188,7 +188,7 @@ Ultimately, SPy represents the language and tools which I would have liked to ha
 during all these years.
 
 What follows is a collection of loosely connected facts, opinions and personal
-experiences. They might be seem a bit chaotic, but each of team is a piece of the puzzle
+experiences. They might be seem a bit chaotic, but each of them is a piece of the puzzle
 which motivates the design of SPy.
 
 
@@ -225,7 +225,7 @@ know). Python semantics makes it intrinsically **cache unfriendly**.  In Python
 ~~everything is an object~~ everything is a pointer, and objects are mutable by default.
 In CPython object references are implemented as `PyObject *` in C, which means that any
 time we do an attribute and/or item lookup we need to dereference a pointer.  It is not
-uncommon to have to dereference 4 of 5 pointers to execute just a single line code: this
+uncommon to have to dereference 4 or 5 pointers to execute just a single line code: this
 is called [Pointer Chasing](https://en.wikichip.org/wiki/pointer_chasing) and in short,
 it's Very Bad™ for performance because it destroys
 [memory locality](https://en.wikipedia.org/wiki/Locality_of_reference#Hierarchical_memory). Take
@@ -295,7 +295,7 @@ that `import numpy` actually imports the same version of numpy from the same dir
 again and again.
 
 Moreover, during the years, as a community we understood that certain patterns are
-"good", while others are detrimental to readablity and maintainability: we tend to have
+"good", while others are detrimental to readability and maintainability: we tend to have
 functions which operate on well defined types, creating attributes outside of `__init__`
 is a bad practice, monkey-patching is permitted only in certain contexts (e.g. testing),
 we never change the `__class__` of an object, and so on.
@@ -312,11 +312,11 @@ libraries in the ecosystem!
 
 ### Static Typing in Python
 
-In the recent years, static typing and type checkers have become more and more poupular
+In the recent years, static typing and type checkers have become more and more popular
 in the Python community.  Let's be clear: I think that **given the constraints**, the
 Python typing story is good enough and well designed. I wouldn't be able to do it
 better.  But still, Python is not a language designed for static typing and, in absolute
-terms, the currenty situation leaves a lot to be desired.
+terms, the current situation leaves a lot to be desired.
 
 The static-vs-dynamic typing debate has been going on for decades. Let's try to examine
 the typical pros&cons of each.
@@ -411,7 +411,7 @@ hard to distinguish the cases in which a warning makes sense from those in which
 doesn't.
 
 If you want maximum performance, you need to **write code which complies with the
-heuristics**: it's yet another subset of Python,, but this time it is very loosely
+heuristics**: it's yet another subset of Python, but this time it is very loosely
 specified and often requires deep knowledge of the JIT internals to know exactly what
 you can and cannot do; let's call this `JITPython`. It becomes very hard to reason about
 performance and to predict whether a given piece of code will be fast or slow.  I call
@@ -668,7 +668,7 @@ it allowed power users to write all the incredible libraries with very intuitive
 high level APIs which we love.  However, such expressivity comes with many problems in
 terms of performance, type safety and so on.
 
-SPy attempts to fix those problems by constraining the dyanimicity into well defined
+SPy attempts to fix those problems by constraining the dynamicity into well defined
 places, without hurting performance.
 
 The next posts of this series will explain in bigger detail how the language works, and
