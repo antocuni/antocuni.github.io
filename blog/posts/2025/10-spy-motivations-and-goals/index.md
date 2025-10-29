@@ -16,7 +16,7 @@ This is the first of a series of posts in which I will try to give a deep explan
 language, differences with Python and implementation details.
 
 This post focuses primarily on **the problem space**: why Python is fundamentally hard
-to optimize, what compromises existing solutions require, and where current approaches
+to optimize, what trade-offs existing solutions require, and where current approaches
 fall short. Subsequent posts in this series will explore the solutions in depth. For
 now, let's start with the essential question: what is SPy?
 
@@ -69,7 +69,7 @@ libraries from SPy, and SPy modules from Python.
 !!! tip "Current Status: Python integration"
     At the moment of writing, SPy cannot import Python libraries yet.  The plan is to
     support this use case by embedding `libpython.so` (only if and when needed!) but to
-    do that we need a way to call C from SPy, which we haven't yet.
+    do that we need a way to call C from SPy, which we haven't yet implemented.
 
     The other direction is partially supported: the SPy compiler can generate CFFI-based
     extensions which can be imported by CPython.  This is useful for experimentation and
@@ -105,7 +105,7 @@ introduce slowdowns, or they might use too much memory, or they are slow to "war
 
 The problem of the subset/variant approach is that by removing the dynamic features of
 Python, you end up with something which does not feel *pythonic*, and in which many
-typical and idiomatic python patterns just don't work.  You often end up with "Java with
+typical and idiomatic Python patterns just don't work.  You often end up with "Java with
 Python syntax" (nothing in particular against Java, but I hope it gives an idea of what
 I mean).
 
@@ -128,7 +128,7 @@ series of posts :).
 
 ## The Zen of SPy
 
-As said above, 100% compatibility with Python is explicitly not a goal.
+As mentioned above, 100% compatibility with Python is explicitly not a goal.
 
 If you are a "language nerd" (like me :)) who knows the inner details of the
 [attribute lookup logic](../08-cpython-attribute-lookup/index.md) or when Python invokes
@@ -351,7 +351,7 @@ program. Unfortunately, this doesn't happen in Python.
 
 The interpreter just ignores type annotations. The typechecker tries its best, but there
 are cases in which it just doesn't understand the full semantics of Python and/or
-deliberately ignore it and thus has a wrong view on what's actually happening.  The
+deliberately ignores it and thus has a wrong view on what's actually happening.  The
 following silly example happily passes `mypy`, although it's clearly wrong and raises
 `AttributeError` at runtime:
 
