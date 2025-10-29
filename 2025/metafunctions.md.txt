@@ -1,0 +1,106 @@
+### Metafunctions
+
+Operator dispatch is just a special case of **metafunctions**, which is the final piece
+of the puzzle and probably the most complex one.  It's a a very advanced feature which
+is available to power users, but I don't expect the majority of users to have to deal
+with it.
+
+They deserve a much bigger explanation, but let's try to give a high level idea by
+examining one example. Let's look at Python's `max` function: we can call it with two
+arguments (`max(a, b)`) or with a single argument which is an iterable
+(`max(mylist)`). A possible simplified implementation in pure Python looks like this:
+
+```python
+def max(*args):
+    if len(args) == 2:
+        # max(a, b)
+        a, b = args
+        if a > b:
+            return a
+        else:
+            return b
+
+    elif len(args) == 1:
+        # max(mylist)
+        iterable = args[0]
+        for item in iterable:
+            ...
+
+    else:
+        raise TypeError("max() takes either 1 or 2 arguments")
+```
+
+Whenever we call it, Python must create the `args` tuple with the arguments, and `max`
+must extract those arguments from the tuple, after checking its length.  However, if we
+look **at each call site**, we already have all the information which is needed to
+determine which version of `max` we want to call.
+
+Metafunctions are a way to exploit this knowledge: the `call` operation is divided into
+a two phase lookup:
+
+  - **Metacall**: we call the metafunction with "meta arguments": they are abstract values
+    which carry only the information which is known at compile time, including their
+    static type, their color, and in case of `blue` arguments, their value. The
+    metafunction returns a concrete function to call at runtime.
+
+  - **Runtime call**: this is the actual call which happens at runtime, without any
+    overhead.
+
+The precise syntax for defining metafunction in SPy is still work in progress and it
+will probably change in the future to make it nicer and easier to use, but currently it
+works like this:
+
+```python
+@blue.metafunc
+def max(*meta_args):
+    if len(meta_args) == 2:
+        m_a, m_b = meta_args
+        T = m_a.static_type
+        def _max2(a: T, b: T) -> T:
+            # if m_a and m_b are of two different types, the typechecker will
+            # automatically complain because we try to call _max2 with wrong types.
+            if a > b:
+                return a
+            else:
+                return b
+        return _max2
+
+    if len(meta_args) == 1:
+        T = meta_args[0].static_type
+        if not is_iterable(T):
+            raise TypeError(f"expected iterable, found {T}")
+
+        def _max_iterable(it: T) -> T.item_type:
+            ...
+        return _max_iterable
+
+    else:
+        raise TypeError("max() takes either 1 or 2 arguments")
+```
+
+Again, the trick is that the **metacall** phase is `blue`, and so it's completely
+optimized away during redshifting. So if we have this code:
+
+```python
+def fn(a: int, b: int, lst: list[int]) -> None:
+    x = max(a, b)
+    y = max(lst)
+```
+
+it becomes this, without any dispatch overhead at runtime:
+
+```python
+def fn(a: int, b: int, lst: list[int]) -> None:
+    x = _max2(a, b)
+    y = _max_iterable(lst)
+```
+
+As I said above, operators are just a special case of metafunctions. Custom types can
+implement their own `__add__` & co. as metafunctions if they want, and do all complex
+dispatch logic at compile time.
+
+This works especially well for things like `__getattr__`: if we implement it as a
+metafunction, we can statically dispatch on the concrete attribute in all the cases in
+which the attribute name is statically known at the call site, which is the
+majority. E.g. if we have `a.b`, we will call `__getattr__` with a blue meta argument
+which contains the concrete string `"b"`.

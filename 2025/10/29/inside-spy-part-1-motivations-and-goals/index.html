@@ -1,0 +1,1821 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Antonio Cuni's blog">
+      
+      
+      
+        <link rel="canonical" href="https://antocuni.eu/2025/10/29/inside-spy-part-1-motivations-and-goals/">
+      
+      
+        <link rel="prev" href="../../../09/24/tracing-jits-in-the-real-world--cpython-core-dev-sprint/">
+      
+      
+      
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../../feed_rss_updated.xml">
+      
+      <link rel="icon" href="../../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+    
+    
+      
+        <title>Inside SPy, part 1: Motivations and Goals - Antonio Cuni's blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-Z20FNJZ1GJ"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-Z20FNJZ1GJ",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-Z20FNJZ1GJ",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+  
+
+    
+    
+    
+  <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#inside-spy-part-1-motivations-and-goals" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Antonio Cuni's blog" class="md-header__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Antonio Cuni's blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Inside SPy, part 1: Motivations and Goals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="cyan" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Antonio Cuni's blog" class="md-nav__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Antonio Cuni's blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../feed_rss_updated.xml" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RSS feed
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2021
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2019/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2019
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2018/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2018
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2017/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2017
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2012/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2012
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2011/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2011
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2010/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2010
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2009/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2009
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2008/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2008
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Post
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/talk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Talk
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-spy" class="md-nav__link">
+    <span class="md-ellipsis">
+      What is SPy?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-zen-of-spy" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Zen of SPy
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#motivations-and-background" class="md-nav__link">
+    <span class="md-ellipsis">
+      Motivations and background
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Motivations and background">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-python-is-slow" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why Python is slow
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realpython-is-a-subset-of-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      RealPython is a subset of Python
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-typing-in-python" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static Typing in Python
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#about-pypy-and-jit-compilers" class="md-nav__link">
+    <span class="md-ellipsis">
+      About PyPy and JIT compilers
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      C API
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rpython" class="md-nav__link">
+    <span class="md-ellipsis">
+      RPython
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spy-putting-it-all-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      SPy: Putting It All Together
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SPy: Putting It All Together">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#static-typing-in-spy" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static typing in SPy
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-time-vs-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      Import time vs runtime
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redshifting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redshifting
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static dispatch
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusion
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+                        <time datetime="2025-10-29 00:00:00+00:00" class="md-ellipsis">Oct 29, 2025</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/post/">Post</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+                          <span class="md-ellipsis">
+                            
+                              21 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+  <nav class="md-tags">
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:spy" class="md-tag">spy</a>
+      
+    
+  </nav>
+
+
+
+<h1 id="inside-spy-part-1-motivations-and-goals">Inside SPy🥸, part 1: Motivations and Goals<a class="headerlink" href="#inside-spy-part-1-motivations-and-goals" title="Permanent link">¶</a></h1>
+<p>This is the first of a series of posts in which I will try to give a deep explanation of
+<a href="https://github.com/spylang/spy">SPy</a>, including motivations, goals, rules of the
+language, differences with Python and implementation details.</p>
+<p>This post focuses primarily on <strong>the problem space</strong>: why Python is fundamentally hard
+to optimize, what trade-offs existing solutions require, and where current approaches
+fall short. Subsequent posts in this series will explore the solutions in depth. For
+now, let's start with the essential question: what is SPy?</p>
+<div class="admonition success">
+<p>Before diving in, I want to express my gratitude to my employer,
+<a href="https://www.anaconda.com/">Anaconda</a>, for giving me the opportunity to dedicate
+100% of my time to this open-source project.</p>
+</div>
+<!-- more -->
+
+<h2 id="what-is-spy">What is SPy?<a class="headerlink" href="#what-is-spy" title="Permanent link">¶</a></h2>
+<p>There are multiple answers to that, depending on the point of view. The most technically
+accurate is:</p>
+<blockquote>
+<p>SPy is an interpreter <em>and</em> a compiler for a <strong>statically typed variant</strong> of Python,
+with focus on performance.</p>
+</blockquote>
+<p>I think it's very important to be clear and honest since the beginning: SPy is not a
+"compiler for Python". There are features of the Python language which will never be
+supported by SPy by design. Don't expect to compile Django or FastAPI with SPy.</p>
+<p>A small corollary is that for now I decided that SPy programs live in <code>*.spy</code> files, to
+make the distinction between the two worlds very clear.</p>
+<p>Whilst compiling 100% of Python is not a goal, SPy still aims to have a very tight
+integration with the existing Python ecosystem.  It is possible to <code>import</code> Python
+libraries from SPy, and SPy modules from Python.</p>
+<div class="admonition note">
+<p class="admonition-title">The myth of 100% compatibility</p>
+<p>The vast majority of "compilers for Python" which exists or existed in the past are
+not "100% compatible". They don't support the full language even when they claim
+so. SPy prefers to be more explicit and honest about it.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Current Status</p>
+<p>SPy is still very work-in-progress and there are many things which are part of the
+plan and the design, but they are currently not there.</p>
+<p>To make reading easier in this series I always use the present tense when talking
+about SPy capabilities -- even when they are not implemented -- and defer a more
+detailed explanation to these "Current Status" boxes.</p>
+<p>At this point, SPy is still not usable for anything bigger than demos. The most
+complex piece of code written in SPy is probably the
+<a href="https://github.com/spylang/demos/tree/main/raytracing">raytracing example</a>, which is
+<strong>200x faster than CPython</strong>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Current Status: Python integration</p>
+<p>At the moment of writing, SPy cannot import Python libraries yet.  The plan is to
+support this use case by embedding <code>libpython.so</code> (only if and when needed!) but to
+do that we need a way to call C from SPy, which we haven't yet implemented.</p>
+<p>The other direction is partially supported: the SPy compiler can generate CFFI-based
+extensions which can be imported by CPython.  This is useful for experimentation and
+for early testing, but it exposes only a partial and low-level API.  Eventually, the
+SPy compiler will be able to generate fully fledged CPython extensions, similar to
+what Cython does.</p>
+</div>
+<p>Another possible answer is the following:</p>
+<blockquote>
+<p>SPy is a thought experiment to determine how much dynamicity we can remove from Python
+while still feeling Pythonic.</p>
+</blockquote>
+<p>During the years there have been many attempts to improve Python speed; generally they
+fall into two categories:</p>
+<ol>
+<li>
+<p>Implement "full Python". To be able to support all dynamic features and be fast,
+     they usually employ a Just In Time (JIT) compiler. Examples are
+     <a href="https://pypy.org/">PyPy</a>, <a href="https://www.graalvm.org/python/">GraalPy</a>,
+     <a href="https://github.com/pyston/pyston">Pyston</a>, and
+     <a href="https://github.com/python/cpython/tree/v3.14.0/Tools/jit">CPython's own JIT</a>.</p>
+</li>
+<li>
+<p>Implement a "subset of Python" or "variant of Python", either as an Ahead of Time
+     (AOT) or JIT compiler which is able to produce fast code. The usual approach here
+     is to remove many (if not all) of the dynamic features which make Python hard to
+     compile.  Examples are <a href="https://rpython.readthedocs.io/en/latest/">RPython</a>,
+     <a href="https://github.com/mypyc/mypyc">Mypyc</a>, <a href="https://cython.org/">Cython</a> and
+     <a href="https://numba.pydata.org/">Numba</a>.</p>
+</li>
+</ol>
+<p>The problem of "full Python" JIT compilers is that sometimes they work very well and
+produce huge speedups, other times they don't produce any speedup at all, or might even
+introduce slowdowns, or they might use too much memory, or they are slow to "warm up".</p>
+<p>The problem of the subset/variant approach is that by removing the dynamic features of
+Python, you end up with something which does not feel <em>pythonic</em>, and in which many
+typical and idiomatic Python patterns just don't work.  You often end up with "Java with
+Python syntax" (nothing in particular against Java, but I hope it gives an idea of what
+I mean).</p>
+<p>SPy does something different: on one hand, it removes the dynamic features which make
+Python "slow", but on the other hand it introduces <em>new</em> features which make it
+possible to implement and use the same pythonic patterns which we like.  How to achieve
+this result is not possible to explain in a few sentences, that's why we need a full
+series of posts :).</p>
+<div class="admonition note">
+<p class="admonition-title">Subset vs Variant</p>
+<p>If a compiler implements a <strong>subset</strong> of Python, then all programs which can be
+compiled can also run on top of CPython. If the compiler also add new features which
+are not available on CPython, then it's a <strong>variant</strong>.</p>
+<p>For example according to this definition, RPython is a subset and Cython is a
+variant.  SPy is also a variant because it offers unique features, as we will see
+later.</p>
+</div>
+<h2 id="the-zen-of-spy">The Zen of SPy<a class="headerlink" href="#the-zen-of-spy" title="Permanent link">¶</a></h2>
+<p>As mentioned above, 100% compatibility with Python is explicitly not a goal.</p>
+<p>If you are a "language nerd" (like me :)) who knows the inner details of the
+<a href="../../../08/25/inside-cpythons-attribute-lookup/">attribute lookup logic</a> or when Python invokes
+<code>__add__</code> or <code>__radd__</code> in case of inheritance from builtin types, then SPy is
+definitely <strong>not Python</strong>, and doesn't even try to be.</p>
+<p><strong>However</strong>, I expect that for a large fraction of Python users, it will not
+matter. There are many users who mainly consume complex libraries written by others and
+write "straightforward" Python code: for them, writing SPy should be as easy as writing
+Python.</p>
+<p>The following is a list of goals and design guidelines of SPy:</p>
+<ol>
+<li>
+<p><strong>Easy to use and implement</strong>. The language is easy to understand. Moreover, it
+     must be possible to implement SPy without huge engineering teams.</p>
+</li>
+<li>
+<p>We have an <strong>interpreter</strong> for ease of development and debugging.</p>
+</li>
+<li>
+<p>We have a <strong>compiler</strong> for deployment and performance. The interpreter and the
+     compiler are guaranteed to produce the exact same results at runtime.</p>
+</li>
+<li>
+<p><strong>Static typing</strong>. Type annotations are enforced by the language and checked by
+     both the interpreter and the compiler.</p>
+</li>
+<li>
+<p><strong>Performance matters</strong>. SPy aims to have performance comparable to low level
+     languages such as C and Rust.</p>
+</li>
+<li>
+<p><strong>Predictable performance</strong>. We should be able to reason about the performance
+     characteristics of a piece of code, without relying on a "magical optimizer" which
+     we don't fully understand, and without having "performance cliffs" in which
+     modifying a line of code makes everything 10x slower.</p>
+</li>
+<li>
+<p><strong>Rich metaprogramming capabilities</strong>. SPy has 1st class support for
+     metaprogramming, although the precise spelling and characteristics might deviate
+     from Python.  For example, it would totally be possible to recreate something like
+     FastAPI or SQLAlchemy in SPy.</p>
+</li>
+<li>
+<p><strong>Zero cost abstractions</strong>. SPy supports things like decorators, <code>**kwargs</code>, the
+     descriptor protocol, <code>__getattr__</code>, etc. without extra runtime costs.</p>
+</li>
+<li>
+<p><strong>Opt-in dynamism</strong>. Some of the dynamic features of Python are off by default, but
+     it's still possible to opt-in explicitly, when needed.  As an example, SPy provides
+     a <code>dynamic</code> type which provides full dynamic dispatch.</p>
+</li>
+<li>
+<p><strong>One language, two levels</strong>. SPy supports the low-level capabilities of C, C++,
+     Rust, etc., as well as the high-level abstractions and expressivity of Python. For
+     example, SPy's own
+     <a href="https://github.com/spylang/spy/blob/9b3bbf42a8a1426008de14c884536451f2ae9025/stdlib/_list.spy">list</a>
+     and
+     <a href="https://github.com/spylang/spy/blob/9b3bbf42a8a1426008de14c884536451f2ae9025/stdlib/_dict.spy">dict</a>
+     types are written in SPy.</p>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Current Status: <code>**kwargs</code> and <code>dynamic</code></p>
+<p>At the time of writing, <code>**kwargs</code> and keyword arguments are not implemented yet.
+The <code>dynamic</code> type works in the interpreter, but not yet in the compiler.</p>
+</div>
+<h2 id="motivations-and-background">Motivations and background<a class="headerlink" href="#motivations-and-background" title="Permanent link">¶</a></h2>
+<p>There are several factors which motivated me to start such an ambitious project. Some of
+them come directly from my first hand experience as a PyPy core dev in the last ~20
+years.  Others come from insights which I gained while doing my professional activity,
+which for years consisted in trying to optimize real world Python code used in
+production.  Finally, some come from observing how Python is actually used in practice.</p>
+<p>Throughout this post, we'll see variations on a theme: Python developers already write
+in constrained subsets of the language (for readability, for the JIT, for the type
+checker), but these subsets are informal and poorly specified. SPy formalizes these
+constraints and gives you powerful tools in return.</p>
+<h3 id="why-python-is-slow">Why Python is slow<a class="headerlink" href="#why-python-is-slow" title="Permanent link">¶</a></h3>
+<p>Thanks to my work on PyPy, I came to the conclusion that Python is fundamentally
+impossible to optimize to the level of performance which I aim for.  There are some
+features of the language which make Python "intrinsically slow": I have talked about it
+extensively in my EuroPython talk <strong>Myths and fairy tales around Python performance</strong>
+(<a href="https://www.youtube.com/watch?v=X3QbMaEIpt0">video</a>,
+<a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/">slides</a> and
+<a href="https://lwn.net/Articles/1031707/">LWN write-up</a>).</p>
+<div class="admonition note">
+<p class="admonition-title">Levels of performance</p>
+<p>When comparing two different languages and implementations, it doesn't make sense to
+say "X is Nx faster than Y": the precise number can vary a lot depending on the
+benchmark and on the hardware.</p>
+<p>Neverthelss, we can at least write down the order of magnitude of the expected
+speeups in the average and best case scenarios:</p>
+<ul>
+<li>
+<p>CPython's JIT aims to be 10% - 50% faster than CPython's interpreter</p>
+</li>
+<li>
+<p>PyPy's JIT aims to be 2x - 10x faster than CPython</p>
+</li>
+<li>
+<p>SPy aims to be 10x - 100x faster than CPython.</p>
+</li>
+</ul>
+</div>
+<p>The first problem is that Python is <strong>extremely dynamic</strong>. I'm not talking only about
+dynamic typing, but also about the fact that in a given Python process, the "world" is a
+moving target and "everything can change at any time".  For example, <code>import</code> statements
+are resolved dynamically at runtime and it's impossible to reliably determine them
+statically. Modules and classes are mutable: their content can change at any time, and a
+compiler must be defensive about it.  The <code>__class__</code> of an object can change, etc.</p>
+<p>On top of that, <strong>operation dispatch</strong> is also very dynamic. Most syntactical constructs
+like <code>.</code>, <code>+</code>, <code>[]</code>, etc., trigger
+<a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/#/15/0/0">very complex</a>
+lookup logic which must be resolved at runtime.  And even knowing the type of an object
+is not enough to predict its behavior, because you can have per-instance attributes
+which overrides class behavior.</p>
+<p>A JIT compiler <strong>can solve</strong> these two problems, and PyPy proves it. However, an
+approach based on JIT compilation introduces its own unique problems, as we will see in
+the dedicated section.</p>
+<p>Finally, we have a problem which cannot be solved even by a JIT (as far as I
+know). Python semantics makes it intrinsically <strong>cache unfriendly</strong>.  In Python
+<del>everything is an object</del> everything is a pointer, and objects are mutable by default.
+In CPython object references are implemented as <code>PyObject *</code> in C, which means that any
+time we do an attribute and/or item lookup we need to dereference a pointer.  It is not
+uncommon to have to dereference 4 or 5 pointers to execute just a single line code: this
+is called <a href="https://en.wikichip.org/wiki/pointer_chasing">Pointer Chasing</a> and in short,
+it's Very Bad™ for performance because it destroys
+<a href="https://en.wikipedia.org/wiki/Locality_of_reference#Hierarchical_memory">memory locality</a>. Take
+the classical example of a <code>Rect</code> which has two <code>Points</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="p">:</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">y</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nd">@dataclass</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">Rect</span><span class="p">:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">Point</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="n">b</span><span class="p">:</span> <span class="n">Point</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">r</span> <span class="o">=</span> <span class="n">Rect</span><span class="p">(</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">Point</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">width</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">r</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">height</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">r</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+<p>We can use the excellent <a href="https://pythontutor.com/render.html#code=class%20Point%3A%0A%20%20%20%20def%20__init__%28self,%20x,%20y%29%3A%0A%20%20%20%20%20%20%20%20self.x%20%3D%20x%0A%20%20%20%20%20%20%20%20self.y%20%3D%20y%0A%20%20%20%20%0Aclass%20Rect%3A%20%20%20%20%0A%20%20%20%20def%20__init__%28self,%20a,%20b%29%3A%0A%20%20%20%20%20%20%20%20self.a%20%3D%20a%0A%20%20%20%20%20%20%20%20self.b%20%3D%20b%0A%0A%0Ar%20%3D%20Rect%28Point%281,%202%29,%20Point%282,%203%29%29%0A%0Awidth%20%3D%20abs%28r.b.x%20-%20r.a.x%29%0Aheight%20%3D%20abs%28r.b.y%20-%20r.a.y%29&amp;cumulative=false&amp;curInstr=15&amp;heapPrimitives=nevernest&amp;mode=display&amp;origin=opt-frontend.js&amp;py=311&amp;rawInputLstJSON=%5B%5D&amp;textReferences=false">PyTutor</a> to visualize a simplified version of the memory layout of a <code>Rect</code>:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../10-spy-motivations-and-goals/rect-point.png" data-title="Memory layout of a Rect instance" data-desc-position="bottom"><img alt="Memory layout of a Rect instance" src="../../../10-spy-motivations-and-goals/rect-point.png"></a></p>
+<p>Each arrow is a pointer, and following an arrow means that we have a chance to do a
+"cache miss".  A better memory layout for this precise case would be to store the 4
+<code>float</code>s in a contiguous area of memory, but doing so would violate some property which
+the language guarantees (e.g. <code>id(r.a) == id(r.a)</code>, or that <code>r.a</code> doesn't make a copy),
+so a compliant Python implementation cannot do that.</p>
+<div class="admonition note">
+<p class="admonition-title">About CPUs, cache and RAM</p>
+<p>Modern CPUs are very complex beasts, thus the following is a simplified explanation.</p>
+<p>The cost of loading values from RAM is very slow compared to the cost of computation
+itself. If you want to add two numbers which are already in CPU registers, you can
+do that in 1 cycle, but if you need to fetch those values from memory, the CPU must
+sit idle for <strong>hundreds</strong> of cycles while it waits for the data to be loaded.</p>
+<p>Since loading from RAM is so slow, CPUs store frequently used data into a
+"cache". Loading from the cache is much faster, and thus CPUs can execute many more
+instructions per second when they operate on cached data. Normally on modern systems
+we have three levels of cache: L1, L2 and L3. L1 is the smallest and fastest, then
+each level is bigger and slower than the previous; the RAM is the slowest.  Loading
+an address of memory which is in the cache is a <strong>cache hit</strong>, else it's a <strong>cache
+miss</strong>.</p>
+<p>For multiple reasons which I cannot explain in this box, if the address <code>A</code> is in
+cache, then also all the values which are "close" to <code>A</code> are in cache. That's why
+having a good memory locality increases the chance of cache hits. On the other hand,
+when we follow a pointer there is a high risk of landing in a "far" region of the
+memory, and thus each pointer dereference is a potential cache miss.</p>
+<p>This <a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/#/44">video</a>
+gives a visual intuition of the relative performance of each level. Compared to L1,
+RAM is super slow, and that's why each cache miss is a disaster for performance.</p>
+</div>
+<h3 id="realpython-is-a-subset-of-python">RealPython is a subset of Python<a class="headerlink" href="#realpython-is-a-subset-of-python" title="Permanent link">¶</a></h3>
+<p>In the previous section we saw how Python allows a great deal of dynamism. However, in
+practice this doesn't happen so often.</p>
+<p>We run applications in very well defined environments, with locked set of
+dependencies. But the interpreter doesn't know and must rediscover at every single run
+that <code>import numpy</code> actually imports the same version of numpy from the same directory
+again and again.</p>
+<p>Moreover, during the years, as a community we understood that certain patterns are
+"good", while others are detrimental to readability and maintainability: we tend to have
+functions which operate on well defined types, creating attributes outside of <code>__init__</code>
+is a bad practice, monkey-patching is permitted only in certain contexts (e.g. testing),
+we never change the <code>__class__</code> of an object, and so on.</p>
+<p>De facto, we are <strong>already using a subset of Python</strong>, which I'd like to call
+<code>RealPython</code>, but it's a subset which is not formally specified and is slightly
+different from case to case.  The interpreter cannot take advantage of it because it
+needs to be ready to handle the 0.1% of the cases in which these things actually happen.</p>
+<p>But at the same time, we cannot just remove dynamism and metaprogramming from the
+language: it's what makes it possible to have some of the most powerful and rich
+libraries in the ecosystem!</p>
+<h3 id="static-typing-in-python">Static Typing in Python<a class="headerlink" href="#static-typing-in-python" title="Permanent link">¶</a></h3>
+<p>In the recent years, static typing and type checkers have become more and more popular
+in the Python community.  Let's be clear: I think that <strong>given the constraints</strong>, the
+Python typing story is good enough and well designed. I wouldn't be able to do it
+better.  But still, Python is not a language designed for static typing and, in absolute
+terms, the current situation leaves a lot to be desired.</p>
+<p>The static-vs-dynamic typing debate has been going on for decades. Let's try to examine
+the typical pros&amp;cons of each.</p>
+<p>The first typical advantage of static typing is that the typecheker can <strong>prove</strong> (in the
+mathematical sense) that <strong>a certain class of bugs cannot happen</strong> in your
+program. Unfortunately, this doesn't happen in Python.</p>
+<p>The interpreter just ignores type annotations. The typechecker tries its best, but there
+are cases in which it just doesn't understand the full semantics of Python and/or
+deliberately ignores it and thus has a wrong view on what's actually happening.  The
+following silly example happily passes <code>mypy</code>, although it's clearly wrong and raises
+<code>AttributeError</code> at runtime:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Point</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">y</span><span class="p">:</span> <span class="nb">int</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">p</span> <span class="o">=</span> <span class="n">Point</span><span class="p">()</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+<p>As such, we need to treat Python type checkers more like linters than actual theorem
+provers -- which is still better than nothing, but very far from having the advantages
+of an actual sound type system.</p>
+<p>The second typical advantage of static typing is that the compiler can emit <strong>more
+efficient code</strong>.  But since we cannot actually be sure that types are correct, we
+cannot use them to guide compilation.  There are projects like <code>mypyc</code> which go in this
+direction, but by doing so they break compatibility and limit dynamism, so we are back
+to the category of "compiler for a subset/variant of Python".</p>
+<p>Finally, another advantage of static typing is that <strong>IDEs and tooling</strong> can use type
+knowledge to assist development. I think this is actually a great success in Python and
+I suspect this plays a big role in the enthusiasm around the Python typing system.</p>
+<p>On the other hand, the typical advantage of dynamic typing is that it allows more
+flexibility. This is another pain point of Python typing: I often find cases in which
+there are patterns which would make my code "better", but they cannot be understood by
+the typechecker even if they are totally correct.  The part of the language which is
+type-checkable is <em>another</em> subset of Python: this time it's better specified, although
+very far from being a formal specification.</p>
+<p>I am aware that what I'm going to say it's a bit of exaggeration, it wants to be
+provocative.  But, from some point of view, by using static typing in Python we get
+<strong>the worst of both worlds</strong>: zero guarantees, still slow, and it prevents patterns
+where dynamic typing is actually useful.</p>
+<p>Wouldn't it be better to have static typing in such a way which is safe, fast <strong>and</strong>
+still allows pythonic patterns?</p>
+<h3 id="about-pypy-and-jit-compilers">About PyPy and JIT compilers<a class="headerlink" href="#about-pypy-and-jit-compilers" title="Permanent link">¶</a></h3>
+<p>In the section "Why Python is slow", we listed three problems:</p>
+<ol>
+<li>
+<p>mutable world</p>
+</li>
+<li>
+<p>dynamic &amp; complex dispatch</p>
+</li>
+<li>
+<p>cache unfriendliness</p>
+</li>
+</ol>
+<p>The PyPy JIT actually solves (1) and (2) very well, by taking advantage of what we
+realized in <a href="#real-python-is-a-subset-of-python">RealPython is a subset of Python</a>: a
+lot of the "crazy things" don't actually happen in practice, or happen very rarely. The
+essence is that it speculatively assumes conditions such as:</p>
+<ul>
+<li>
+<p>the types of variables in a given piece of code are stable</p>
+</li>
+<li>
+<p>the <code>__dict__</code> of classes and modules doesn't change</p>
+</li>
+<li>
+<p>the <code>__class__</code> of an object doesn't change</p>
+</li>
+<li>
+<p>etc.</p>
+</li>
+</ul>
+<p>Then it generates code which is very fast <strong>as long as those assumptions
+hold</strong>. Moreover, it generates extra code and guards to check that the assumptions are
+still valid, and deoptimize when they are not.</p>
+<p>This high-level overview is correct not only for PyPy, but for all Python JIT compilers
+that I know of, although then the actual low-level details can vary <strong>a lot</strong> depending
+on the implementation.</p>
+<p>The main drawback of this strategy is that the code is fast only as long as the
+heuristics are correct. We can easily find cases in which by modifying a single line of
+code the generated code becomes 2x, 5x or even 10x slower, because the JIT is no longer
+able to optimize it correctly.  What is infuriating is that in those cases the JIT
+<strong>perfectly knows why it cannot optimize</strong>, but it just doesn't tell us.  We could
+probably try to emit warnings in those cases, but from the point of view of the JIT is
+hard to distinguish the cases in which a warning makes sense from those in which it
+doesn't.</p>
+<p>If you want maximum performance, you need to <strong>write code which complies with the
+heuristics</strong>: it's yet another subset of Python, but this time it is very loosely
+specified and often requires deep knowledge of the JIT internals to know exactly what
+you can and cannot do; let's call this <code>JITPython</code>. It becomes very hard to reason about
+performance and to predict whether a given piece of code will be fast or slow.</p>
+<p>Moreover, there are other problems with JITs. In random order:</p>
+<ul>
+<li>
+<p>the implementation is much more complex. It's harder to contribute, and it requires
+    lot of engineering power.</p>
+</li>
+<li>
+<p>No matter how advanced a JIT is, there will always be cases which it fails to
+    optimize.</p>
+</li>
+<li>
+<p>Guards and checks have a runtime cost.</p>
+</li>
+<li>
+<p>Even when everything goes well, the quality of the generated code is worse than an
+    AOT compiler, because the JIT cannot spend too much time on optimizations.</p>
+</li>
+<li>
+<p>There is a warmup phase before reaching peak performance.</p>
+</li>
+<li>
+<p>They tend to use more memory.</p>
+</li>
+<li>
+<p>For the specific case of <strong>tracing JITs</strong> like PyPy and CPython's own JIT, there are
+    other kinds of problems which I discuss in full details
+    <a href="../../../09/24/tracing-jits-in-the-real-world--cpython-core-dev-sprint/">here</a>.</p>
+</li>
+</ul>
+<h3 id="c-api">C API<a class="headerlink" href="#c-api" title="Permanent link">¶</a></h3>
+<p>There is another problem with JIT compilers: the C API is completely opaque to any JIT.</p>
+<p>Huge parts of the Python ecosystem are written in compiled languages (C, C++, Rust,
+Cython, ...) and they communicate with the Python interpreter through the C API.  As
+soon as the JIT needs to call into a C extension, it loses track of what's going on and
+has to assume that "everything changed", which often needs to deoptimize and/or do
+expensive sanity checks.</p>
+<p>In an ideal world, we would like to have an optimizer which is able to see the whole
+program across the language boundary and e.g. to inline a C function called from Python
+or viceversa.  This is something which happens almost for free when using AOT compiled
+language with Link Time Optimization (LTO), but which is just impossible to get with
+Python.</p>
+<h3 id="rpython">RPython<a class="headerlink" href="#rpython" title="Permanent link">¶</a></h3>
+<p>RPython is an implementation detail of PyPy, but a very interesting one. It stands for
+"Restricted Python", it's a subset of Python which is compilable to C, and it's the
+language in which the PyPy interpreter is written in:</p>
+<div class="highlight"><pre><span></span><code>PyPy : RPython = CPython : C
+</code></pre></div>
+<p>RPython programs can usually run <strong>unmodified</strong> on CPython, and you get the same results
+as with the compiled version.  This means that you can use the CPython interpreter for
+development and debugging, and the RPython compiler for deployment -- the best of both
+worlds.  This pattern is used heavily to develop PyPy.</p>
+<p>Another interesting feature of RPython is its metaprogramming capabilities, which come
+directly from the way it is implemented.  The RPython compiler is written in Python, and
+it works by first <strong>importing the entry point</strong> of the target program inside CPython,
+then analyzing the bytecode of the live function objects recursively referenced by the
+entry point.</p>
+<p>The interesting part is that the initial <code>import</code> happens entirely inside CPython: at
+"import time" the RPython program can use the full power of Python to do
+metaprogramming, including using decorators, metaclasses, code generation, etc.  This
+works because the RPython compiler kicks in only <em>after</em> this phase ends.</p>
+<p>Inside PyPy, RPython is just a tool to be able to write the "full Python" which we
+give the end users. RPython was never meant to be used by final users, and thus its
+ergonomics is very bad: it happens quite often that if you try to compile an RPython
+program which contains a type error, you end up with an <code>AssertionError</code> inside the
+compiler itself, or with an obscure error message.</p>
+<p>Despite those shortcomings, the combination of:</p>
+<ul>
+<li>
+<p>possibility to use an interpreter for development and debugging</p>
+</li>
+<li>
+<p>full metaprogramming capabilities at "compile time"</p>
+</li>
+<li>
+<p>static typing at runtime</p>
+</li>
+</ul>
+<p>proved to be very nice and enjoyable to use in practice.</p>
+<p>SPy takes a lot of inspiration from that. From many points of view, it can be considered
+"RPython 2.0". After all, the <code>S</code> stands for "Static" but it's also the letter after <code>R</code>
+:).</p>
+<h2 id="spy-putting-it-all-together">SPy: Putting It All Together<a class="headerlink" href="#spy-putting-it-all-together" title="Permanent link">¶</a></h2>
+<p>SPy aims to solve all the issues explained in the previous sections. It does so in part
+by formalizing the limitations of the various "subsets of Python" which we saw above,
+and in part by adding novel features which hopefully are as powerful as the ones which we
+removed, but more suitable to performance oriented compilation.</p>
+<p>The next posts of this series will cover all in great detail, but for now let's give a
+hint of the main characteristics of SPy.</p>
+<h3 id="static-typing-in-spy">Static typing in SPy<a class="headerlink" href="#static-typing-in-spy" title="Permanent link">¶</a></h3>
+<p>SPy's type system is designed with different goals in mind and it is more limited
+compared to e.g. <code>mypy</code>, although it tries to be compatible when it makes sense. For
+many of the common cases, the final user won't see any noticeable difference.</p>
+<p>Types are actively enforced by the interpreter. If you try to assign a value to a
+variable of an incompatible type, you get a <code>TypeError</code>.  You can opt-in and use the
+<code>dynamic</code> type, but any assignment or cast to a more precise type inserts a runtime
+check.</p>
+<p>The typesystem is sound and if a program passes the type checker it is guaranteed not to
+have <code>TypeError</code> at runtime.  The compiler can use this knowledge to generate more
+efficient code.  It is guaranteed that the interpreter and the compiler produce the
+exact same output.</p>
+<p>This alone is an improvement over <a href="#static-typing-in-python">Static Typing in Python</a>,
+as now it's guaranteed that our programs are free of type errors, and they are much
+faster.  But if SPy had <strong>only</strong> a static type system, it wouldn't be much different than all the
+other "Python compilers".  What makes the difference are the features which <strong>enable
+metaprogramming</strong> and other "pythonic" patterns <strong>in a type safe way</strong>.</p>
+<h3 id="import-time-vs-runtime">Import time vs runtime<a class="headerlink" href="#import-time-vs-runtime" title="Permanent link">¶</a></h3>
+<p>Before launching a program SPy analyzes the source code and <strong>statically determines the
+set of modules</strong> which will be imported.</p>
+<p>After that, we enter what we call the <strong>import time</strong> phase and we import all the needed
+modules. Things such as decorators, metaclasses and module-level initialization run in this
+phase and the world is "mutable as usual".</p>
+<p>Then we <strong>freeze</strong> the world: all global constants are frozen and become immutable,
+including modules and classes.</p>
+<p>Finally, at <strong>runtime</strong> the program runs "as usual", inside an immutable world.</p>
+<p>This is clearly similar to what RPython does. The big difference is that RPython uses
+CPython as its "Import time" interpreter, while SPy uses its own interpreter. A lot of
+Python metaprogramming patterns fit very well in this scheme, and the experience of the
+PyPy team with RPython validates this claim.</p>
+<p>This is basically a formalization of some of the rules of both <code>RealPython</code> and
+<code>JITPython</code>: the big advantage is that if you violate the rule you get a very clear
+error message instead of a subtle slowdown.</p>
+<h3 id="redshifting">Redshifting<a class="headerlink" href="#redshifting" title="Permanent link">¶</a></h3>
+<p>The other fundamental concept in SPy is <strong>redshifting</strong>.</p>
+<p>Each expression is given a color:</p>
+<ul>
+<li>
+<p><code>blue</code> expressions are those which can safely be evaluated ahead of time, because they
+    don't have side effects and all operands are statically known.</p>
+</li>
+<li>
+<p><code>red</code> expressions are those which needs to be evaluated at runtime.</p>
+</li>
+</ul>
+<p>During <strong>redshifting</strong> we eagerly evaluate all the <code>blue</code> parts of the code: it's a form
+of partial evaluation.  This process plays very well with the freezing that we discussed
+above, because a lot of operations on frozen data become automatically blue: for
+example, if we statically know the type of an object, the logic to look up a method
+inside the frozen class hierarchy is a blue operation and it's optimized away, leaving
+just a direct call as a result.</p>
+<p>So far, this is not different than usual constant folding, with the difference that it's
+guaranteed to happen.  What makes it more powerful is the ability to mark some functions
+as <code>@blue</code>.</p>
+<p>Calling a <code>@blue</code> function is always a blue operation, and the function body is executed
+during redshifting. This is in a way similar to what you do with e.g. C++ templates,
+with the important difference that the language that you use for metaprogramming is
+exactly the same language that you use at runtime.  Moreover, the <code>@blue</code> functions are
+executed by the familiar SPy interpreter, so they are much easier to debug, e.g. by
+using <code>breakpoint()</code>.</p>
+<p>Generics are just a special case of <code>@blue</code> functions operating on types. The syntax
+<code>MyList[T]</code> is just syntax sugar over this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nd">@blue</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">MyList</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">class</span><span class="w"> </span><span class="nc">_MyList</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="n">items</span><span class="p">:</span> <span class="n">array</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>  <span class="c1"># fictional example</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="o">...</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">return</span> <span class="n">_MyList</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Current status: generics</p>
+<p>The syntax sugar <code>Type[T]</code> is not implemented yet, but writing generic types in
+<code>@blue</code> function totally works and it's how SPy implement its own <code>list</code>, <code>dict</code> and
+<code>array</code> types.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Zig <code>comptime</code></p>
+<p>SPy <code>@blue</code> functions have <strong>lot</strong> in common to Zig's
+<a href="https://ziglang.org/documentation/master/#comptime">comptime</a> feature.</p>
+<p>When I originally designed SPy I didn't know about Zig (I swear!), but after showing
+the initial ideas about <code>@blue</code> code, someone pointed me to Zig: I was pleasantly
+surprised to see it already implemented in a very different context, because it was
+an important validation that my ideas made sense.</p>
+<p>Very recently I had the pleasure to meet <a href="https://andrewkelley.me/">Andrew Kelly</a>,
+Zig's inventor and BDFL. We discussed details of both systems and we agreed that
+they are basically equivalent, apart from some minor differences.</p>
+</div>
+<h3 id="static-dispatch">Static dispatch<a class="headerlink" href="#static-dispatch" title="Permanent link">¶</a></h3>
+<p>When you do <code>a + b</code> in Python, the interpreter must execute complex logic at runtime to
+determine which method to call.  In SPy we do almost the same logic, but at compile
+time.  Operators are implemented as a two-phase mechanism:</p>
+<ol>
+<li>
+<p>first, we <strong>lookup the implementation</strong> by examining the information which is
+     available at compile time: in particular, the <strong>static type</strong> of the operands.</p>
+</li>
+<li>
+<p>Then, we call the implementation which we got at point (1).</p>
+</li>
+</ol>
+<p>The trick is that phase (1) is entirely <code>blue</code>, and it's completely optimized away by
+the redshifter. For example, take this code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></div>
+<p>After redshifting it becomes:
+</p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">return</span> <span class="err">`</span><span class="n">operator</span><span class="p">::</span><span class="n">f64_add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="err">`</span>
+</code></pre></div><p></p>
+<p>This is a big departure from Python semantics, because we operate on the <strong>static
+type</strong> of the operands, as opposed to the actual types at runtime. I believe this covers
+the majority of use cases. For those cases in which you really need full dynamic
+dispatch, you can opt-in by using the type <code>dynamic</code>.</p>
+<p>Custom types can still override <code>__add__</code> &amp; co. and participate to this "blue time"
+lookup logic. The details will be explained in a later post.</p>
+<h2 id="conclusion">Conclusion<a class="headerlink" href="#conclusion" title="Permanent link">¶</a></h2>
+<p>Python's dynamic nature and expressivity plays a big part of why it became so popular:
+it allowed power users to write all the incredible libraries with very intuitive and
+high level APIs which we love.  However, such expressivity comes with many problems in
+terms of performance, type safety and so on.</p>
+<p>SPy attempts to fix those problems by constraining the dynamicity into well defined
+places, without hurting performance.</p>
+<p>In the next posts of this series, we'll dive deep into how this actually works: the type
+system, the blue/red evaluation model, static dispatch, and the implementation of both
+the interpreter and the compiler. We'll see concrete examples of SPy code and explore
+how features like zero-cost abstractions are achieved in practice.</p>
+<p><strong>Want to explore SPy yourself?</strong> Visit the <a href="https://github.com/spylang/spy">SPy repository on
+GitHub</a> to see the code, try out examples, and follow
+the project's development. If you have questions, want to discuss design decisions, or
+are interested in contributing, join us on the <a href="https://discord.gg/wRb29FGZpP">SPy Discord
+server</a>.  SPy is still early in development, and this is a
+great time to get involved and help shape its future.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js" data-repo="antocuni/antocuni.github.io" data-repo-id="R_kgDON3STLg" data-category="Announcements" data-category-id="DIC_kwDON3STLs4Cm2EZ" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="light" data-lang="en" data-loading="lazy" crossorigin="anonymous" async>
+</script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2008 - 2025 Antonio Cuni  - <a href="#__consent">Change cookie settings</a>
+
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="feed_rss_created.xml" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/antocuni/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://mastodon.social/@antocuni" target="_blank" rel="noopener me" title="mastodon.social" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/antocuni.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/antocuni" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+  
+    
+  
+
+
+
+
+  
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input class="md-toggle" type="checkbox" id="__settings">
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+      
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="analytics" checked>
+          <span class="task-list-indicator"></span>
+          Google Analytics
+        </label>
+      </li>
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout((function(){document.querySelector("[data-md-component=consent]").hidden=!1}),250);var form=document.forms.consent;for(var action of["submit","reset"])form.addEventListener(action,(function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map((function(e){return[e,!0]})))),location.hash="",location.reload()}))</script>
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.highlight", "search.suggest", "header.autohide"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

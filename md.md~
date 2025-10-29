@@ -1,0 +1,25 @@
+# Admonitions
+
+!!! note "Title"
+    Note with a title
+
+!!! note
+    Note without a title
+
+!!! note ""
+    note without title box
+
+Admonition types:
+
+  - note
+  - abstract
+  - info
+  - tip
+  - success
+  - question
+  - warning
+  - failure
+  - danger
+  - bug
+  - example
+  - quote
