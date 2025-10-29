@@ -1,6 +1,6 @@
 ---
-draft: true
-date: 2025-10-26
+draft: false
+date: 2025-10-29
 title: "Inside SPy, part 1: Motivations and Goals"
 categories:
   - Post
