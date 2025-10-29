@@ -20,6 +20,12 @@ to optimize, what compromises existing solutions require, and where current appr
 fall short. Subsequent posts in this series will explore the solutions in depth. For
 now, let's start with the essential question: what is SPy?
 
+!!! Success ""
+    Before diving in, I want to express my gratitude to my employer,
+    [Anaconda](https://www.anaconda.com/), for giving me the opportunity to dedicate
+    100% of my time to this open-source project.
+
+
 <!-- more -->
 
 ## What is SPy?
@@ -81,23 +87,27 @@ During the years there have been many attempts to improve Python speed; generall
 fall into two categories:
 
   1. Implement "full Python". To be able to support all dynamic features and be fast,
-     they usually employ a JIT compiler. Examples are PyPy, GraalPy, Pyston, Unladen
-     Swallow, etc.
+     they usually employ a Just In Time (JIT) compiler. Examples are
+     [PyPy](https://pypy.org/), [GraalPy](https://www.graalvm.org/python/),
+     [Pyston](https://github.com/pyston/pyston), and
+     [CPython's own JIT](https://github.com/python/cpython/tree/v3.14.0/Tools/jit).
 
-  2. Implement a "subset of Python" or "variant of Python", often with an Ahead of Time
-     (AOT) compiler which is able to produce fast code. The usual approach here is to
-     remove many (if not all) of the dynamic features which make Python hard to
-     compile.
+  2. Implement a "subset of Python" or "variant of Python", either as an Ahead of Time
+     (AOT) or JIT compiler which is able to produce fast code. The usual approach here
+     is to remove many (if not all) of the dynamic features which make Python hard to
+     compile.  Examples are [RPython](https://rpython.readthedocs.io/en/latest/),
+     [Mypyc](https://github.com/mypyc/mypyc), [Cython](https://cython.org/) and
+     [Numba](https://numba.pydata.org/).
 
-The problem of JIT compilers is that sometimes they work very well and produce huge
-speedups, other times they don't produce any speedup at all, or might even introduce
-slowdowns, or they might use too much memory, or they are slow to "warm up".
+The problem of "full Python" JIT compilers is that sometimes they work very well and
+produce huge speedups, other times they don't produce any speedup at all, or might even
+introduce slowdowns, or they might use too much memory, or they are slow to "warm up".
 
-The problem of the AOT approach is that by removing the dynamic features of Python, you
-end up with something which does not feel *pythonic*, and in which many typical and
-idiomatic python patterns just don't work.  You often end up with "Java with Python
-syntax" (nothing in particular against Java, but I hope it gives an idea of what I
-mean).
+The problem of the subset/variant approach is that by removing the dynamic features of
+Python, you end up with something which does not feel *pythonic*, and in which many
+typical and idiomatic python patterns just don't work.  You often end up with "Java with
+Python syntax" (nothing in particular against Java, but I hope it gives an idea of what
+I mean).
 
 SPy does something different: on one hand, it removes the dynamic features which make
 Python "slow", but on the other hand it introduces *new* features which make it
@@ -132,18 +142,16 @@ Python.
 
 The following is a list of goals and design guidelines of SPy:
 
-  1. **Easy to use and implement**. The language is easy to understand. It must be
-     possible to implement SPy without huge engineering teams.
+  1. **Easy to use and implement**. The language is easy to understand. Moreover, it
+     must be possible to implement SPy without huge engineering teams.
 
   2. We have an **interpreter** for ease of development and debugging.
 
   3. We have a **compiler** for deployment and performance. The interpreter and the
      compiler are guaranteed to produce the exact same results at runtime.
 
-  4. **Rich metaprogramming capabilities**. SPy has 1st class support for
-     metaprogramming, although the precise spelling and characteristics might deviate
-     from CPython.  For example, it would totally be possible to recreate something like
-     FastAPI or SQLAlchemy in SPy.
+  4. **Static typing**. Type annotations are enforced by the language and checked by
+     both the interpreter and the compiler.
 
   5. **Performance matters**. SPy aims to have performance comparable to low level
      languages such as C and Rust.
@@ -153,11 +161,13 @@ The following is a list of goals and design guidelines of SPy:
      we don't fully understand, and without having "performance cliffs" in which
      modifying a line of code makes everything 10x slower.
 
-  7. **Zero cost abstractions**. SPy supports things like decorators, `**kwargs`, the
-     descriptor protocol, `__getattr__`, etc. without extra runtime costs.
+  7. **Rich metaprogramming capabilities**. SPy has 1st class support for
+     metaprogramming, although the precise spelling and characteristics might deviate
+     from Python.  For example, it would totally be possible to recreate something like
+     FastAPI or SQLAlchemy in SPy.
 
-  8. **Static typing**. Type annotations are enforced by the language and checked by
-     both the interpreter and the compiler.
+  8. **Zero cost abstractions**. SPy supports things like decorators, `**kwargs`, the
+     descriptor protocol, `__getattr__`, etc. without extra runtime costs.
 
   9. **Opt-in dynamism**. Some of the dynamic features of Python are off by default, but
      it's still possible to opt-in explicitly, when needed.  As an example, SPy provides
@@ -199,6 +209,22 @@ extensively in my EuroPython talk **Myths and fairy tales around Python performa
 ([video](https://www.youtube.com/watch?v=X3QbMaEIpt0),
 [slides](https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/) and
 [LWN write-up](https://lwn.net/Articles/1031707/)).
+
+!!! note "Levels of performance"
+
+    When comparing two different languages and implementations, it doesn't make sense to
+    say "X is Nx faster than Y": the precise number can vary a lot depending on the
+    benchmark and on the hardware.
+
+    Neverthelss, we can at least write down the order of magnitude of the expected
+    speeups in the average and best case scenarios:
+
+      - CPython's JIT aims to be 10% - 50% faster than CPython's interpreter
+
+      - PyPy's JIT aims to be 2x - 10x faster than CPython
+
+      - SPy aims to be 10x - 100x faster than CPython.
+
 
 The first problem is that Python is **extremely dynamic**. I'm not talking only about
 dynamic typing, but also about the fact that in a given Python process, the "world" is a
@@ -467,30 +493,20 @@ worlds.  This pattern is used heavily to develop PyPy.
 
 Another interesting feature of RPython is its metaprogramming capabilities, which come
 directly from the way it is implemented.  The RPython compiler is written in Python, and
-it works this way:
+it works by first **importing the entry point** of the target program inside CPython,
+then analyzing the bytecode of the live function objects recursively referenced by the
+entry point.
 
-  1. Import the **entry point** of the target program inside CPython.
-
-  2. Analyze the bytecode of the entry point and recursively find all the functions
-     which are called from there.
-
-  3. Do whole-program type inference to determine the static type of each variable.
-
-  4. [lot and lot of stuff which is not interesting for this discussion]
-
-  5. Emit C code and call `gcc` to generate the final executable.
-
-The interesting part is that point (1) happens entirely inside CPython: at "import time"
-the RPython program can use the full power of Python to do metaprogramming, including
-using decorators, metaclasses, code generation, etc.  This works because the RPython
-compiler kicks in only *after* this phase ends.
+The interesting part is that the initial `import` happens entirely inside CPython: at
+"import time" the RPython program can use the full power of Python to do
+metaprogramming, including using decorators, metaclasses, code generation, etc.  This
+works because the RPython compiler kicks in only *after* this phase ends.
 
 Inside PyPy, RPython is just a tool to be able to write the "full Python" which we
 give the end users. RPython was never meant to be used by final users, and thus its
 ergonomics is very bad: it happens quite often that if you try to compile an RPython
 program which contains a type error, you end up with an `AssertionError` inside the
-compiler itself, or with an obscure error message.  Moreover, whole-program type
-inference is very hard to debug when something goes wrong.
+compiler itself, or with an obscure error message.
 
 Despite those shortcomings, the combination of:
 
