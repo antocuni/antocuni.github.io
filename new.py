@@ -29,11 +29,11 @@ def create_talk():
 
     # Create target directory
     script_dir = Path(__file__).parent
-    target_dir = script_dir / "talk" / year / month / dir_name
+    target_dir = script_dir / "blog" / "talk" / year / month / dir_name
     target_dir.mkdir(parents=True, exist_ok=True)
 
     # Copy template files
-    template_dir = script_dir / "talk" / "template"
+    template_dir = script_dir / "blog" / "talk" / "template"
     if not template_dir.exists():
         print(f"Error: template not found at {template_dir}", file=sys.stderr)
         sys.exit(1)
