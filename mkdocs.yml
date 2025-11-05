@@ -12,7 +12,7 @@ nav:
   - Blog: index.md
   - About: about.md
   - Tags: tags.md
-  - RSS feed: feed_rss_updated.xml
+  - RSS feed: feed_rss_created.xml
 
 theme:
   logo: assets/logo.svg
