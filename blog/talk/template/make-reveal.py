@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run
 """
 Offline reveal.js presentation generator.
 Reads slides.md.txt and generates index.html ready to be opened in the browser.
@@ -33,6 +33,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/webcomponent-qr-code@1.3.0/dist/index.min.js"></script>
+
 </head>
 <body>
 

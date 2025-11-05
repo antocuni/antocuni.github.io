@@ -35,19 +35,34 @@
 </style>
 
 
-# Title title title
+# Open Source
+## From code to community
 
-XXX update link!
+<qr-code data="https://antocuni.eu/talk/2025/11/oss-from-code-to-community/" format="svg" modulesize="8" margin="4"></qr-code>
 
-<qr-code data="https://antocuni.eu/talk/2025/...." format="svg" modulesize="8" margin="4"></qr-code>
+<span class="small">https://antocuni.eu/talk/2025/11/oss-from-code-to-community/</span>
 
-<span class="small">https://antocuni.eu/talk/2025/....</span>
-
-
----
-
-## Slide 1
 
 ---
 
-## Slide 2
+## Who am I?
+
+- Antonio Cuni
+
+- Graduated from UniGe
+
+- Principal Software Engineer @ Anaconda
+
+- Very active in the Python community
+
+  - PyPy, pdb++, HPy, PyScript, SPy
+
+  - Talk often at various PyCons
+
+---
+
+## Bias
+
+- a lot of what I'll say is biased towards the python community
+
+---
