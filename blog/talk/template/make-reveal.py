@@ -51,6 +51,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 <script>
     Reveal.initialize({{
+        width: 1920,      // base width (16:9 ratio)
+        height: 1080,     // base height (16:9 ratio)
+        margin: 0.04,     // optional spacing around slides
+        minScale: 0.2,    // how small slides can scale
+        maxScale: 2.0,    // how large slides can scale
         plugins: [
             RevealMarkdown,
             RevealHighlight,
