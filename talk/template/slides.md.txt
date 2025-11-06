@@ -35,6 +35,10 @@
 </style>
 
 
+
+<!-- you can also use this comment to set a custom html title (remove the xxx) -->
+<!-- xxx-title: ... -->
+
 # Title title title
 
 XXX update link!
