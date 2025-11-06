@@ -32,6 +32,61 @@
   .main-size {
     font-size: var(--r-main-font-size);
   }
+
+
+
+/* Quote card for Reveal.js */
+.reveal .quote-card {
+  position: relative;
+  margin: 1.5em auto;
+  padding: 1.25em 1.5em 1.25em 2.25em;
+  max-width: 900px;
+
+  background: rgba(0,0,0,0.03);
+  border-left: 6px solid var(--quote-accent, #6aa9ff);
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.8);
+}
+
+/* Big decorative quote mark */
+.reveal .quote-card::before {
+  content: "“";
+  position: absolute;
+  left: 12px;
+  top: 6px;
+  font-size: 2.2em;
+  line-height: 1;
+  color: var(--quote-accent, #6aa9ff);
+  opacity: 0.6;
+  font-style: normal;
+}
+
+/* Body text */
+.reveal .quote-card p {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+/* Attribution */
+.reveal .quote-card footer {
+  margin-top: 0.8em;
+  text-align: right;
+  font-style: normal;
+  font-size: 0.9em;
+  color: rgba(0,0,0,0.6);
+}
+
+.reveal .quote-card footer .source {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+
+
 </style>
 
 
@@ -49,20 +104,201 @@
 
 - Antonio Cuni
 
-- Graduated from UniGe
-
 - Principal Software Engineer @ Anaconda
 
 - Very active in the Python community
 
   - PyPy, pdb++, HPy, PyScript, SPy
 
-  - Talk often at various PyCons
+  - Many talks
+
+- https://antocuni.eu
 
 ---
 
-## Bias
+<h4>Setup used to create Linux</h4>
+<img src="linus.jpg" width="40%">
 
-- a lot of what I'll say is biased towards the python community
+<h4>Setup used to copy code from ChatGPT</h4>
+<img src="fancy-desk.jpg" width="40%">
+
+
+---
+
+<h4 class="fragment" data-fragment-index="1" >The social aspect of OSS</h4>
+<img class="fragment" data-fragment-index="1" src="loving-puppies.png" width="40%">
+
+<h4>The tech stack of an OSS repo</h4>
+<img src="fancy-desk.jpg" width="40%">
+
+
+---
+
+
+# What is Open Source?
+
+---
+
+## Definitions
+
+- **Open Source Software (OSS)**
+
+  - Source code is publicly available
+
+  - Licensed to allow use, modification, distribution
+
+- **Free Software**
+
+  - Freedom to run, study, share, modify
+
+  - "Free as in freedom, not as in beer"
+
+- **FOSS / FLOSS**
+
+  - Free/Libre Open Source Software
+
+---
+
+## Licenses
+
+- Permissive licenses
+
+  - MIT, BSD, Apache 2.0
+
+  - Do whatever you want (almost)
+
+- Copyleft licenses
+
+  - GPL, LGPL, AGPL
+
+  - Derivative works must also be open
+
+- Choose wisely: https://choosealicense.com/
+
+---
+
+## Open Source vs Open Governance
+
+- **Open Source**: code is public
+
+- **Open Governance**: decisions are made transparently
+
+  - Who decides what features to add?
+
+  - Who can merge pull requests?
+
+  - How are maintainers chosen?
+
+---
+
+## Examples
+
+- Linux kernel: open source, meritocratic governance
+
+- Python: open source, governed by the PSF and Steering Council
+
+- Many corporate projects: open source, closed governance
+
+  - Code is public
+
+  - Decisions made internally
+
+---
+
+# The social aspect
+
+<h3 class="fragment"><i>OSS is more about people than code</i></h3>
+
+---
+
+## OSS citizens
+
+- Users
+
+- Contributors
+
+- Maintainers
+
+---
+
+## TL;DR
+
+# Be nice
+
+---
+
+## Be a good OSS citizen
+
+- [Setting expectations for open source participation](https://snarky.ca/setting-expectations-for-open-source-participation/)
+
+- [Video](https://youtu.be/tzFWz5fiVKU?t=48m55s)
+
+- Brett Cannon's Keynote @ PyCon US 2018
+
+- OSS as a series of kindnesses
+
+---
+
+> Open source is more than just some free source code; there are real people involved
+> here and that simple fact cannot be ignored.
+> <footer>— <strong>Brett Cannon</strong></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+> You could view everything in OSS as a kindness that someone has done for you and others.
+> <footer>— <strong>Brett Cannon</strong></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+> When someone in open source makes demands it's like the person passing through the
+> door criticizing how I held the door open.
+> <footer>— <strong>Brett Cannon</strong></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+> It's a kindness when you report a bug so that I have a chance to try and fix it. But
+> just because you reported a bug doesn't mean I specifically owe you anything.  [...]
+> So the idea that any open source project owes anyone anything is a misunderstanding of
+> what open source fundamentally is.
+> <footer>— <strong>Brett Cannon</strong></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+> When you submit a change to something, I'm sure your intentions are good. [...] <br>
+> Think of a contribution like a puppy: you might view it as this cute, wonderful thing you're
+> giving me while I'm looking at it as over a decade of feeding, walking, and vet bills.
+> <footer>— <strong>Brett Cannon</strong></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+> A kindness should not come with an expectation of something in return
+> <footer>— <strong>Brett Cannon</strong></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+# Good Communication examples
+
+---
+
+> Hey @LucasSantos91, I’m curious about your definition of "pure" here. I’m
+> checking my understanding of pure and I may be wrong here.
+> <footer>— <strong>AndrewCodeDev</strong></footer>
+<!-- .element: class="quote-card" -->
+
+https://ziggit.dev/t/clarification-on-comptime-meta-programming/4346/5
+
+---
+
+<img src="ahri-fox-quote.png" />
+
+---
+
+<img src="antocuni-discord-quote.png" />
 
 ---
