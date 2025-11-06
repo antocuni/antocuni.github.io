@@ -25,13 +25,24 @@
     font-size: 2.5em;
   }
 
+  .small {
+    font-size: 0.8em;
+  }
+
   .main-size {
     font-size: var(--r-main-font-size);
   }
 </style>
 
 
-# The HPy dilemma
+# Title title title
+
+XXX update link!
+
+<qr-code data="https://antocuni.eu/talk/2025/...." format="svg" modulesize="8" margin="4"></qr-code>
+
+<span class="small">https://antocuni.eu/talk/2025/....</span>
+
 
 ---
 

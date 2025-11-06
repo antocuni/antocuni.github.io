@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tracing JIT and real world Python</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.min.css">
+
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/zenburn.min.css">
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/markdown/markdown.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/webcomponent-qr-code@1.3.0/dist/index.min.js"></script>
+
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+    <section data-markdown>
+      <textarea data-template>
+<!-- -*- mode: markdown -*- -->
+
+<style>
+
+  :root {
+	--r-main-font-size: 40px;  /* the default is 40px */
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+	text-transform: none;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+	text-transform: none;
+  }
+
+  .reveal pre code {
+	padding: 5px;
+	overflow: auto;
+	max-height: 600px;
+	word-wrap: normal;
+  }
+
+  .big {
+	font-size: 2.5em;
+  }
+
+  .small {
+	font-size: 0.8em;
+  }
+
+  .main-size {
+	font-size: var(--r-main-font-size);
+  }
+
+
+
+/* Quote card for Reveal.js */
+.reveal .quote-card {
+  position: relative;
+  margin: 1.5em auto;
+  padding: 1.25em 1.5em 1.25em 2.25em;
+  max-width: 900px;
+
+  background: rgba(0,0,0,0.03);
+  border-left: 6px solid var(--quote-accent, #6aa9ff);
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+
+  font-style: italic;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.8);
+}
+
+/* Big decorative quote mark */
+.reveal .quote-card::before {
+  content: "“";
+  position: absolute;
+  left: 12px;
+  top: 6px;
+  font-size: 2.2em;
+  line-height: 1;
+  color: var(--quote-accent, #6aa9ff);
+  opacity: 0.6;
+  font-style: normal;
+}
+
+/* Body text */
+.reveal .quote-card p {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+/* Attribution */
+.reveal .quote-card footer {
+  margin-top: 0.8em;
+  text-align: left;			  /* change to right if you prefer */
+  font-style: normal;
+  font-size: 0.9em;
+  color: rgba(0,0,0,0.6);
+}
+
+.reveal .quote-card footer .source {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+
+
+</style>
+
+
+# Open Source
+## From code to community
+
+<qr-code data="https://antocuni.eu/talk/2025/11/oss-from-code-to-community/" format="svg" modulesize="8" margin="4"></qr-code>
+
+<span class="small">https://antocuni.eu/talk/2025/11/oss-from-code-to-community/</span>
+
+
+---
+
+## Who am I?
+
+- Antonio Cuni
+
+- Principal Software Engineer @ Anaconda
+
+- Very active in the Python community
+
+  - PyPy, pdb++, HPy, PyScript, SPy
+
+  - Many talks
+
+- https://antocuni.eu
+
+---
+
+<h4>Setup used to create Linux</h4>
+<img src="linus.jpg" width="40%">
+
+<h4>Setup used to copy code from ChatGPT</h4>
+<img src="fancy-desk.jpg" width="40%">
+
+
+---
+
+<h4 class="fragment" data-fragment-index="1" >The social aspect of OSS</h4>
+<img class="fragment" data-fragment-index="1" src="loving-puppies.png" width="40%">
+
+<h4>The tech stack of an OSS repo</h4>
+<img src="fancy-desk.jpg" width="40%">
+
+
+---
+
+
+# What is Open Source?
+
+---
+
+## Definitions
+
+- **Open Source Software (OSS)**
+
+  - Source code is publicly available
+
+  - Licensed to allow use, modification, distribution
+
+- **Free Software**
+
+  - Freedom to run, study, share, modify
+
+  - "Free as in freedom, not as in beer"
+
+- **FOSS / FLOSS**
+
+  - Free/Libre Open Source Software
+
+---
+
+## Licenses
+
+- Permissive licenses
+
+  - MIT, BSD, Apache 2.0
+
+  - Do whatever you want (almost)
+
+- Copyleft licenses
+
+  - GPL, LGPL, AGPL
+
+  - Derivative works must also be open
+
+- Choose wisely: https://choosealicense.com/
+
+---
+
+## Open Source vs Open Governance
+
+- **Open Source**: code is public
+
+- **Open Governance**: decisions are made transparently
+
+  - Who decides what features to add?
+
+  - Who can merge pull requests?
+
+  - How are maintainers chosen?
+
+---
+
+## Examples
+
+- Linux kernel: open source, meritocratic governance
+
+- Python: open source, governed by the PSF and Steering Council
+
+- Many corporate projects: open source, closed governance
+
+  - Code is public
+
+  - Decisions made internally
+
+---
+
+# The social aspect
+
+<h3 class="fragment"><i>OSS is more about people than code</i></h3>
+
+---
+
+## OSS citizens
+
+- Users
+
+- Contributors
+
+- Maintainers
+
+---
+
+## TL;DR
+
+# Be nice
+
+---
+
+## Be a good OSS citizen
+
+- [Setting expectations for open source participation](https://snarky.ca/setting-expectations-for-open-source-participation/)
+
+- [Video](https://youtu.be/tzFWz5fiVKU?t=48m55s)
+
+- Brett Cannon's Keynote @ PyCon US 2018
+
+- Small selection of quotes from the talk
+
+---
+
+> Creativity is just connecting things. When you ask creative people how they did something, they feel a little guilty because they didn't really do it, they just saw something…
+> <footer>-- <strong>Steve Jobs</strong> <span class="source">Source Title</span></footer>
+<!-- .element: class="quote-card" -->
+
+---
+
+> Open source is more than just some free source code; there are real people involved here and that simple fact cannot be ignored.
+<footer style="font-size: 50%; text-align: right">- Anonymous Contributor</footer>
+
+
+---
+
+	> "To reiterate, just because open source software is free for you doesn't mean someone else hasn't paid some price on your behalf to get you that code."
+
+	> You could view everything in OSS as a kindness that someone has done for you and others.
+
+	> when someone in open source makes demands it's like the person passing through the door criticizing how I held the door open.
+
+   >  It's a kindness when you report a bug so that I have a chance to try and fix it. But just because you reported a bug doesn't mean I specifically owe you anything.
+
+
+> My kindness was to provide my time and effort for the open source project up until now, but there's no expectation beyond that of my time and effort. [...] So the idea that any open source project owes anyone anything is a misunderstanding of what open source fundamentally is.
+
+> When you submit a change to something, I'm sure your intentions are good. You have put in the effort to try and improve the project somehow and that's appreciated. But where this tends to go wrong is when people don't take into account the fact that your considerations for a change are often very different from mine.
+
+> When responding to a submitted contribution, maintainers should try to say "thank you".
+
+> A kindness should not come with an expectation of something in return
+
+
+
+
+## Code of Conduct
+
+- Sets expectations for behavior
+
+- Protects contributors from harassment
+
+- Makes the project welcoming
+
+- Python: https://www.python.org/psf/conduct/
+
+- Contributor Covenant: https://www.contributor-covenant.org/
+
+---
+
+## Maintainer burnout
+
+- Maintaining OSS is **hard work**
+
+- Often unpaid, done in spare time
+
+- Dealing with issues, PRs, questions, complaints
+
+- Emotional labor is real
+
+---
+
+## Burnout: warning signs
+
+- Feeling overwhelmed by notifications
+
+- Dreading opening GitHub
+
+- Guilt when not working on the project
+
+- Resentment towards users/contributors
+
+---
+
+## Good communication ✅
+
+```
+Hi! I noticed a bug in function X when using Y.
+Here's a minimal reproducible example: [code]
+I checked the docs and searched existing issues.
+Would you like me to submit a PR?
+```
+
+---
+
+## Bad communication ❌
+
+```
+your code is broken, fix it!!!
+```
+
+---
+
+## Bad communication ❌
+
+```
+This doesn't work.
+```
+
+<p class="fragment">(No details, no error message, no context)</p>
+
+---
+
+## Bad communication ❌
+
+```
+Why haven't you merged my PR yet?
+It's been 2 hours!!!
+```
+
+---
+
+## Good maintainer response ✅
+
+```
+Thanks for the report! I can reproduce it.
+This will take some time to fix properly.
+I'll get to it when I can, or contributions
+are welcome!
+```
+
+---
+
+## Bad maintainer response ❌
+
+```
+RTFM
+```
+
+---
+
+## Bad maintainer response ❌
+
+```
+[No response for months, then closes issue
+without explanation]
+```
+
+---
+
+## Remember
+
+- Contributors are volunteers (usually)
+
+- Maintainers are volunteers (usually)
+
+- Everyone is human
+
+- Be patient, be kind, be respectful
+
+---
+
+# Technical bits
+
+---
+
+## Clear guidance for users
+
+- **README.md**
+
+  - What does this project do?
+
+  - How do I install it?
+
+  - Quick start / basic examples
+
+- **Documentation**
+
+  - API reference
+
+  - Tutorials
+
+  - https://www.sphinx-doc.org/ (Python)
+
+---
+
+## Clear guidance for contributors
+
+- **CONTRIBUTING.md**
+
+  - How to set up development environment
+
+  - How to run tests
+
+  - Code style expectations
+
+  - How to submit PRs
+
+- **Good first issue** labels
+
+---
+
+## Tests!
+
+- If you don't test it, it's broken
+
+- Makes it easy to accept contributions
+
+- Prevents regressions
+
+- Python: pytest → https://pytest.org/
+
+---
+
+## Continuous Integration (CI)
+
+- Automate testing on every commit/PR
+
+- GitHub Actions → https://docs.github.com/en/actions
+
+- Run tests on multiple Python versions
+
+- Check code coverage
+
+---
+
+## Example: GitHub Actions
+
+```yaml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+	runs-on: ubuntu-latest
+	strategy:
+	  matrix:
+		python-version: ["3.9", "3.10", "3.11", "3.12"]
+
+	steps:
+	- uses: actions/checkout@v4
+	- uses: actions/setup-python@v5
+	  with:
+		python-version: ${{ matrix.python-version }}
+	- run: pip install -e ".[dev]"
+	- run: pytest
+```
+
+---
+
+## Pre-commit hooks
+
+- Run checks before committing
+
+- Enforce formatting, linting automatically
+
+- https://pre-commit.com/
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+	rev: v0.8.4
+	hooks:
+	  - id: ruff
+	  - id: ruff-format
+```
+
+---
+
+## Formatters & Linters
+
+- **Black** → https://github.com/psf/black
+
+  - "The uncompromising code formatter"
+
+  - Opinionated, consistent
+
+- **Ruff** → https://github.com/astral-sh/ruff
+
+  - Extremely fast linter + formatter
+
+  - Replaces flake8, isort, and more
+
+---
+
+## More tools
+
+- **mypy** → https://mypy-lang.org/
+
+  - Static type checker
+
+- **coverage.py** → https://coverage.readthedocs.io/
+
+  - Measure code coverage
+
+- **tox** → https://tox.wiki/
+
+  - Test across multiple Python versions locally
+
+---
+
+## Project templates
+
+- Get started quickly with best practices
+
+- **cookiecutter** → https://www.cookiecutter.io/
+
+- Many Python templates available
+
+  - https://github.com/audreyfeldroy/cookiecutter-pypackage
+
+  - https://github.com/scientific-python/cookie
+
+---
+
+## Communication channels
+
+- **Issue tracker**
+
+  - Bug reports, feature requests
+
+  - GitHub Issues, GitLab Issues
+
+- **Discussions / Forums**
+
+  - GitHub Discussions
+
+  - Discourse
+
+- **Chat**
+
+  - Discord, Slack, Matrix
+
+  - Real-time communication
+
+---
+
+## Small projects vs community
+
+- Starting small is fine!
+
+  - Just you, solving your problem
+
+  - README + tests + CI = good start
+
+- As it grows:
+
+  - Add CONTRIBUTING.md
+
+  - Set up discussions/chat
+
+  - Be responsive (when you can)
+
+  - Consider co-maintainers
+
+---
+
+## From code to community
+
+- Start with code
+
+- Add documentation
+
+- Make it easy to contribute
+
+- Be welcoming and kind
+
+- Build trust
+
+- **Community emerges naturally**
+
+---
+
+## Resources
+
+- https://opensource.guide/
+
+  - Comprehensive guide to OSS
+
+- https://www.python.org/community/
+
+  - Python community resources
+
+- https://github.com/nayafia/contributing-template
+
+  - Template for CONTRIBUTING.md
+
+---
+
+# Thank you
+
+<div class="small">
+
+- https://antocuni.eu
+
+- @antocuni on GitHub, LinkedIn, Bluesky
+
+Questions?
+
+</div>
+
+      </textarea>
+    </section>
+  </div>
+</div>
+
+<script>
+    Reveal.initialize({
+        plugins: [
+            RevealMarkdown,
+            RevealHighlight,
+            RevealNotes
+        ],
+        hash: true
+    });
+</script>
+
+</body>
+</html>

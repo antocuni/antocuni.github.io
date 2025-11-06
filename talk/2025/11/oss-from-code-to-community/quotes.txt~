@@ -1,0 +1,66 @@
+- https://snarky.ca/setting-expectations-for-open-source-participation/
+
+    > "Open source is more than just some free source code; there are real people involved here and that simple fact cannot be ignored"
+
+    > "To reiterate, just because open source software is free for you doesn't mean someone else hasn't paid some price on your behalf to get you that code."
+
+    > You could view everything in OSS as a kindness that someone has done for you and others.
+
+    > when someone in open source makes demands it's like the person passing through the door criticizing how I held the door open.
+
+   >  It's a kindness when you report a bug so that I have a chance to try and fix it. But just because you reported a bug doesn't mean I specifically owe you anything.
+
+
+> My kindness was to provide my time and effort for the open source project up until now, but there's no expectation beyond that of my time and effort. [...] So the idea that any open source project owes anyone anything is a misunderstanding of what open source fundamentally is.
+
+> When you submit a change to something, I'm sure your intentions are good. You have put in the effort to try and improve the project somehow and that's appreciated. But where this tends to go wrong is when people don't take into account the fact that your considerations for a change are often very different from mine.
+
+> When responding to a submitted contribution, maintainers should try to say "thank you".
+
+> A kindness should not come with an expectation of something in return
+
+
+
+
+# Outline
+
+- Intro to OSS
+
+  - Definition: OSS, free software, FOSS
+
+  - License
+
+  - Open Source and Open Governance
+
+
+- OSS is more about people than code
+
+  - TL;DR: be nice
+
+  - "I came for the language, but stayed for the community"
+
+  - code of conducts
+
+  - Maintainers burn out
+
+  - examples of good and bad communications
+
+
+- Technical bits
+
+  - clear guidance for users
+
+  - clear guidance for contributors
+
+  - tests!
+
+  - CI, GHA
+
+  - pre-commit, formatters, linters
+
+  - communication channel
+
+  - small projecs vs community
+
+
+- AI
