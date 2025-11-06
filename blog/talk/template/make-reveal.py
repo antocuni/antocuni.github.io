@@ -17,7 +17,7 @@ from watchdog.events import FileSystemEventHandler
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Tracing JIT and real world Python</title>
+    <title>{title}</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta charset="utf-8">
 
@@ -70,6 +70,42 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>"""
 
 
+def extract_title(content):
+    """Extract the title from a special comment or the first markdown heading.
+
+    First checks for a comment like: <!-- title: Custom Title -->
+    If not found, uses the first markdown heading.
+    Falls back to "Presentation" if neither is found.
+    """
+    # Check for special title comment first
+    for line in content.split('\n'):
+        line = line.strip()
+        if line.startswith('<!--') and 'title:' in line.lower():
+            # Extract title from comment: <!-- title: My Title -->
+            start = line.lower().find('title:')
+            if start != -1:
+                # Find the content after 'title:'
+                title_part = line[start + 6:]  # Skip 'title:'
+                # Remove the closing -->
+                if '-->' in title_part:
+                    title_part = title_part[:title_part.find('-->')]
+                title = title_part.strip()
+                if title:
+                    return title
+
+    # If no comment found, look for first markdown heading
+    for line in content.split('\n'):
+        line = line.strip()
+        if line.startswith('#'):
+            # Remove the leading # symbols and strip whitespace
+            title = line.lstrip('#').strip()
+            if title:
+                return title
+
+    # Fallback if no heading found
+    return "Presentation"
+
+
 def read_slides(filename):
     """Read and process the slides content."""
     with open(filename, 'r', encoding='utf-8') as f:
@@ -80,16 +116,17 @@ def read_slides(filename):
     return content
 
 
-def generate_html(slides_content):
+def generate_html(slides_content, title):
     """Generate the complete HTML with slides content."""
-    return HTML_TEMPLATE.format(content=slides_content)
+    return HTML_TEMPLATE.format(content=slides_content, title=title)
 
 
 def build_presentation(input_file, output_file):
     """Build the presentation from input to output file."""
     try:
         slides_content = read_slides(input_file)
-        html_content = generate_html(slides_content)
+        title = extract_title(slides_content)
+        html_content = generate_html(slides_content, title)
 
         with open(output_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
