@@ -135,20 +135,17 @@
 
 ---
 
-
 # What is Open Source?
 
 ---
 
 ## Definitions
 
-- **Open Source Software (OSS)**
-
-  - Source code is publicly available
+- [The Open Source Definition](https://opensource.org/osd)
 
   - Licensed to allow use, modification, distribution
 
-- **Free Software**
+- [The Free Software Definition](https://www.gnu.org/philosophy/free-sw.html.en)
 
   - Freedom to run, study, share, modify
 
