@@ -170,3 +170,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 .aider*
+
+# autorun.py generated files
+blog/**/autorun/
+blog/**/autorun-themes.html
