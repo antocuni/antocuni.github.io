@@ -13,6 +13,7 @@ dependencies = [
     { name = "mkdocs-material" },
     { name = "mkdocs-redirects" },
     { name = "mkdocs-rss-plugin" },
+    { name = "watchdog" },
 ]
 
 [package.metadata]
@@ -23,6 +24,7 @@ requires-dist = [
     { name = "mkdocs-material", specifier = "==9.6.3" },
     { name = "mkdocs-redirects", specifier = "==1.2.2" },
     { name = "mkdocs-rss-plugin", specifier = "==1.17.1" },
+    { name = "watchdog", specifier = ">=6.0.0" },
 ]
 
 [[package]]
