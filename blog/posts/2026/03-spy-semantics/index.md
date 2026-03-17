@@ -270,16 +270,16 @@ def main() -> None:
 ```autorun
 $ spy type-error1.spy
 Traceback (most recent call last):
-  * type-error1::main at /home/antocuni/pypy/misc/antocuni.github.io/blog/posts/2026/03-spy-semantics/autorun/type-error1.spy:2
+  * type-error1::main at .../autorun/type-error1.spy:2
   |     x: int = "hello"
   |              |_____|
 
 TypeError: mismatched types
-  | /home/antocuni/pypy/misc/antocuni.github.io/blog/posts/2026/03-spy-semantics/autorun/type-error1.spy:2
+  | .../autorun/type-error1.spy:2
   |     x: int = "hello"
   |              |_____| expected `i32`, got `str`
 
-  | /home/antocuni/pypy/misc/antocuni.github.io/blog/posts/2026/03-spy-semantics/autorun/type-error1.spy:2
+  | .../autorun/type-error1.spy:2
   |     x: int = "hello"
   |        |_| expected `i32` because of type declaration
 
