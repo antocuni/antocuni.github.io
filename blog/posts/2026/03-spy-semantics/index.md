@@ -202,7 +202,7 @@ always executed "at compile time".
 Thus, this is the hello world in SPy:
 
 ```python
-# examples/hello.spy
+# filename: hello.spy
 
 def main() -> None:
     print("Hello world!")
@@ -210,8 +210,8 @@ def main() -> None:
 
 We can run it in interpreted mode, as we would do in Python:
 
-```
-❯ spy examples/hello.spy
+```autorun
+$ spy hello.spy
 Hello world!
 ```
 
@@ -220,27 +220,31 @@ We can do redshifting and inspect the transformed version. By default `spy redsh
 easier to read. In this case the redshifted version is very similar to the original, but
 e.g. we can see that `print` has been specialized to `print_str`:
 
-```
-❯ spy redshift examples/hello.spy
+```autorun
+$ spy redshift hello.spy
+
 def main() -> None:
     print_str('Hello world!')
+
+
+
 ```
 
 We can do redshifting **and execute** the code. This is equivalent to the doppler mode
 described above:
 
-```
-❯ spy redshift -x examples/hello.spy
+```autorun
+$ spy redshift -x hello.spy
 Hello world!
 ```
 
+
 Finally, we can build an executable:
 
-```
-❯ spy build examples/hello.spy
-[debug] examples/build/hello
-
-❯ ./examples/build/hello
+```autorun
+$ spy build hello.spy
+[debug] build/hello 
+$ ./build/hello
 Hello world!
 ```
 
@@ -255,3 +259,29 @@ binary.
 In SPy, **type annotations are always enforced**. This is probably the biggest departure
 from CPython semantics, which explicitly ignore type annotations at runtime. After all,
 the S in SPy stands for static :).
+
+```python
+# filename: type-error1.spy
+def main() -> None:
+    x: int = "hello"
+    print(x)
+```
+
+```autorun
+$ spy type-error1.spy
+Traceback (most recent call last):
+  * type-error1::main at /home/antocuni/pypy/misc/antocuni.github.io/blog/posts/2026/03-spy-semantics/autorun/type-error1.spy:2
+  |     x: int = "hello"
+  |              |_____|
+
+TypeError: mismatched types
+  | /home/antocuni/pypy/misc/antocuni.github.io/blog/posts/2026/03-spy-semantics/autorun/type-error1.spy:2
+  |     x: int = "hello"
+  |              |_____| expected `i32`, got `str`
+
+  | /home/antocuni/pypy/misc/antocuni.github.io/blog/posts/2026/03-spy-semantics/autorun/type-error1.spy:2
+  |     x: int = "hello"
+  |        |_| expected `i32` because of type declaration
+
+
+```
