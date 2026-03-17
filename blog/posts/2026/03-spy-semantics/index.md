@@ -12,7 +12,7 @@ tags:
 # Inside SPy🥸, part 2: Language semantics
 
 This is the second post of the *Inside SPy* series. The [first
-post](../2025/10-spy-motivations-and/goals/index.md) was mostly about motivations and
+post](../../2025/10-spy-motivations-and-goals/index.md) was mostly about motivations and
 goals of SPy. This post will cover more in detail the semantics of SPy, including the
 parts which makes it different that CPython.
 
@@ -28,11 +28,12 @@ XXX write something more here.
 
 ## Motivation and goals, recap
 
-Let's do a quick recap of the motivations and goals described in part 1.
+[Part 1](../../2025/10-spy-motivations-and-goals/index.md) describes motivations and
+goals in great detail, but let's do a quick recap.
 
-The main motivation is to make Python faster; by "faster" I mean performances which are
-comparable to C, Rust and Go.  After spending 20 years in this problem space, I am
-convinced that it's impossible to achieve such a goal without breaking compatibility.
+The main motivation is to make Python faster; by "faster" I mean comparable to C, Rust
+and Go.  After spending 20 years in this problem space, I am convinced that it's
+impossible to achieve such a goal without breaking compatibility.
 
 The second motivation is that static typing is playing a more and more important role in
 the Python community, but Python is not a language designed for that, which leads to a
@@ -110,16 +111,18 @@ graph TD
 
     %% Core pipeline
     SRC -- pyparse --> PYAST -- parse --> AST -- ScopeAnalyzer --> SYMAST
-    SYMAST -- import --> SPyVM -- execute --> OUT
+    SYMAST -- import --> SPyVM -- interp --> OUT
     SPyVM -- redshift --> REDSHIFTED -- cwrite --> C
+    REDSHIFTED -- interp(doppler) --> OUT
     C -- ninja --> EXE_NAT -- execute --> OUT
     C -- ninja --> EXE_WASI -- execute --> OUT
     C -- ninja --> EXE_EM -- execute --> OUT
 ```
 
-!!! node "`parse` vs `pyparse`"
+!!! note "`parse` vs `pyparse`"
 
-    Why do we have two separate parsing steps? At the moment we rely on CPython parser: `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/15179faa70374af68affa772c015629473901736/spy/ast.py).
+    Why do we have two separate parsing steps? At the moment we rely on CPython parser:
+    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/15179faa70374af68affa772c015629473901736/spy/ast.py).
 
     Eventually SPy will have its own parser and thus we will be able to drop `pyparse`.
 
@@ -142,7 +145,7 @@ enable many important features of SPy. We will talk more about it in the [releva
 section](...).
 
 
-After `import`, we can run the code in two very different modes:
+After `import`, we can run the code in thre different modes:
 
 - **interpreted mode**: the untyped AST is executed as is by the interpreter.
 
@@ -152,23 +155,23 @@ After `import`, we can run the code in two very different modes:
   other C compiler. Multiple targets are supported, including native, WASM/WASI and
   Emscripten.
 
-Morever, there is a third mode which is not shown in the diagram: since redshift
-produces typed ASTs, we can feed them directly into the interpreter. This is called
-**doppler mode** (because, you know, redshifting... :)) and it's used by our test
-infrastructure to ensure that the redshift pass produces correct code.
+- **doppler mode**: the typed ASTs produced by **redshift** are executed by the
+  interpreter. This is mostly used by tests to ensure that the redshift pass produces
+  correct code.
+
 
 !!! note "Why C code and not LLVM?"
 
-   At this stage we are trying to optimize for time to market. Emitting C code is much
-   simpler, easier to develop and easier to debug, while still getting performance which
-   are comparable or better than LLVM.
+    At this stage we are trying to optimize for time to market. Emitting C code is much
+    simpler, easier to develop and easier to debug, while still getting performance which
+    are comparable or better than LLVM.
 
-   Moreover, by using C as the commond ground we automatically have lots of great
-   existing tools at our disposal, like debuggers, profilers, build systems, etc.  And
-   using C makes it very easy to target new platforms such as e.g. emscripten.
+    Moreover, by using C as the commond ground we automatically have lots of great
+    existing tools at our disposal, like debuggers, profilers, build systems, etc.  And
+    using C makes it very easy to target new platforms such as e.g. emscripten.
 
 
-## Phases of execution
+## Phases of execution and hello world
 
 From the point of view of the user, SPy code runs in three distinct **execution
 phases**:
@@ -246,3 +249,9 @@ switch to `--release` mode and to target a different platform.
 
 You can also use `spy build -x` to compile **and** automatically execute the resulting
 binary.
+
+## Static typing
+
+In SPy, **type annotations are always enforced**. This is probably the biggest departure
+from CPython semantics, which explicitly ignore type annotations at runtime. After all,
+the S in SPy stands for static :).
