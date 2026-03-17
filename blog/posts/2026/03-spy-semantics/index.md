@@ -225,9 +225,6 @@ $ spy redshift hello.spy
 
 def main() -> None:
     print_str('Hello world!')
-
-
-
 ```
 
 We can do redshifting **and execute** the code. This is equivalent to the doppler mode
@@ -243,10 +240,29 @@ Finally, we can build an executable:
 
 ```autorun
 $ spy build hello.spy
-[debug] build/hello 
+[debug] build/hello
+
 $ ./build/hello
 Hello world!
 ```
+
+If you are curious, you can have a look at the generated C code. We will talk in depth
+about it later during this series:
+
+```autorun
+$ tail -10 build/src/hello.c | pygmentize -l C
+// content of the module
+
+int main(void) {
+    spy_hello$main();
+    return 0;
+}
+#line SPY_LINE(2, 18)
+void spy_hello$main(void) {
+    spy_builtins$print_str(&SPY_g_str0 /* 'Hello world!' */);
+}
+```
+
 
 By default, it compiles to debug mode for the `native` platform, but there are flags to
 switch to `--release` mode and to target a different platform.
@@ -258,7 +274,7 @@ binary.
 
 In SPy, **type annotations are always enforced**. This is probably the biggest departure
 from CPython semantics, which explicitly ignore type annotations at runtime. After all,
-the S in SPy stands for static :).
+the **S** stands for static :).
 
 ```python
 # filename: type-error1.spy
@@ -270,18 +286,194 @@ def main() -> None:
 ```autorun
 $ spy type-error1.spy
 Traceback (most recent call last):
-  * type-error1::main at .../autorun/type-error1.spy:2
+  * type-error1::main at /.../autorun/type-error1.spy:2
   |     x: int = "hello"
   |              |_____|
 
 TypeError: mismatched types
-  | .../autorun/type-error1.spy:2
+  | /.../autorun/type-error1.spy:2
   |     x: int = "hello"
   |              |_____| expected `i32`, got `str`
 
-  | .../autorun/type-error1.spy:2
+  | /.../autorun/type-error1.spy:2
   |     x: int = "hello"
   |        |_| expected `i32` because of type declaration
 
 
 ```
+
+This also applies to e.g. function calls, `return` statements, etc.
+
+Type annotations are **mandatory** for function arguments and return types. They are
+optional for variables.  In that case, we do a very limited form of type inference and
+automatically declare the variable using the type of its initializer.  We can use the
+special function `STATIC_TYPE` to inspect it:
+
+```python
+# filename: type-inference.spy
+def main() -> None:
+    x = "hello"
+    print(STATIC_TYPE(x))
+```
+
+```autorun
+$ spy type-inference.spy
+<spy type 'str'>
+```
+
+!!! note "Type annotation of `@blue` functions"
+
+    Type annotations are mandatory only for "red" functions. For "blue" functions they
+    are optional and they default to `dynamic`. We will talk about this in the
+    appropriate section.
+
+!!! note "`STATIC_TYPE`"
+
+    Currently `STATIC_TYPE` has an uppercase name and lives in the `builtins` module,
+    for historical reasons. This might change. One option is to move it to the special
+    `__spy__` module and call it `static_type`.
+
+## Operator dispatch
+
+In SPy, as in Python, almost every syntactical form is turned into an operator call. So
+e.g. `+` is equivalent to `operator.add`, `a.b` is equivalent to `getattr`, etc., and in
+turn they call the various `__add__`, `__getattr__`, etc.
+
+Whereas in Python operator dispatch happens dynamically, in SPy it happens
+statically. An example if worth 1000 words:
+
+```python
+# filename: op_dispatch.spy
+def add_int(x: int, y: int) -> int:
+    return x + y
+
+def add_str(x: str, y: str) -> str:
+    return x + y
+```
+
+```autorun
+$ spy redshift --full-fqn op_dispatch.spy
+
+def `op_dispatch::add_int`(x: `builtins::i32`, y: `builtins::i32`) -> `builtins::i32`:
+    return `operator::i32_add`(x, y)
+
+def `op_dispatch::add_str`(x: `builtins::str`, y: `builtins::str`) -> `builtins::str`:
+    return `operator::str_add`(x, y)
+```
+
+Here we see that after redshifting, the generic `+` operators have been replaced by
+concrete `i32_add` and `str_add` calls, which the C backend then replaces with direct
+call to the appropriate function.
+
+!!! note "FQNs and `--full-fqn`"
+
+    FQN stands for Fully Qualified Name. It's an unique identifier assigned to every
+    function, type and constant inside a running SPy VM.
+
+    By default, `spy redshift` uses a special "pretty" output mode which is easier to
+    read for humans and e.g. prints `i32` instead of `builtins::i32`, and `x + y`
+    instead of `operator::i32_add(x, y)`.
+
+    But the point of the example above was precisely to show the call to
+    `operator::i32_add`: `--full-fqn` turns off pretty printing. Try to run
+    `spy rs op_dispatch.spy` and see the difference.
+
+
+## Static vs dynamic types
+
+Operator dispatch is based on **static types**. SPy distinguishes between static and
+dynamic types of expression:
+
+  - the **static type** is the type as known by the compiler;
+
+  - the **dynamic type** (or just the "type") is the actual type of the concrete object
+    in memory.
+
+```python
+# filename: static-dynamic-types.spy
+def print_types(x: object) -> None:
+    print(STATIC_TYPE(x))
+    print(type(x))
+
+def main() -> None:
+    print_types(42)
+    print("---")
+    print_types("hello")
+```
+
+```autorun
+$ spy static-dynamic-types.spy
+<spy type 'object'>
+<spy type 'i32'>
+---
+<spy type 'object'>
+<spy type 'str'>
+```
+
+This has interesting consequences, and it's another big departure from Python. The
+example below fails because the dispatch happen on the static type:
+
+```python
+# filename: type-error2.spy
+def add(x: object, y: object) -> object:
+    return x + y
+
+def main() -> None:
+    print(add(1, 2))
+```
+
+```autorun
+$ spy type-error2.spy
+Traceback (most recent call last):
+  * type-error2::main at /.../autorun/type-error2.spy:6
+  |     print(add(1, 2))
+  |           |_______|
+  * type-error2::add at /.../autorun/type-error2.spy:3
+  |     return x + y
+  |            |___|
+
+TypeError: cannot do `object` + `object`
+  | /.../autorun/type-error2.spy:3
+  |     return x + y
+  |            ^ this is `object`
+
+  | /.../autorun/type-error2.spy:3
+  |     return x + y
+  |                ^ this is `object`
+
+  | /.../autorun/type-error2.spy:3
+  |     return x + y
+  |            |___| operator::ADD called here
+```
+
+Is is possible to explicitly opt-in for dynamic dispatch by using the special type
+`dynamic`:
+
+```python
+# filename: dynamic_dispatch.spy
+def add(x: dynamic, y: dynamic) -> dynamic:
+    return x + y
+
+def main() -> None:
+    print(add(1, 2))
+    print(add("hello ", "world"))
+```
+
+```autorun
+$ spy dynamic_dispatch.spy
+3
+hello world
+
+$ spy redshift dynamic_dispatch.spy
+
+def add(x: dynamic, y: dynamic) -> dynamic:
+    return `operator::dynamic_add`(x, y)
+
+def main() -> None:
+    print_dynamic(`dynamic_dispatch::add`(1, 2))
+    print_dynamic(`dynamic_dispatch::add`('hello ', 'world'))
+```
+
+The rationale is that dynamic dispatch is costly and prevents many other
+optimization. By requiring an explicit opt-in, we can make sure that it's used only when
+it's really needed without hurting the performance of "normal" code.
