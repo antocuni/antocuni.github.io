@@ -85,7 +85,7 @@ Now, time to dive deeper into the language.
 
 !!! note "SPy version"
 
-    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit 15179faa](https://github.com/spylang/spy/tree/15179faa70374af68affa772c015629473901736)
+    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit bb3e0292](https://github.com/spylang/spy/tree/bb3e0292)
 
 ## Compilation pipeline
 
@@ -122,7 +122,7 @@ graph TD
 !!! note "`parse` vs `pyparse`"
 
     Why do we have two separate parsing steps? At the moment we rely on CPython parser:
-    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/15179faa70374af68affa772c015629473901736/spy/ast.py).
+    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/bb3e0292/spy/ast.py).
 
     Eventually SPy will have its own parser and thus we will be able to drop `pyparse`.
 
@@ -222,7 +222,6 @@ e.g. we can see that `print` has been specialized to `print_str`:
 
 ```autorun
 $ spy redshift hello.spy
-
 def main() -> None:
     print_str('Hello world!')
 ```
@@ -240,8 +239,7 @@ Finally, we can build an executable:
 
 ```autorun
 $ spy build hello.spy
-[debug] build/hello
-
+[debug] build/hello 
 $ ./build/hello
 Hello world!
 ```
@@ -250,7 +248,7 @@ If you are curious, you can have a look at the generated C code. We will talk in
 about it later during this series:
 
 ```autorun
-$ tail -10 build/src/hello.c | pygmentize -l C
+$ tail -10 build/src/hello.c | pygmentize -l C -f terminal
 // content of the module
 
 int main(void) {
@@ -353,7 +351,6 @@ def add_str(x: str, y: str) -> str:
 
 ```autorun
 $ spy redshift --full-fqn op_dispatch.spy
-
 def `op_dispatch::add_int`(x: `builtins::i32`, y: `builtins::i32`) -> `builtins::i32`:
     return `operator::i32_add`(x, y)
 
@@ -425,25 +422,27 @@ def main() -> None:
 ```autorun
 $ spy type-error2.spy
 Traceback (most recent call last):
-  * type-error2::main at /.../autorun/type-error2.spy:6
+  * type-error2::main at /.../autorun/type-error2.spy:5
   |     print(add(1, 2))
   |           |_______|
-  * type-error2::add at /.../autorun/type-error2.spy:3
+  * type-error2::add at /.../autorun/type-error2.spy:2
   |     return x + y
   |            |___|
 
 TypeError: cannot do `object` + `object`
-  | /.../autorun/type-error2.spy:3
+  | /.../autorun/type-error2.spy:2
   |     return x + y
   |            ^ this is `object`
 
-  | /.../autorun/type-error2.spy:3
+  | /.../autorun/type-error2.spy:2
   |     return x + y
   |                ^ this is `object`
 
-  | /.../autorun/type-error2.spy:3
+  | /.../autorun/type-error2.spy:2
   |     return x + y
   |            |___| operator::ADD called here
+
+
 ```
 
 Is is possible to explicitly opt-in for dynamic dispatch by using the special type
@@ -463,9 +462,7 @@ def main() -> None:
 $ spy dynamic_dispatch.spy
 3
 hello world
-
 $ spy redshift dynamic_dispatch.spy
-
 def add(x: dynamic, y: dynamic) -> dynamic:
     return `operator::dynamic_add`(x, y)
 
