@@ -550,4 +550,7 @@ $ spy parse --format html rs1.spy
 Written build/rs1_parse.html
 ```
 
-<!-- antocuni-include-spyast: autorun/build/rs1_parse.html -->
+```antocuni-popup
+img: rs1_parse.svg
+url: autorun/build/rs1_parse.html
+```
