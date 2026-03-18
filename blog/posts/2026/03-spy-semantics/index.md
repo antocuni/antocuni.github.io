@@ -239,7 +239,7 @@ Finally, we can build an executable:
 
 ```autorun
 $ spy build hello.spy
-[debug] build/hello 
+[debug] build/hello
 $ ./build/hello
 Hello world!
 ```
@@ -408,7 +408,8 @@ $ spy static-dynamic-types.spy
 ```
 
 This has interesting consequences, and it's another big departure from Python. The
-example below fails because the dispatch happen on the static type:
+example below fails because the dispatch of `+` happen on the static type, which is
+`object`:
 
 ```python
 # filename: type-error2.spy
@@ -445,7 +446,7 @@ TypeError: cannot do `object` + `object`
 
 ```
 
-Is is possible to explicitly opt-in for dynamic dispatch by using the special type
+It is possible to explicitly opt-in for dynamic dispatch by using the special type
 `dynamic`:
 
 ```python
@@ -474,3 +475,79 @@ def main() -> None:
 The rationale is that dynamic dispatch is costly and prevents many other
 optimization. By requiring an explicit opt-in, we can make sure that it's used only when
 it's really needed without hurting the performance of "normal" code.
+
+!!! tip "Current Status: `dynamic`"
+    At the time of writing, `dynamic` works in the interpreter, but not yet in the
+    compiler.
+
+## Redshifting
+
+Redshifting is a core concept of SPy to enable good performance without sacrificing
+usability.
+
+The core idea is that given a piece of code, there are parts of it that can precomputed
+eagerly at compile time, leaving *less code* to run at runtime.  It's a form of *partial
+evaluation*.
+
+To do that, we introduce the concept of *color of an expression*: **blue** expressions
+are those whose value is known at compile time; **red** are those which must be
+evaluated at runtime.
+
+Examples of **blue** expressions are:
+
+  1. literals, like `42` or `"hello"`;
+
+  2. module-level constants;
+
+  3. function calls **if** the target function is known at compile time, it's **pure**,
+     and all the arguments are blue;
+
+  4. function call which are explicitly marked as `@blue`
+
+Examples of **red** expressions are:
+
+  1. everything else :).
+
+Let's start with a silly example:
+
+```python
+# filename: rs1.spy
+def foo(x: int) -> int:
+    return x + 2 * 3
+```
+
+We can see the colors and the result of redshifting by running `spy colorize`, and `spy
+redshift`:
+
+```autorun
+$ spy colorize rs1.spy
+def foo(x: int) -> int:
+    return x + 2 * 3
+
+$ spy redshift rs1.spy
+def foo(x: i32) -> i32:
+    return x + 6
+```
+
+Notable things:
+
+  - `2` and `3` are blue because are literals
+
+  - `2 * 3` is blue because it's a pure operation between blue values
+
+  - `x + ...` is red because `x` is a function argument and thus unknown at compile
+    time.
+
+  - in the redshifted version, `2 * 3` has been replaced by `6`. This is a silly
+    optimization which any compiler can do, but as we will see later redshifting is much
+    more powerful than that.
+
+Internally, redshifting operates on the AST (Abstract Syntax Tree). First, let's look at
+the original AST:
+
+```autorun
+$ spy parse --format html rs1.spy
+Written build/rs1_parse.html
+```
+
+<!-- antocuni-include-spyast: autorun/build/rs1_parse.html -->
