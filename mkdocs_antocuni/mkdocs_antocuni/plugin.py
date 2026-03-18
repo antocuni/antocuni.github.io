@@ -107,22 +107,35 @@ def _replace_popup_block(match: re.Match, page_src_dir: Path,
     else:
         img_tag = _POPUP_PLACEHOLDER_SVG
 
+    open_js = (
+        f"var el=document.getElementById('{popup_id}');"
+        f"el.style.display='flex';"
+        f"document.body.style.overflow='hidden';"
+    )
+    close_js = (
+        f"var el=document.getElementById('{popup_id}');"
+        f"el.style.display='none';"
+        f"document.body.style.overflow='';"
+    )
+
     return (
         f'<div class="antocuni-popup-wrapper">'
-        f'<div onclick="document.getElementById(\'{popup_id}\').style.display=\'flex\'"'
+        f'<div onclick="{open_js}"'
         f' style="cursor:pointer;text-align:center;">'
         f'{img_tag}'
         f'<div style="font-size:0.85em;color:#888;margin-top:4px;">'
         f'click to expand</div>'
         f'</div>'
-        f'<div id="{popup_id}" style="display:none;position:fixed;top:0;left:0;'
-        f'width:100vw;height:100vh;background:rgba(0,0,0,0.8);z-index:9999;'
-        f'align-items:center;justify-content:center;"'
-        f' onclick="this.style.display=\'none\'">'
-        f'<div style="position:relative;width:92vw;height:92vh;background:white;'
+        f'<div id="{popup_id}" style="display:none;position:fixed;inset:0;'
+        f'background:rgba(0,0,0,0.8);z-index:9999;'
+        f'align-items:center;justify-content:center;'
+        f'overflow:hidden;touch-action:none;"'
+        f' onclick="{close_js}">'
+        f'<div style="position:relative;width:92vw;height:92vh;'
+        f'max-height:calc(100dvh - 4vh);background:white;'
         f'border-radius:8px;overflow:hidden;"'
         f' onclick="event.stopPropagation()">'
-        f'<button onclick="document.getElementById(\'{popup_id}\').style.display=\'none\'"'
+        f'<button onclick="{close_js}"'
         f' style="position:absolute;top:8px;right:12px;z-index:10000;'
         f'font-size:1.5em;background:none;border:none;cursor:pointer;color:#333;">'
         f'&times;</button>'
