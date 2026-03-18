@@ -483,26 +483,22 @@ it's really needed without hurting the performance of "normal" code.
 ## Redshifting
 
 Redshifting is a core concept of SPy to enable good performance without sacrificing
-usability.
+usability.  The core idea is that given a piece of code, there are parts of it that can
+precomputed eagerly at compile time, leaving *less code* to run at runtime.  It's a form
+of *partial evaluation*.
 
-The core idea is that given a piece of code, there are parts of it that can precomputed
-eagerly at compile time, leaving *less code* to run at runtime.  It's a form of *partial
-evaluation*.
-
-To do that, we introduce the concept of *color of an expression*: **blue** expressions
-are those whose value is known at compile time; **red** are those which must be
-evaluated at runtime.
-
-Examples of **blue** expressions are:
+To do that, we introduce the concept of *color of an expression*: expressions whoe value
+is known at compile time are **blue**; expressions which must be evaluated at runtime
+are **red**.  Examples of **blue** expressions are:
 
   1. literals, like `42` or `"hello"`;
 
   2. module-level constants;
 
-  3. function calls **if** the target function is known at compile time, it's **pure**,
+  3. function calls if the **target function is known** at compile time, it's **pure**,
      and all the arguments are blue;
 
-  4. function call which are explicitly marked as `@blue`
+  4. function call which are explicitly marked as `@blue`.
 
 Examples of **red** expressions are:
 
@@ -517,7 +513,8 @@ def foo(x: int) -> int:
 ```
 
 We can see the colors and the result of redshifting by running `spy colorize`, and `spy
-redshift`:
+redshift`; `colorize` shows the **original** source code with colors; `redshift` shows
+the redshifted source code:
 
 ```autorun
 $ spy colorize rs1.spy
@@ -531,12 +528,12 @@ def foo(x: i32) -> i32:
 
 Notable things:
 
-  - `2` and `3` are blue because they are literals
+  - `2` and `3` are blue because they are literals;
 
-  - `2 * 3` is blue because it's a pure operation between blue values
+  - `2 * 3` is blue because it's a pure operation between blue values;
 
   - `x + ...` is red because `x` is a function argument and thus unknown at compile
-    time.
+    time;
 
   - in the redshifted version, `2 * 3` has been replaced by `6`. This is a silly
     optimization which any compiler can do, but as we will see later redshifting is much
@@ -581,7 +578,8 @@ url: autorun/build/rs1_rs.html
 ```
 
 During redshifting we find all the subtrees which are fully blue, and replace them with
-a single constant node containing the result.  This also explain **why it's called
+a single constant node containing the result.  In this case, the whole subtree `2 * 3`
+has been replaced by a single node `6`. This also explain **why it's called
 redshifting**: because the resulting tree is "less blue" and thus "more red".
 
 Moreover, the remaining BinOp `x + 6` has been converted into a concrete call to
