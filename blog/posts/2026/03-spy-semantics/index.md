@@ -85,7 +85,7 @@ Now, time to dive deeper into the language.
 
 !!! note "SPy version"
 
-    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit bb3e0292](https://github.com/spylang/spy/tree/bb3e0292)
+    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit bb295df6](https://github.com/spylang/spy/tree/bb295df6)
 
 ## Compilation pipeline
 
@@ -122,7 +122,7 @@ graph TD
 !!! note "`parse` vs `pyparse`"
 
     Why do we have two separate parsing steps? At the moment we rely on CPython parser:
-    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/bb3e0292/spy/ast.py).
+    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/bb295df6/spy/ast.py).
 
     Eventually SPy will have its own parser and thus we will be able to drop `pyparse`.
 
@@ -586,3 +586,62 @@ Moreover, the remaining BinOp `x + 6` has been converted into a concrete call to
 `i32_add`. Note that the node for `i32_add` is blue, because the **callee** is constant
 and known at compile time, but the `Call` itself is red because the function will be
 called at runtime.
+
+
+## `@blue` functions
+
+What we have seen so far it's a very complicated way to do simple numerical
+optimizations, which is a bit underwhelming.  Redshifting becomes more interesting in
+combination with `@blue` function.
+
+These are functions which are **guaranteed** to be eagerly evaluated. It is mandatory
+that all the arguments are blue as well, and the the function is evaluated **by the
+interpreter** during redshifting.
+
+Let's look at a simple example
+
+```python
+# filename: pi.spy
+from math import fabs
+
+@blue
+def get_pi() -> float:
+    """
+    Compute an approximation of PI using the Leibniz series
+    """
+    tol = 0.001
+    pi_approx = 0.0
+    k = 0
+    term = 1.0  # Initial term to enter the loop
+
+    while fabs(term) > tol:
+        if k % 2 == 0:
+            term = 1.0 / (2 * k + 1)
+        else:
+            term = -1 * 1.0 / (2 * k + 1)
+
+        pi_approx = pi_approx + term
+        k = k + 1
+
+    return 4 * pi_approx
+
+
+def main() -> None:
+    pi = get_pi()
+    print("pi:")
+    print(pi)
+```
+
+```autorun
+$ spy pi.spy
+pi:
+3.143588659585789
+
+$ spy redshift pi.spy
+def main() -> None:
+    print_str('pi:')
+    print_f64(3.143588659585789)
+```
+
+`get_pi` is a `@blue` function, and thus is completely evaluated at compile time. What
+is left after redshifting is just the constant value.
