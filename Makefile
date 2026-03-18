@@ -15,6 +15,10 @@ gh-deploy:
 edit-py:
 	e `uv run python -c 'import material; print(material.__file__)'`
 
-aws-preview-deploy: build
-	rsync -avz --delete site/ aws:/home/ubuntu/www/f.antocuni.eu/preview/
-	echo http://f.antocuni.eu/preview/
+preview-deploy:
+	sed 's/draft: false/draft: true/' mkdocs.yml > mkdocs-preview.yml
+	uv run mkdocs build -f mkdocs-preview.yml
+	find site -name "*~" -delete
+	rm mkdocs-preview.yml
+	wrangler deploy --name preview-antocuni-eu --assets site/ --compatibility-date 2024-09-23
+	echo https://preview.antocuni.eu
