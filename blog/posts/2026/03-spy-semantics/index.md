@@ -531,7 +531,7 @@ def foo(x: i32) -> i32:
 
 Notable things:
 
-  - `2` and `3` are blue because are literals
+  - `2` and `3` are blue because they are literals
 
   - `2 * 3` is blue because it's a pure operation between blue values
 
@@ -543,7 +543,7 @@ Notable things:
     more powerful than that.
 
 Internally, redshifting operates on the AST (Abstract Syntax Tree). First, let's look at
-the original AST:
+the original AST; you can click on it to see the full interactive version:
 
 ```autorun
 $ spy parse --format html rs1.spy
@@ -554,3 +554,37 @@ Written build/rs1_parse.html
 img: rs1_parse.svg
 url: autorun/build/rs1_parse.html
 ```
+
+It's a standard "textbook" AST: each node represent a binary operation, with `left` and
+`right` children. Now let's look again at `spy colorize`, this time looking at the AST:
+
+```autorun
+$ spy colorize --format html rs1.spy
+Written build/rs1_colorize.html
+```
+
+```antocuni-popup
+img: rs1_colorize.svg
+url: autorun/build/rs1_colorize.html
+```
+
+Finally, the redshifted version:
+
+```autorun
+$ spy redshift --format html rs1.spy
+Written build/rs1_rs.html
+```
+
+```antocuni-popup
+img: rs1_rs.svg
+url: autorun/build/rs1_rs.html
+```
+
+During redshifting we find all the subtrees which are fully blue, and replace them with
+a single constant node containing the result.  This also explain **why it's called
+redshifting**: because the resulting tree is "less blue" and thus "more red".
+
+Moreover, the remaining BinOp `x + 6` has been converted into a concrete call to
+`i32_add`. Note that the node for `i32_add` is blue, because the **callee** is constant
+and known at compile time, but the `Call` itself is red because the function will be
+called at runtime.
