@@ -643,5 +643,246 @@ def main() -> None:
     print_f64(3.143588659585789)
 ```
 
-`get_pi` is a `@blue` function, and thus is completely evaluated at compile time. What
-is left after redshifting is just the constant value.
+`get_pi` is a `@blue` function, and thus is completely evaluated at compile time. It's
+completely removed from the redshifted output and it will never be seen by the C
+backend. What is left after redshifting is just the `main` function with constant value.
+
+Things become more interesting when we create closures:
+
+```python
+# filename: adder.spy
+
+@blue
+def make_adder(n: int):
+    def add(x: int) -> int:
+        return x + n
+
+    return add
+
+add5 = make_adder(5)
+add7 = make_adder(7)
+
+def main() -> None:
+    add9 = make_adder(9)
+    print(add5(10))
+    print(add7(10))
+    print(add9(10))
+
+    add5_again = make_adder(5)
+    print(add5_again(10))
+```
+
+This example works "as expected": if you ignore the `@blue` decorator, it works exactly
+as in CPython:
+
+```autorun
+$ spy adder.spy
+15
+17
+19
+15
+```
+
+However, `redshift` shows the magic:
+
+```autorun
+$ spy redshift adder.spy
+add5 = `adder::make_adder::add`
+add7 = `adder::make_adder::add#1`
+
+def `adder::make_adder::add`(x: i32) -> i32:
+    return x + 5
+
+def `adder::make_adder::add#1`(x: i32) -> i32:
+    return x + 7
+
+def main() -> None:
+    print_i32(`adder::make_adder::add`(10))
+    print_i32(`adder::make_adder::add#1`(10))
+    print_i32(`adder::make_adder::add#2`(10))
+    print_i32(`adder::make_adder::add`(10))
+
+def `adder::make_adder::add#2`(x: i32) -> i32:
+    return x + 9
+```
+
+Each invocation of `make_adder` creates a *new* specialized copy of `add`, each bound to
+a different value; Each version is given an unique FQN.
+
+`add5` and `add7` are created at module level, while `add9` is created inside the
+`main`, but the end result is the same.  It's also worth to note that the second call to
+`make_adder(5)` does **NOT** create yet another copy: `@blue` calls are automatically
+memoized, thus subsequent calls with the same arguments reuse the previously computed
+value.
+
+We can also have a look at the C code to confirm that each `add` is translated into a
+specific C function:
+
+```autorun
+$ spy build adder.spy
+[debug] build/adder
+
+$ tail -24 build/src/adder.c | pygmentize -l C -f terminal
+#line SPY_LINE(4, 18)
+int32_t spy_adder$make_adder$add(int32_t x) {
+    return x + 5;
+    abort(); /* reached the end of the function without a `return` */
+}
+#line SPY_LINE(4, 23)
+int32_t spy_adder$make_adder$add$1(int32_t x) {
+    return x + 7;
+    abort(); /* reached the end of the function without a `return` */
+}
+#line SPY_LINE(12, 28)
+void spy_adder$main(void) {
+    #line SPY_LINE(14, 30)
+    spy_builtins$print_i32(spy_adder$make_adder$add(10));
+    spy_builtins$print_i32(spy_adder$make_adder$add$1(10));
+    spy_builtins$print_i32(spy_adder$make_adder$add$2(10));
+    #line SPY_LINE(19, 34)
+    spy_builtins$print_i32(spy_adder$make_adder$add(10));
+}
+#line SPY_LINE(4, 37)
+int32_t spy_adder$make_adder$add$2(int32_t x) {
+    return x + 9;
+    abort(); /* reached the end of the function without a `return` */
+}
+```
+
+As in Python, nested function can access names defined in the outer scope. If the outer
+scope is a `@blue` function, those names are automatically blue.
+
+We can see it clearly by inspecting the AST of the nested `add`: the `n` node is blue.
+
+```autorun
+$ spy colorize -f html adder.spy
+Written build/adder_colorize.html
+```
+
+```antocuni-popup
+img: adder_colorize.svg
+url: autorun/build/adder_colorize.html
+```
+
+## Type manipulation and generics
+
+Types are first order values as in Python, and thus they can be freely manipulated by
+`@blue` functions. Here, we build a different type-specialized versions of an `add`
+function:
+
+```python
+# filename: add_T.spy
+
+@blue
+def add_T(T: type):
+    def add(a: T, b: T) -> T:
+        return a + b
+
+    return add
+
+add_int = add_T(int)
+add_str = add_T(str)
+
+def main() -> None:
+    print(add_int(2, 3))
+    print(add_str("hello ", "world"))
+```
+
+Again, it works as expected:
+
+```autorun
+$ spy add_T.spy
+5
+hello world
+```
+
+And `redshift` creates two specialized versions of `add`, one for ints and one for
+strings:
+
+```autorun
+$ spy redshift add_T.spy
+add_int = `add_T::add_T[i32]::add`
+add_str = `add_T::add_T[str]::add`
+
+def `add_T::add_T[i32]::add`(a: i32, b: i32) -> i32:
+    return a + b
+
+def `add_T::add_T[str]::add`(a: str, b: str) -> str:
+    return `operator::str_add`(a, b)
+
+def main() -> None:
+    print_i32(`add_T::add_T[i32]::add`(2, 3))
+    print_str(`add_T::add_T[str]::add`('hello ', 'world'))
+```
+
+This is how SPy does **generics**: a generic function is a `@blue` function which take
+one or more types, and create a specialized nested function (same for generic types,
+which we will see later).
+
+However, we would like to use square brackets for generics, for compatibility with
+Python and because they look nicer. We can achieve that by using the decorator
+`@blue.generic`:
+
+```
+# filename: blue_generic.spy
+
+@blue.generic
+def add(T: type):
+    def impl(a: T, b: T) -> T:
+        return a + b
+    return impl
+
+def main() -> None:
+    print(add[int](2, 3))
+    print(add[str]("hello ", "world"))
+```
+
+```autorun
+$ spy blue_generic.spy
+5
+hello world
+
+$ spy redshift blue_generic.spy
+def main() -> None:
+    print_i32(`blue_generic::add[i32]::impl`(2, 3))
+    print_str(`blue_generic::add[str]::impl`('hello ', 'world'))
+
+def `blue_generic::add[i32]::impl`(a: i32, b: i32) -> i32:
+    return a + b
+
+def `blue_generic::add[str]::impl`(a: str, b: str) -> str:
+    return `operator::str_add`(a, b)
+```
+
+!!! note "`@blue` vs `@blue.generic`"
+
+    The **only** difference between the two decorators is that `@blue` creates a blue
+    function which is called via parentheses, while `@blue.generic` creates a blue
+    function which is valled via square bracket. Apart that, they behave exactly the
+    same.
+
+    In particular, there is no limitation w.r.t. types of arguments and return
+    type. Generic function can take as many arguments as they want, of any type, and
+    they can return objects of any type.
+
+!!! tip "Current status: PEP 695 - Type parameter syntax"
+
+    [PEP 695](https://peps.python.org/pep-0695/) introduced the "Type parameter syntax":
+
+    ```python
+    def func[T](a: T, b: T) -> T:
+        ...
+    ```
+
+    In SPy, this is just **syntax sugar** for `@blue.generic`.
+    However, at the moment of writing it has not been implemented yet.
+
+
+
+
+
+
+
+It is important to underline that **typechecking is fully aware of blue semantics**,
+meaning that the SPy compiler can keep track of the precise type of
+`add_int` and `add_str` out of the box, without any special support
