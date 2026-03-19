@@ -133,6 +133,26 @@ kept in form of AST, which is then transformed during the various stages of the
 pipeline. **SPy AST is used as the internal IR of both the compiler and the
 interpreter**.
 
+!!! note "AST vs bytecode"
+
+    Why using the AST instead of a bytecode as CPython does?
+
+    The main advantage of direct AST interpretation is that it's simpler and easier to
+    implement; bytecode-based execution is more complex because you need both the
+    bytecode compiler and the bytecode VM but tends to be faster to execute. This
+    tradeoff makes a lot of sense for CPython, where bytecode is the only mean of
+    execution but less for SPy where we also have a C backend.
+
+    That said, the long term goal for SPy's interpreter is to have performance
+    comparable to CPython.
+
+    I/n the very early days of the project, SPy was bytecode based. Then
+    [PR #4](https://github.com/spylang/spy/pull/4) switched to the AST interpreter and we
+    never looked back. Having an AST-based IR makes it **much** simpler to implement
+    [Redshifting](#redshifting) and the C backend.
+
+
+
 The `import` step is interesting: it imports the given module **and all its
 dependencies** in the running `SPyVM` instance.  The dependencies are determined and
 resolved statically, by scanning for the presence of `import` statements, recursively.
@@ -145,7 +165,7 @@ enable many important features of SPy. We will talk more about it in the [releva
 section](...).
 
 
-After `import`, we can run the code in thre different modes:
+After `import`, we can run the code in three different modes:
 
 - **interpreted mode**: the untyped AST is executed as is by the interpreter.
 
@@ -179,7 +199,7 @@ phases**:
 1. Import time: this is when we run all the module-level code, including global variable
    initializers, decorators, metaclasses, etc.
 
-2. Redshift: during this phase we apply partial evaluation to all expressions are safe
+2. Redshift: during this phase we apply partial evaluation to all expressions that are safe
    to be evaluated eagerly.  This is an optional phase which happens only during
    compilation or when explicitly requested.  The presence/absence of redshift **should
    not have any visible effects** on the behavior of the program.
@@ -323,7 +343,7 @@ $ spy type-inference.spy
 
     Type annotations are mandatory only for "red" functions. For "blue" functions they
     are optional and they default to `dynamic`. We will talk about this in the
-    appropriate section.
+    appropriate section.  `@blue` functions are explained [later](#blue-functions).
 
 !!! note "`STATIC_TYPE`"
 
@@ -487,7 +507,7 @@ usability.  The core idea is that given a piece of code, there are parts of it t
 precomputed eagerly at compile time, leaving *less code* to run at runtime.  It's a form
 of *partial evaluation*.
 
-To do that, we introduce the concept of *color of an expression*: expressions whoe value
+To do that, we introduce the concept of *color of an expression*: expressions whose value
 is known at compile time are **blue**; expressions which must be evaluated at runtime
 are **red**.  Examples of **blue** expressions are:
 
@@ -595,10 +615,11 @@ optimizations, which is a bit underwhelming.  Redshifting becomes more interesti
 combination with `@blue` function.
 
 These are functions which are **guaranteed** to be eagerly evaluated. It is mandatory
-that all the arguments are blue as well, and the the function is evaluated **by the
+that all the arguments are blue as well, and the function is evaluated **by the
 interpreter** during redshifting.
 
-Let's look at a simple example
+In the next sections we will see how they enable interesting metaprogramming patterns,
+but let's start from a simple example first:
 
 ```python
 # filename: pi.spy
