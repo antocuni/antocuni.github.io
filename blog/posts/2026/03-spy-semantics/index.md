@@ -664,7 +664,7 @@ def main() -> None:
     print_f64(3.143588659585789)
 ```
 
-`get_pi` is a `@blue` function, and thus is completely evaluated at compile time. It's
+`get_pi` is a `@blue` function, and thus is evaluated at compile time. It's
 completely removed from the redshifted output and it will never be seen by the C
 backend. What is left after redshifting is just the `main` function with constant value.
 
@@ -792,17 +792,17 @@ Types are first order values as in Python, and thus they can be freely manipulat
 function:
 
 ```python
-# filename: add_T.spy
+# filename: add_T1.spy
 
 @blue
-def add_T(T: type):
-    def add(a: T, b: T) -> T:
+def add(T: type):
+    def impl(a: T, b: T) -> T:
         return a + b
 
-    return add
+    return impl
 
-add_int = add_T(int)
-add_str = add_T(str)
+add_int = add(int)
+add_str = add(str)
 
 def main() -> None:
     print(add_int(2, 3))
@@ -812,7 +812,7 @@ def main() -> None:
 Again, it works as expected:
 
 ```autorun
-$ spy add_T.spy
+$ spy add_T1.spy
 5
 hello world
 ```
@@ -821,19 +821,19 @@ And `redshift` creates two specialized versions of `add`, one for ints and one f
 strings:
 
 ```autorun
-$ spy redshift add_T.spy
-add_int = `add_T::add_T[i32]::add`
-add_str = `add_T::add_T[str]::add`
+$ spy redshift add_T1.spy
+add_int = `add_T1::add[i32]::impl`
+add_str = `add_T1::add[str]::impl`
 
-def `add_T::add_T[i32]::add`(a: i32, b: i32) -> i32:
+def `add_T1::add[i32]::impl`(a: i32, b: i32) -> i32:
     return a + b
 
-def `add_T::add_T[str]::add`(a: str, b: str) -> str:
+def `add_T1::add[str]::impl`(a: str, b: str) -> str:
     return `operator::str_add`(a, b)
 
 def main() -> None:
-    print_i32(`add_T::add_T[i32]::add`(2, 3))
-    print_str(`add_T::add_T[str]::add`('hello ', 'world'))
+    print_i32(`add_T1::add[i32]::impl`(2, 3))
+    print_str(`add_T1::add[str]::impl`('hello ', 'world'))
 ```
 
 This is how SPy does **generics**: a generic function is a `@blue` function which take
@@ -844,8 +844,8 @@ However, we would like to use square brackets for generics, for compatibility wi
 Python and because they look nicer. We can achieve that by using the decorator
 `@blue.generic`:
 
-```
-# filename: blue_generic.spy
+```python
+# filename: add_T2.spy
 
 @blue.generic
 def add(T: type):
@@ -859,19 +859,19 @@ def main() -> None:
 ```
 
 ```autorun
-$ spy blue_generic.spy
+$ spy add_T2.spy
 5
 hello world
 
-$ spy redshift blue_generic.spy
+$ spy redshift add_T2.spy
 def main() -> None:
-    print_i32(`blue_generic::add[i32]::impl`(2, 3))
-    print_str(`blue_generic::add[str]::impl`('hello ', 'world'))
+    print_i32(`add_T2::add[i32]::impl`(2, 3))
+    print_str(`add_T2::add[str]::impl`('hello ', 'world'))
 
-def `blue_generic::add[i32]::impl`(a: i32, b: i32) -> i32:
+def `add_T2::add[i32]::impl`(a: i32, b: i32) -> i32:
     return a + b
 
-def `blue_generic::add[str]::impl`(a: str, b: str) -> str:
+def `add_T2::add[str]::impl`(a: str, b: str) -> str:
     return `operator::str_add`(a, b)
 ```
 
@@ -889,21 +889,140 @@ def `blue_generic::add[str]::impl`(a: str, b: str) -> str:
 !!! tip "Current status: PEP 695 - Type parameter syntax"
 
     [PEP 695](https://peps.python.org/pep-0695/) introduced the "Type parameter syntax":
-
     ```python
     def func[T](a: T, b: T) -> T:
         ...
     ```
 
-    In SPy, this is just **syntax sugar** for `@blue.generic`.
+    In SPy, this is just **syntax sugar** for `@blue.generic`. The line above is
+    equivalent to:
+    ```python
+    @blue.generic
+    def func(T):
+        def impl(a: T, b: T) -> T:
+            ...
+        return impl
+    ```
     However, at the moment of writing it has not been implemented yet.
 
+## Powerful metaprogramming with `@blue` functions
 
+We can do arbitrary operations on blue values, and we have the full power of the
+language at blue time.  This makes it possible to write very interesting code: for
+example, this is a revised version of `make_adder`, which works for *arbitrary types*:
+the blue function dynamically get the type `T` of the argument and uses it in the
+signature of the nested functon:
 
+```python
+# filename: meta1.spy
 
+@blue
+def make_adder(y: dynamic):
+    T = type(y)
+    def add(x: T) -> T:
+        return x + y
 
+    return add
 
+add_world = make_adder(" world")
+add5 = make_adder(5)
+
+def main() -> None:
+    print(add_world("hello"))
+    print(add5(2))
+
+```
+
+```autorun
+$ spy meta1.spy
+hello world
+7
+
+$ spy redshift meta1.spy
+add_world = `meta1::make_adder::add`
+add5 = `meta1::make_adder::add#1`
+
+def `meta1::make_adder::add`(x: str) -> str:
+    return `operator::str_add`(x, ' world')
+
+def `meta1::make_adder::add#1`(x: i32) -> i32:
+    return x + 5
+
+def main() -> None:
+    print_str(`meta1::make_adder::add`('hello'))
+    print_i32(`meta1::make_adder::add#1`(2))
+```
 
 It is important to underline that **typechecking is fully aware of blue semantics**,
-meaning that the SPy compiler can keep track of the precise type of
-`add_int` and `add_str` out of the box, without any special support
+meaning that the SPy compiler can keep track of the precise type of `add5` and
+`add_world` by construction, without any special support. By the time the typechecker
+runs, all the blue values are fully known.  This is a big improvements over classical
+type checkers for Python which typically cannot understand metaprogramming patterns, or
+they have ad-hoc support only for some.
+
+Inside `@blue` functions we can use the full power of the language. Imagine that we want
+to "optimize" `make_adder(0)`: instead of adding 0, we can just return the identity
+function. This is obviously a silly example, but hopefully it gives the idea.
+
+The problem is: how do we know what is the "zero" value since we are coding for a
+generic type `T`? For example, for ints it's `0`, but for strings is `""`.
+
+This is a possible solution:
+
+```python
+# filename: meta2.spy
+
+@blue.generic
+def zero(T):
+    "Return the 'zero' value for the given type"
+    if T == int:
+        return 0
+    elif T == str:
+        return ""
+    else:
+        return None
+
+
+@blue.generic
+def identity(T):
+    def impl(x: T) -> T:
+        return x
+    return impl
+
+@blue
+def make_adder(y: dynamic):
+    T = type(y)
+    z = zero[T]
+
+    if z is not None and y == z:
+        # use the identity function instead of doing + 0, for "efficiency"
+        return identity[T]
+
+    else:
+        # general case
+        def add(x: T) -> T:
+            return x + y
+
+        return add
+
+def main() -> None:
+    adds = make_adder(" world")
+    add0 = make_adder(0)
+    print(adds("hello"))
+    print(add0(2))
+```
+
+After redshift, we can see that `add0` is actually `identity[i32]`:
+
+```autorun
+$ spy redshift meta2.spy
+def main() -> None:
+    print_str(`meta2::make_adder::add`('hello'))
+    print_i32(`meta2::identity[i32]::impl`(2))
+
+def `meta2::make_adder::add`(x: str) -> str:
+    return `operator::str_add`(x, ' world')
+
+def `meta2::identity[i32]::impl`(x: i32) -> i32:
+    return x
+```
