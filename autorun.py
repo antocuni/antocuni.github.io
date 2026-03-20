@@ -177,21 +177,23 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
     modified = False
 
     for start, end, info, body_lines in reversed(blocks):
-        if info != 'autorun':
+        if info not in ('autorun', 'autorun x'):
             continue
         if not body_lines:
             continue
+
+        block_force = force or (info == 'autorun x')
 
         # "No output yet" means every non-empty line starts with '$ '.
         has_output = any(
             l.strip() and not l.strip().startswith('$ ')
             for l in body_lines
         )
-        if has_output and not force:
+        if has_output and not block_force:
             continue
 
         # When forcing a regen, strip existing output: keep only '$ cmd' lines.
-        if has_output and force:
+        if has_output and block_force:
             body_lines = [l for l in body_lines if l.strip().startswith('$ ')]
 
         # Must contain at least one command line.
@@ -204,8 +206,10 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
         # Rebuild the body: after each '$ cmd' line insert its output.
         new_body: list[str] = []
         for line in body_lines:
-            new_body.append(line)
             stripped = line.rstrip('\n').rstrip('\r')
+            if stripped.startswith('$ ') and new_body:
+                new_body.append('\n')
+            new_body.append(line)
             if not stripped.startswith('$ '):
                 continue
             cmd = stripped[2:]
@@ -238,6 +242,8 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
 
         # Replace the block body in-place (start+1 .. end are the body lines).
         lines[start + 1:end] = new_body
+        if info == 'autorun x':
+            lines[start] = lines[start].replace('autorun x', 'autorun', 1)
         modified = True
 
     if modified:
