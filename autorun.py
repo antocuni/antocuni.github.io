@@ -201,7 +201,8 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
         if not cmd_lines:
             continue
 
-        cwd = autorun_dir if autorun_dir.is_dir() else md_path.parent
+        autorun_dir.mkdir(exist_ok=True)
+        cwd = autorun_dir
 
         # Rebuild the body: after each '$ cmd' line insert its output.
         new_body: list[str] = []
