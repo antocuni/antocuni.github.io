@@ -170,3 +170,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 .aider*
+
+# symlink to the most recently edited post directory
+/current
