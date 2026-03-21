@@ -10,6 +10,7 @@ dependencies = [
     "mkdocs-glightbox",
     "mkdocs-antocuni",
     "watchdog>=6.0.0",
+    "ansi2html>=1.9.2",
 ]
 
 [tool.uv.sources]

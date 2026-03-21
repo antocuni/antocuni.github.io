@@ -72,6 +72,7 @@ PATH when running autorun commands.
 """
 
 import argparse
+import hashlib
 import os
 import re
 ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m')
@@ -143,15 +144,17 @@ def parse_blocks(lines: list[str]):
 FILENAME_RE = re.compile(r'^#\s*filename:\s*(\S+)')
 
 
-def process_md_file(md_path: Path) -> bool:
+def process_md_file(md_path: Path, force: bool = False) -> bool:
     """Scan *md_path* and apply both transformations.
 
     Returns True if the file was modified (autorun output inserted).
+    If *force* is True, existing output is discarded and all commands are
+    re-run (used by --regen).
     """
     content = md_path.read_text()
     lines = content.splitlines(keepends=True)
 
-    examples_dir = md_path.parent / 'examples'
+    autorun_dir = md_path.parent / 'autorun'
 
     # --- pass 1: extract filename blocks (read-only w.r.t. the .md file) ---
     for _start, _end, _info, body_lines in parse_blocks(lines):
@@ -161,8 +164,8 @@ def process_md_file(md_path: Path) -> bool:
         if not m:
             continue
         filename = m.group(1)
-        examples_dir.mkdir(exist_ok=True)
-        out_path = examples_dir / filename
+        autorun_dir.mkdir(exist_ok=True)
+        out_path = autorun_dir / filename
         file_content = ''.join(body_lines[1:])
         if not out_path.exists() or out_path.read_text() != file_content:
             out_path.write_text(file_content)
@@ -184,15 +187,19 @@ def process_md_file(md_path: Path) -> bool:
             l.strip() and not l.strip().startswith('$ ')
             for l in body_lines
         )
-        if has_output:
+        if has_output and not force:
             continue
+
+        # When forcing a regen, strip existing output: keep only '$ cmd' lines.
+        if has_output and force:
+            body_lines = [l for l in body_lines if l.strip().startswith('$ ')]
 
         # Must contain at least one command line.
         cmd_lines = [l for l in body_lines if l.strip().startswith('$ ')]
         if not cmd_lines:
             continue
 
-        cwd = examples_dir if examples_dir.is_dir() else md_path.parent
+        cwd = autorun_dir if autorun_dir.is_dir() else md_path.parent
 
         # Rebuild the body: after each '$ cmd' line insert its output.
         new_body: list[str] = []
@@ -212,12 +219,15 @@ def process_md_file(md_path: Path) -> bool:
                     cwd=cwd,
                     env=_ENV,
                 )
-                output = result.stdout
+                raw_output = result.stdout
                 if result.returncode != 0 and result.stderr:
-                    output += result.stderr
-                output = ANSI_ESCAPE_RE.sub('', output)
+                    raw_output += result.stderr
             except Exception as exc:
-                output = f'ERROR: {exc}\n'
+                raw_output = f'ERROR: {exc}\n'
+            # Save raw output (with ANSI codes) for the mkdocs plugin.
+            raw_path = autorun_dir / hashlib.md5(cmd.encode()).hexdigest()
+            raw_path.write_text(raw_output)
+            output = ANSI_ESCAPE_RE.sub('', raw_output)
             output_lines = output.splitlines(keepends=True)
             if output_lines and not output_lines[-1].endswith('\n'):
                 output_lines[-1] += '\n'
@@ -231,6 +241,119 @@ def process_md_file(md_path: Path) -> bool:
         md_path.write_text(''.join(lines))
 
     return modified
+
+
+# ---------------------------------------------------------------------------
+# Theme preview
+# ---------------------------------------------------------------------------
+
+def show_themes(md_path: Path) -> None:
+    """Render all autorun blocks from *md_path* in every ansi2html theme and
+    write an interactive HTML file next to the .md file."""
+    from ansi2html import Ansi2HTMLConverter
+    from ansi2html.style import SCHEME
+
+    content = md_path.read_text()
+    lines = content.splitlines(keepends=True)
+    autorun_dir = md_path.parent / 'autorun'
+
+    # Collect (cmd, raw_output) pairs per block.
+    blocks_data: list[list[tuple[str, str]]] = []
+    for _start, _end, info, body_lines in parse_blocks(lines):
+        if info != 'autorun':
+            continue
+        entries: list[tuple[str, str]] = []
+        for line in body_lines:
+            stripped = line.strip()
+            if not stripped.startswith('$ '):
+                continue
+            cmd = stripped[2:]
+            raw_path = autorun_dir / hashlib.md5(cmd.encode()).hexdigest()
+            raw_output = raw_path.read_text() if raw_path.exists() else \
+                '(output not available — run autorun.py first)\n'
+            entries.append((cmd, raw_output))
+        if entries:
+            blocks_data.append(entries)
+
+    if not blocks_data:
+        print('No autorun blocks with cached output found.')
+        return
+
+    themes = list(SCHEME.keys())
+    default_theme = 'xterm' if 'xterm' in themes else themes[0]
+
+    _TERM_BASE = (
+        'border-radius:6px;padding:1em 1.2em;'
+        'font-family:"Fira Mono","Cascadia Code","Consolas",monospace;'
+        'font-size:.88em;line-height:1.5;margin:1em 0;overflow-x:auto;'
+    )
+    _PRE = 'margin:0;background:transparent;color:#d4d4d4;white-space:pre;'
+
+    theme_divs: list[str] = []
+    for theme in themes:
+        bg = SCHEME[theme][0]
+        conv = Ansi2HTMLConverter(inline=True, scheme=theme)
+        block_htmls: list[str] = []
+        for entries in blocks_data:
+            parts: list[str] = []
+            for cmd, raw_output in entries:
+                combined = f'$ {cmd}\n{raw_output}'
+                out_html = conv.convert(combined, full=False)
+                parts.append(
+                    f'<pre style="{_PRE}">{out_html}</pre>'
+                )
+            block_htmls.append(
+                f'<div style="background:{bg};{_TERM_BASE}">'
+                + '\n'.join(parts) + '</div>'
+            )
+        display = 'block' if theme == default_theme else 'none'
+        theme_divs.append(
+            f'<div id="theme-{theme}" class="theme-section" '
+            f'style="display:{display}">\n'
+            + '\n'.join(block_htmls)
+            + '\n</div>'
+        )
+
+    options = '\n'.join(
+        f'<option value="{t}"{"selected" if t == default_theme else ""}>{t}</option>'
+        for t in themes
+    )
+
+    html = f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>autorun theme preview — {md_path.name}</title>
+  <style>
+    body {{ font-family: sans-serif; padding: 2em; background: #f0f0f0; }}
+    label {{ font-size: 1.1em; }}
+    select {{ font-size: 1em; padding: .2em .6em; margin-left: .4em; }}
+    code {{ font-size: .9em; }}
+  </style>
+</head>
+<body>
+  <h1>autorun theme preview</h1>
+  <p>File: <code>{md_path}</code></p>
+  <label>Theme:
+    <select id="theme-select" onchange="switchTheme()">
+{options}
+    </select>
+  </label>
+  {''.join(theme_divs)}
+  <script>
+    var current = '{default_theme}';
+    function switchTheme() {{
+      document.getElementById('theme-' + current).style.display = 'none';
+      current = document.getElementById('theme-select').value;
+      document.getElementById('theme-' + current).style.display = 'block';
+    }}
+  </script>
+</body>
+</html>
+"""
+    output_path = md_path.parent / 'autorun-themes.html'
+    output_path.write_text(html)
+    print(f'Written: {output_path}')
 
 
 # ---------------------------------------------------------------------------
@@ -283,6 +406,28 @@ if __name__ == '__main__':
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.parse_args()   # only --help for now; exits on -h/--help
+    parser.add_argument(
+        '--regen',
+        metavar='FILENAME',
+        help='Force re-run of all autorun blocks in the given .md file, '
+             'discarding any previously inserted output.',
+    )
+    parser.add_argument(
+        '--show-themes',
+        metavar='FILENAME',
+        help='Render all autorun blocks from the given .md file in every '
+             'available ansi2html theme and write an interactive HTML preview '
+             'to autorun-themes.html next to the file.',
+    )
+    args = parser.parse_args()
     root = Path(__file__).parent
-    watch(root)
+
+    if args.regen:
+        md_path = Path(args.regen).resolve()
+        print(f'Regenerating {md_path.relative_to(root)}')
+        process_md_file(md_path, force=True)
+    elif args.show_themes:
+        md_path = Path(args.show_themes).resolve()
+        show_themes(md_path)
+    else:
+        watch(root)
