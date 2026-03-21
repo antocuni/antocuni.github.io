@@ -224,6 +224,9 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
                     raw_output += result.stderr
             except Exception as exc:
                 raw_output = f'ERROR: {exc}\n'
+            # Strip the local absolute path prefix so it doesn't leak into
+            # the rendered output (e.g. in error tracebacks).
+            raw_output = raw_output.replace(str(md_path.parent) + '/', '/.../')
             # Save raw output (with ANSI codes) for the mkdocs plugin.
             raw_path = autorun_dir / hashlib.md5(cmd.encode()).hexdigest()
             raw_path.write_text(raw_output)

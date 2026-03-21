@@ -43,12 +43,13 @@ def _ansi_to_html(text: str) -> str:
 
 def _build_terminal_html(entries: list[tuple[str, str]]) -> str:
     """Build a terminal-like HTML block from (cmd, raw_output) pairs."""
-    parts = [f'<div style="{_TERMINAL_STYLE}">']
-    for cmd, raw_output in entries:
-        combined = f'$ {cmd}\n{raw_output}'
-        parts.append(f'<pre style="{_PRE_STYLE}">{_ansi_to_html(combined)}</pre>')
-    parts.append('</div>')
-    return '\n'.join(parts)
+    sections = [f'$ {cmd}\n{raw_output}' for cmd, raw_output in entries]
+    combined = '\n'.join(sections)  # blank line between each cmd+output section
+    return (
+        f'<div style="{_TERMINAL_STYLE}">'
+        f'<pre style="{_PRE_STYLE}">{_ansi_to_html(combined)}</pre>'
+        f'</div>'
+    )
 
 
 def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
