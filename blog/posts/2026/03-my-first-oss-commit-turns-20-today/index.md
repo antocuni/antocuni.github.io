@@ -13,9 +13,9 @@ tags:
 
 # My first OSS commit turns 20 today
 
-Some time ago I realized that it was almost 20 years since I started to contribute to
+Some time ago I realized that it was 20 years since I started to contribute to
 Open Source. It's easy to remember, because I started to work on PyPy as part of my
-Master Thesis and I graduated in 2006.
+master's thesis and I graduated in 2006.
 
 So, I did a bit of archeology to find the [first commit](https://github.com/pypy/pypy/commit/1a086d45d9):
 
@@ -40,21 +40,21 @@ Date:   Wed Mar 22 14:01:42 2006 +0000
 
 <!-- more -->
 
-The first *interaction* with the PyPy team is actually [couple of weeks earlier](https://www.mail-archive.com/pypy-dev@codespeak.net/msg01588.html):
+The first *interaction* with the PyPy team is actually [a couple of weeks earlier](https://www.mail-archive.com/pypy-dev@codespeak.net/msg01588.html):
 
 ![My first email to pypy-dev](pypy-email.png)
 
-Sending that email was probably one of the best and most influential decision of my
-life: after that I started to work on PyPy, participated to my first
+Sending that email was probably one of the best and most influential decisions of my
+life: after that I started to work on PyPy, participated in my first
 [EuroPython](https://www.europython-society.org/europython/#europython-2006), moved to
-Düsseldorf to continue working on PyPy, went back home, got my PhD, move to Düsseldorf
+Düsseldorf to continue working on PyPy, went back home, got my PhD, moved to Düsseldorf
 and back *again*, did many years of freelancing thanks to my OSS experience, spoke at
 many conferences, met hundreds of wonderful people and had countless beers with them,
 moved to Berlin to join Anaconda and then did the Germany->Italy route for the 3rd time.
 Phew, 20 years of life in a few lines!
 
 During my years in Berlin, I started [SPy](https://github.com/spylang/spy) and met my
-wife.  Deciding what is the most important of these two facts is left as an excercise to
+wife.  Deciding what is the most important of these two facts is left as an exercise to
 the readers :).
 
 So yes, contributing to Open Source turned out to be not a bad decision.
