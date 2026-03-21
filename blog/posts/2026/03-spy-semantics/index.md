@@ -9,6 +9,8 @@ tags:
 
 ---
 
+<!-- spy git commit: e5a8d272 -->
+
 # Inside SPy🥸, part 2: Language semantics
 
 This is the second post of the *Inside SPy* series. The [first
@@ -85,7 +87,7 @@ Now, time to dive deeper into the language.
 
 !!! note "SPy version"
 
-    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit bb295df6](https://github.com/spylang/spy/tree/bb295df6)
+    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit e5a8d272](https://github.com/spylang/spy/tree/e5a8d272)
 
 ## Compilation pipeline
 
@@ -122,7 +124,7 @@ graph TD
 !!! note "`parse` vs `pyparse`"
 
     Why do we have two separate parsing steps? At the moment we rely on CPython parser:
-    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/bb295df6/spy/ast.py).
+    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/e5a8d272/spy/ast.py).
 
     Eventually SPy will have its own parser and thus we will be able to drop `pyparse`.
 
@@ -393,7 +395,7 @@ call to the appropriate function.
 
     But the point of the example above was precisely to show the call to
     `operator::i32_add`: `--full-fqn` turns off pretty printing. Try to run
-    `spy rs op_dispatch.spy` and see the difference.
+    `spy redshift op_dispatch.spy` and see the difference.
 
 
 ## Static vs dynamic types
@@ -736,6 +738,12 @@ a different value; Each version is given an unique FQN.
 memoized, thus subsequent calls with the same arguments reuse the previously computed
 value.
 
+!!! note "Where is `add9`?"
+
+    We don't see any mention of `add9` in the redshifted version. This happens because
+    `add9` is just a local variable of `main` which is optimized away, and the code
+    contains a direct call to `make_adder::add#2`.
+
 We can also have a look at the C code to confirm that each `add` is translated into a
 specific C function:
 
@@ -905,6 +913,161 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
     ```
     However, at the moment of writing it has not been implemented yet.
 
+## Operator dispatch, revisited.
+
+Now that we know about `@blue` functions, we can understand better how operator dispatch
+works. We remember from [the previous section](#operator-dispatch) that e.g. `str + str`
+is dispached to `operator::str_add`.
+
+How to we go from `a + b` to `operator::str_add(a, b)`?  Internally, operator dispatch
+happens in two steps:
+
+  1. first, we determine the implementation function (or **opimpl**) for the given types
+
+  2. then, we call the opimpl with the actual values.
+
+In pseudocode, `a + b` becomes:
+```python
+from operator import ADD
+
+# x = a + b
+Ta = STATIC_TYPE(a)
+Tb = STATIC_TYPE(b)
+opimpl = ADD(Ta, Tb)
+x = opimpl(a, b)
+```
+
+The trick is that `STATIC_TYPE` and `ADD` are both `@blue` functions, so during
+redshifting they are partially evaluated away, leaving just `opimpl(a, b)`.
+
+We can even call `operator.ADD` manually:
+```python
+# filename: op1.spy
+from operator import ADD
+
+def main() -> None:
+    fn1 = ADD(i32, i32)
+    fn2 = ADD(str, str)
+    print(fn1)
+    print(fn2)
+```
+
+```autorun
+$ spy op1.spy
+<OpImpl `def(i32, i32) -> i32` for `operator::i32_add`>
+<OpImpl `def(str, str) -> str` for `operator::str_add`>
+```
+
+In reality, `ADD` doesn't receive the *types* of the operand: it receive objects which
+*describes* the operands: this description include the static type, but also e.g. the
+source code location of the expression, the color and the concrete value if it's
+`blue`.
+
+These "argument description" objects are called **meta args**. A function which takes
+meta args end returns an opimpl is a **meta function**.
+
+As in Python, custom types can override dunder methods like `__add__`, `__getitem__`,
+`__getattr__`, etc., and they can implement them either as normal function or as meta
+functions.  This is a very powerful mechanism which unlocks lots of opportunities.
+
+For example, take [`list.__getitem__`](https://github.com/spylang/spy/blob/e5a8d272/stdlib/_list.spy#L81-L130): it's a meta function which checks the static type
+of the index, and then dispatches to specialized opimpls like `getitem_int` or
+`getitem_slice`.
+
+Meta functions are a very advanced concept. Describing them in depth will be the topic
+of a subsequent blog post.
+
+## Static typing as a special case of `@blue` evaluation
+
+Now, if we try to add two unrelated things, we get an error:
+
+```python
+# filename: op2.spy
+def main() -> None:
+    x = 1 + "hello"
+    print(x)
+```
+
+```autorun
+$ spy op2.spy
+Traceback (most recent call last):
+  * op2::main at /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  |         |_________|
+
+TypeError: cannot do `i32` + `str`
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  |         ^ this is `i32`
+
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  |             |_____| this is `str`
+
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  |         |_________| operator::ADD called here
+
+
+```
+
+From the error message we see that the `TypeError` is raised by `operator.ADD`, which we
+know being a `@blue` function.  This directly leads us to this important property: in
+SPy, **compilation errors are errors which are raised from @blue functions**.
+
+Now, consider this other example. If we run in the interpreter, it works fine because
+`add` is never called:
+
+```python
+# filename: op3.spy
+
+def add(x: int, y: str) -> int:
+    return x + y
+
+def main() -> None:
+    print("hello")
+```
+
+```autorun
+$ spy op3.spy
+hello
+```
+
+However, if we try to `build` or `redshift` it, we get an error:
+
+```autorun
+$ spy redshift op3.spy
+Static error during redshift:
+Traceback (most recent call last):
+  * [redshift] op3::add at /.../autorun/op3.spy:3
+  |     return x + y
+  |            |___|
+
+TypeError: cannot do `i32` + `str`
+  | /.../autorun/op3.spy:3
+  |     return x + y
+  |            ^ this is `i32`
+
+  | /.../autorun/op3.spy:3
+  |     return x + y
+  |                ^ this is `str`
+
+  | /.../autorun/op3.spy:3
+  |     return x + y
+  |            |___| operator::ADD called here
+
+
+```
+
+This happens because all `@blue` calls are evaluated eagerly during redshifting,
+including the implicit `operator.ADD`.
+
+This also means that we can **programmatically generated compilation errors** by raising
+the appropriate exceptions from `@blue` functions.
+
+XXX write an example
+
+
 ## Powerful metaprogramming with `@blue` functions
 
 We can do arbitrary operations on blue values, and we have the full power of the
@@ -1026,3 +1189,21 @@ def `meta2::make_adder::add`(x: str) -> str:
 def `meta2::identity[i32]::impl`(x: i32) -> i32:
     return x
 ```
+
+This is just a hint of the metaprogramming capabilities of SPy. We will see more
+interesting examples later in the series.
+
+!!! note "Metaprogramming in other languages"
+
+    SPy is surely not the only language to allow metaprogramming. In C++ you can achieve
+    similar goals by using *template metaprogramming*: the biggest drawback is that when
+    using C++ templates in that way, you are effectively doing the metaprogramming part
+    in a different language, and moreover C++ templates are infamous for their obscure
+    error messages.
+
+    Another language which is much closer to SPy is Zig: Zig's `comptime` is very
+    similar to SPy's `@blue`.  The big difference in this case is in the implementation
+    and in development experience: Zig is only compiled, and `comptime` evaluation
+    happens at... well, compilation time. In SPy, `@blue` functions are evaluated by the
+    interpreter, with all the usual advantages. For example, you can totally insert a
+    `breakpoint()` in a `@blue` function to do step-by-step debugging.
