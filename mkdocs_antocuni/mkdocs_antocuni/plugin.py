@@ -29,17 +29,24 @@ _ANSI_CONV = Ansi2HTMLConverter(inline=True, scheme='dracula')
 # Terminal HTML helpers
 # ---------------------------------------------------------------------------
 
-_TERMINAL_STYLE = (
+_OUTER_STYLE = (
     'background:#2E3436;'
     'border-radius:6px;'
     'padding:1em 1.2em;'
-    'font-family:"Fira Mono","Cascadia Code","Consolas",monospace;'
-    'font-size:.88em;'
-    'line-height:1.5;'
     'margin:1em 0;'
-    'overflow-x:auto;'
 )
-_PRE_STYLE = 'margin:0;background:transparent;color:#d4d4d4;white-space:pre;'
+# Reset styles that .md-typeset pre and .md-typeset code would otherwise apply.
+_PRE_STYLE = 'margin:0;color:var(--md-code-fg-color);direction:ltr;'
+_CODE_STYLE = (
+    'background:transparent;'
+    'color:#d4d4d4;'
+    'padding:0;'
+    'border-radius:0;'
+    'word-break:normal;'
+    'white-space:pre;'
+    'overflow-x:auto;'
+    'display:block;'
+)
 
 
 def _ansi_to_html(text: str) -> str:
@@ -51,9 +58,13 @@ def _build_terminal_html(entries: list[tuple[str, str]]) -> str:
     """Build a terminal-like HTML block from (cmd, raw_output) pairs."""
     sections = [f'$ {cmd}\n{raw_output}' for cmd, raw_output in entries]
     combined = '\n'.join(sections)  # blank line between each cmd+output section
+    # Use pre>code so that .md-typeset code { font-size:.85em } applies
+    # naturally, giving the exact same size as regular fenced code blocks.
     return (
-        f'<div style="{_TERMINAL_STYLE}">'
-        f'<pre style="{_PRE_STYLE}">{_ansi_to_html(combined)}</pre>'
+        f'<div style="{_OUTER_STYLE}">'
+        f'<pre style="{_PRE_STYLE}">'
+        f'<code style="{_CODE_STYLE}">{_ansi_to_html(combined)}</code>'
+        f'</pre>'
         f'</div>'
     )
 
@@ -238,7 +249,6 @@ class MyPlugin(BasePlugin):
             lambda m: _replace_popup_block(m, page_src_dir, site_asset_prefix),
             markdown,
         )
-
         return markdown
 
     def on_post_build(self, config):

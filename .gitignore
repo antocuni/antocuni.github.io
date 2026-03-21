@@ -171,9 +171,5 @@ cython_debug/
 .pypirc
 .aider*
 
-# autorun.py generated files
-blog/**/autorun/
-blog/**/autorun-themes.html
-
 # symlink to the most recently edited post directory
 /current
