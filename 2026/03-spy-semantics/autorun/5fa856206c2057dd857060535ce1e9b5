@@ -1,0 +1,12 @@
+add5 = [35;01m`meta_adder1::make_adder::add`[00m
+add_world = [35;01m`meta_adder1::make_adder::add#1`[00m
+
+[34;01mdef[00m [35;01m`meta_adder1::make_adder::add`[00m(x: [35;01mi32[00m) -> [35;01mi32[00m:
+    [34;01mreturn[00m x + [33;01m5[00m
+
+[34;01mdef[00m [35;01m`meta_adder1::make_adder::add#1`[00m(x: [35;01mstr[00m) -> [35;01mstr[00m:
+    [34;01mreturn[00m [35;01m`operator::str_add`[00m(x, [32;01m' world'[00m)
+
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    [00mprint_i32[00m([35;01m`meta_adder1::make_adder::add`[00m([33;01m2[00m))
+    [00mprint_str[00m([35;01m`meta_adder1::make_adder::add#1`[00m([32;01m'hello'[00m))

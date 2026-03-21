@@ -1,0 +1,6 @@
+def add(x: dynamic, y: dynamic) -> dynamic:
+    return x + y
+
+def main() -> None:
+    print(add(1, 2))
+    print(add("hello ", "world"))

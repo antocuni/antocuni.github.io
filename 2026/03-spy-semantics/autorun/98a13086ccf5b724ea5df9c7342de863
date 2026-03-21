@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  * [35mtype-error2::main[00m at /.../autorun/type-error2.spy:5
+  |     print(add(1, 2))
+  | [31;01m          |_______|[00m
+  * [35mtype-error2::add[00m at /.../autorun/type-error2.spy:2
+  |     return x + y
+  | [31;01m           |___|[00m
+
+[31;01mTypeError[00m: cannot do `object` + `object`
+  | /.../autorun/type-error2.spy:2
+  |     return x + y
+  | [31;01m           ^ this is `object`[00m
+
+  | /.../autorun/type-error2.spy:2
+  |     return x + y
+  | [31;01m               ^ this is `object`[00m
+
+  | /.../autorun/type-error2.spy:2
+  |     return x + y
+  | [32;01m           |___| operator::ADD called here[00m
+
+

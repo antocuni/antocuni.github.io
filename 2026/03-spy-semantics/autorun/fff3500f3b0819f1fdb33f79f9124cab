@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  * [35mtype-error1::main[00m at /.../autorun/type-error1.spy:2
+  |     x: int = "hello"
+  | [31;01m             |_____|[00m
+
+[31;01mTypeError[00m: mismatched types
+  | /.../autorun/type-error1.spy:2
+  |     x: int = "hello"
+  | [31;01m             |_____| expected `i32`, got `str`[00m
+
+  | /.../autorun/type-error1.spy:2
+  |     x: int = "hello"
+  | [32;01m       |_| expected `i32` because of type declaration[00m
+
+

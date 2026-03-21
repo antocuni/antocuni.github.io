@@ -1,0 +1,10 @@
+cc = cc
+cflags = --std=c99 -Wfatal-errors -fdiagnostics-color=always -I /home/antocuni/anaconda/spy/spy/libspy/include -DSPY_TARGET_NATIVE -Werror=implicit-function-declaration -DSPY_DEBUG -O0 -g -DSPY_GC_BDWGC
+ldflags = -lm -L /home/antocuni/anaconda/spy/spy/libspy/build/native/debug -lspy -DSPY_DEBUG -O0 -g -lgc
+
+rule cc
+  command = $cc $in -o $out $cflags $ldflags
+  description = CC $out
+
+build adder: cc src/adder.c
+default adder

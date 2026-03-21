@@ -1,0 +1,16 @@
+
+@blue
+def make_adder(y: dynamic):
+    T = type(y)
+    def add(x: T) -> T:
+        return x + y
+
+    return add
+
+add_world = make_adder(" world")
+add5 = make_adder(5)
+
+def main() -> None:
+    print(add_world("hello"))
+    print(add5(2))
+

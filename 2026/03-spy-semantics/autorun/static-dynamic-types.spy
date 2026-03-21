@@ -1,0 +1,8 @@
+def print_types(x: object) -> None:
+    print(STATIC_TYPE(x))
+    print(type(x))
+
+def main() -> None:
+    print_types(42)
+    print("---")
+    print_types("hello")
