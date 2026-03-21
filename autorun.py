@@ -75,6 +75,7 @@ import argparse
 import hashlib
 import os
 import re
+import time
 ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m')
 import subprocess
 from pathlib import Path
@@ -392,6 +393,7 @@ class MarkdownHandler(FileSystemEventHandler):
             return
         md_path = Path(src_path)
         print(f'Processing {md_path.relative_to(self.root)}')
+        time.sleep(0.5)  # let Emacs re-register its inotify watch after saving
         modified = process_md_file(md_path)
         if modified:
             self._own_writes.add(src_path)
