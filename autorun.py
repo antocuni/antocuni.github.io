@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run
 """
 autorun.py - Monitor blog/**/*.md and process special fenced code blocks.
 
