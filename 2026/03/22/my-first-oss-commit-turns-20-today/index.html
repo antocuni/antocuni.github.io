@@ -7,13 +7,11 @@
       
       
       
-        <link rel="canonical" href="https://antocuni.eu/2017/10/18/cape-of-good-hope-for-pypy/">
+        <link rel="canonical" href="https://antocuni.eu/2026/03/22/my-first-oss-commit-turns-20-today/">
       
       
-        <link rel="prev" href="../../../07/26/binary-wheels-for-pypy/">
+        <link rel="prev" href="../../../../2025/10/29/inside-spy-part-1-motivations-and-goals/">
       
-      
-        <link rel="next" href="../../30/how-to-make-your-code-80-times-faster/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
@@ -24,7 +22,7 @@
     
     
       
-        <title>(Cape of) Good Hope for PyPy - Antonio Cuni's blog</title>
+        <title>My first OSS commit turns 20 today - Antonio Cuni's blog</title>
       
     
     
@@ -92,6 +90,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#my-first-oss-commit-turns-20-today" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -123,7 +126,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              (Cape of) Good Hope for PyPy
+              My first OSS commit turns 20 today
             
           </span>
         </div>
@@ -783,6 +786,8 @@
   
   
   
+    
+  
   
 </nav>
                   </div>
@@ -819,7 +824,7 @@
                     <li class="md-nav__item">
                       <div class="md-nav__link">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
-                        <time datetime="2017-10-18 13:31:00+00:00" class="md-ellipsis">Oct 18, 2017</time>
+                        <time datetime="2026-03-22 00:00:00+00:00" class="md-ellipsis">Mar 22, 2026</time>
                       </div>
                     </li>
                     
@@ -841,7 +846,7 @@
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
                           <span class="md-ellipsis">
                             
-                              4 min read
+                              2 min read
                             
                           </span>
                         </div>
@@ -868,13 +873,7 @@
       
       
       
-        <a href="../../../../tags/#tag:cpyext" class="md-tag">cpyext</a>
-      
-    
-      
-      
-      
-        <a href="../../../../tags/#tag:profiling" class="md-tag">profiling</a>
+        <a href="../../../../tags/#tag:oss" class="md-tag">oss</a>
       
     
       
@@ -886,148 +885,52 @@
       
       
       
-        <a href="../../../../tags/#tag:speed" class="md-tag">speed</a>
-      
-    
-      
-      
-      
-        <a href="../../../../tags/#tag:sprint" class="md-tag">sprint</a>
-      
-    
-      
-      
-      
-        <a href="../../../../tags/#tag:unicode" class="md-tag">unicode</a>
+        <a href="../../../../tags/#tag:spy" class="md-tag">spy</a>
       
     
   </nav>
 
 
 
-  <h1>(Cape of) Good Hope for PyPy</h1>
+<h1 id="my-first-oss-commit-turns-20-today">My first OSS commit turns 20 today<a class="headerlink" href="#my-first-oss-commit-turns-20-today" title="Permanent link">¶</a></h1>
+<p>Some time ago I realized that it was 20 years since I started to contribute to
+Open Source. It's easy to remember, because I started to work on PyPy as part of my
+master's thesis and I graduated in 2006.</p>
+<p>So, I did a bit of archeology to find the <a href="https://github.com/pypy/pypy/commit/1a086d45d9">first commit</a>:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ cd ~/pypy/pypy &amp;&amp; git show 1a086d45d9 --no-patch
+<span style="color: #F1FA8C">commit 1a086d45d9</span>
+Author: Antonio Cuni &lt;anto.cuni@gmail.com&gt;
+Date:   Wed Mar 22 14:01:42 2006 +0000
+
+    Initial commit of the CLI backend
+</code></pre></div>
 
 <div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2017/10/cape-of-good-hope-for-pypy-hello-from-3656631725712879033.html">PyPy blog</a>.</p>
+<p class="admonition-title">svn, hg, git</p>
+<p>Funny thing, the original commit was not in <code>git</code>, which was just a few months old
+at the time. In 2006 PyPy was using <code>subversion</code>, then a few years later <a href="/2010/12/14/pypy-migrates-to-mercurial/">migrated
+to mercurial</a>, and many years later
+<a href="https://pypy.org/posts/2023/12/pypy-moved-to-git-github.html">migrated to git</a>.</p>
+<p>I managed to find traces of the original <code>svn</code> commit in the archives of the
+<a href="https://marc.info/?l=pypy-svn&amp;m=118495688023240">pypy-svn</a> mailing list.</p>
 </div>
-
-<div>
-
-<br>
 <!-- more -->
-</div>
-Hello from the other side of the world (for most of you)!<br>
-<br>
-With the excuse of coming to <a class="reference external" href="https://za.pycon.org/">PyCon ZA</a> during the last two weeks Armin,
-Ronan, Antonio and sometimes Maciek had a very nice and productive sprint in
-Cape Town, as pictures show :). We would like to say a big thank you to
-Kiwi.com, which sponsored part of the travel costs via its awesome <a class="reference external" href="https://www.kiwi.com/sourcelift/">Sourcelift</a>
-program to help Open Source projects.<br>
-<br>
-<table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="float: right; margin-left: 1em; text-align: right;"><tbody>
-<tr><td style="text-align: center;"><a href="https://3.bp.blogspot.com/-9YVNucPN1wE/WeaWmTUFB-I/AAAAAAAABMQ/HeVMqS-ya2IYJuk0iZZODlULqpKaf5XcgCLcBGAs/s1600/DSC_2418.JPG" style="margin-left: auto; margin-right: auto;"><img border="0" height="225" src="https://3.bp.blogspot.com/-9YVNucPN1wE/WeaWmTUFB-I/AAAAAAAABMQ/HeVMqS-ya2IYJuk0iZZODlULqpKaf5XcgCLcBGAs/s400/DSC_2418.JPG" width="400"></a></td></tr>
-<tr><td class="tr-caption" style="text-align: center;">Armin, Anto and Ronan at Cape Point</td></tr>
-</tbody></table>
-<br>
-Armin, Ronan and Anto spent most of the time hacking at cpyext, our CPython
-C-API compatibility layer: during the last years, the focus was to make it
-working and compatible with CPython, in order to run existing libraries such
-as numpy and pandas. However, we never paid too much attention to performance,
-so the net result is that with the latest released version of PyPy, C
-extensions generally work but their speed ranges from "slow" to "horribly
-slow".<br>
-<br>
-For example, these very simple <a class="reference external" href="https://github.com/antocuni/cpyext-benchmarks">microbenchmarks</a> measure the speed of
-calling (empty) C functions, i.e. the time you spend to "cross the border"
-between RPython and C.  <i>(Note: this includes the time spent doing the loop in regular Python code.)</i> These are the results on CPython, on PyPy 5.8, and on
-our newest in-progress version:<br>
-<br>
-<pre class="literal-block">$ python bench.py     # CPython
-noargs      : 0.41 secs
-onearg(None): 0.44 secs
-onearg(i)   : 0.44 secs
-varargs     : 0.58 secs
-</pre>
-<div>
-<br></div>
-<pre class="literal-block">$ pypy-5.8 bench.py   # PyPy 5.8
-noargs      : 1.01 secs
-onearg(None): 1.31 secs
-onearg(i)   : 2.57 secs
-varargs     : 2.79 secs
-</pre>
-<div>
-<br></div>
-<pre class="literal-block">$ pypy bench.py       # cpyext-refactor-methodobject branch
-noargs      : 0.17 secs
-onearg(None): 0.21 secs
-onearg(i)   : 0.22 secs
-varargs     : 0.47 secs
-</pre>
-<div>
-<br></div>
-<pre class="literal-block"></pre>
-<pre class="literal-block"></pre>
-So yes: before the sprint, we were ~2-6x slower than CPython. Now, we are
-<strong>faster</strong> than it!
-To reach this result, we did various improvements, such as:
-<br>
-<blockquote>
-<ol class="arabic simple">
-<li>teach the JIT how to look (a bit) inside the cpyext module;</li>
-<li>write specialized code for calling <tt class="docutils literal">METH_NOARGS</tt>, <tt class="docutils literal">METH_O</tt> and
-<tt class="docutils literal">METH_VARARGS</tt> functions; previously, we always used a very general and
-slow logic;</li>
-<li>implement freelists to allocate the cpyext versions of <tt class="docutils literal">int</tt> and
-<tt class="docutils literal">tuple</tt> objects, as CPython does;</li>
-<li>the <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/merge_requests/573">cpyext-avoid-roundtrip</a> branch: crossing the RPython/C border is
-slowish, but the real problem was (and still is for many cases) we often
-cross it many times for no good reason. So, depending on the actual API
-call, you might end up in the C land, which calls back into the RPython
-land, which goes to C, etc. etc. (ad libitum).</li>
-</ol>
-</blockquote>
-The branch tries to fix such nonsense: so far, we fixed only some cases, which
-are enough to speed up the benchmarks shown above.  But most importantly, we
-now have a clear path and an actual plan to improve cpyext more and
-more. Ideally, we would like to reach a point in which cpyext-intensive
-programs run at worst at the same speed of CPython.<br>
-<br>
-The other big topic of the sprint was Armin and Maciej doing a lot of work on the
-<a class="reference external" href="https://bitbucket.org/pypy/pypy/commits/branch/unicode-utf8">unicode-utf8</a> branch: the goal of the branch is to always use UTF-8 as the
-internal representation of unicode strings. The advantages are various:
-<br>
-<blockquote>
-<ul class="simple">
-<li>decoding a UTF-8 stream is super fast, as you just need to check that the
-stream is valid;</li>
-<li>encoding to UTF-8 is almost a no-op;</li>
-<li>UTF-8 is always more compact representation than the currently
-used UCS-4. It's also almost always more compact than CPython 3.5 latin1/UCS2/UCS4 combo;</li>
-<li>smaller representation means everything becomes quite a bit faster due to lower cache pressure.</li>
-</ul>
-</blockquote>
-Before you ask: yes, this branch contains special logic to ensure that random
-access of single unicode chars is still O(1), as it is on both CPython and the
-current PyPy.<br>
-We also plan to improve the speed of decoding even more by using modern processor features, like SSE and AVX. Preliminary results show that decoding can be done 100x faster than the current setup.
-<br>
-<br>
-In summary, this was a long and profitable sprint, in which we achieved lots
-of interesting results. However, what we liked even more was the privilege of
-doing <a class="reference external" href="https://bitbucket.org/pypy/pypy/commits/a4307fb5912e">commits</a> from awesome places such as the top of Table Mountain:<br>
-<br>
-<blockquote class="twitter-tweet">
-<div dir="ltr" lang="en">
-Our sprint venue today <a href="https://twitter.com/hashtag/pypy?src=hash&amp;ref_src=twsrc%5Etfw">#pypy</a> <a href="https://t.co/o38IfTYmAV">pic.twitter.com/o38IfTYmAV</a></div>
-— Ronan Lamy (@ronanlamy) <a href="https://twitter.com/ronanlamy/status/915575026107240449?ref_src=twsrc%5Etfw">4 ottobre 2017</a></blockquote>
 
-
-<br>
-<table align="center" cellpadding="0" cellspacing="0" class="tr-caption-container" style="float: left; margin-right: 1em; text-align: left;"><tbody>
-<tr><td style="text-align: center;"><a href="https://foss.heptapod.net/pypy/extradoc/-/blob/branch/extradoc/sprintinfo/cape-town-2017/2017-10-04-155524.jpg" style="margin-left: auto; margin-right: auto;"><img border="0" height="360" src="https://bytebucket.org/pypy/extradoc/raw/extradoc/sprintinfo/cape-town-2017/2017-10-04-155524.jpg" width="640"></a></td></tr>
-<tr><td class="tr-caption" style="text-align: center;">The panorama we looked at instead of staring at cpyext code</td></tr>
-</tbody></table>
+<p>The first <em>interaction</em> with the PyPy team is actually <a href="https://www.mail-archive.com/pypy-dev@codespeak.net/msg01588.html">a couple of weeks earlier</a>:</p>
+<p><a class="glightbox" data-type="image" data-width="auto" data-height="auto" href="../../../03-my-first-oss-commit-turns-20-today/pypy-email.png" data-title="My first email to pypy-dev" data-desc-position="bottom"><img alt="My first email to pypy-dev" src="../../../03-my-first-oss-commit-turns-20-today/pypy-email.png"></a></p>
+<p>Sending that email was probably one of the best and most influential decisions of my
+life: after that I started to work on PyPy, participated in my first
+<a href="https://www.europython-society.org/europython/#europython-2006">EuroPython</a>, moved to
+Düsseldorf to continue working on PyPy, went back home, got my PhD, moved to Düsseldorf
+and back <em>again</em>, did many years of freelancing thanks to my OSS experience, spoke at
+many conferences, met hundreds of wonderful people and had countless beers with them,
+moved to Berlin to join Anaconda and then did the Germany-&gt;Italy route for the 3rd time.
+Phew, 20 years of life in a few lines!</p>
+<p>During my years in Berlin, I started <a href="https://github.com/spylang/spy">SPy</a> and met my
+wife.  Deciding what is the most important of these two facts is left as an exercise to
+the readers :).</p>
+<p>So yes, contributing to Open Source turned out to be not a bad decision.</p>
+<p><strong>Happy birthday, commit <code>1a086d45d9</code></strong> 🎉.</p>
 
 
 

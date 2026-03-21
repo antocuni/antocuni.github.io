@@ -359,6 +359,8 @@
       
         
       
+        
+      
     
     
       
@@ -392,6 +394,30 @@
             Archive
           </label>
           <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="archive/2026/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2026
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -772,6 +798,65 @@
       <header class="md-typeset">
         
       </header>
+      
+        <article class="md-post md-post--excerpt">
+  <header class="md-post__header">
+    
+    <div class="md-post__meta md-meta">
+      <ul class="md-meta__list">
+        <li class="md-meta__item">
+          <time datetime="2026-03-22 00:00:00+00:00">Mar 22, 2026</time></li>
+        
+          <li class="md-meta__item">
+            in
+            
+              <a href="category/post/" class="md-meta__link">Post</a></li>
+        
+        
+          
+          <li class="md-meta__item">
+            
+              2 min read
+            
+          </li>
+        
+      </ul>
+      
+    </div>
+  </header>
+  <div class="md-post__content md-typeset">
+    <h2 id="my-first-oss-commit-turns-20-today"><a class="toclink" href="2026/03/22/my-first-oss-commit-turns-20-today/">My first OSS commit turns 20 today</a></h2>
+<p>Some time ago I realized that it was 20 years since I started to contribute to
+Open Source. It's easy to remember, because I started to work on PyPy as part of my
+master's thesis and I graduated in 2006.</p>
+<p>So, I did a bit of archeology to find the <a href="https://github.com/pypy/pypy/commit/1a086d45d9">first commit</a>:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ cd ~/pypy/pypy &amp;&amp; git show 1a086d45d9 --no-patch
+<span style="color: #F1FA8C">commit 1a086d45d9</span>
+Author: Antonio Cuni &lt;anto.cuni@gmail.com&gt;
+Date:   Wed Mar 22 14:01:42 2006 +0000
+
+    Initial commit of the CLI backend
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">svn, hg, git</p>
+<p>Funny thing, the original commit was not in <code>git</code>, which was just a few months old
+at the time. In 2006 PyPy was using <code>subversion</code>, then a few years later <a href="/2010/12/14/pypy-migrates-to-mercurial/">migrated
+to mercurial</a>, and many years later
+<a href="https://pypy.org/posts/2023/12/pypy-moved-to-git-github.html">migrated to git</a>.</p>
+<p>I managed to find traces of the original <code>svn</code> commit in the archives of the
+<a href="https://marc.info/?l=pypy-svn&amp;m=118495688023240">pypy-svn</a> mailing list.</p>
+</div>
+
+    
+      <nav class="md-post__action">
+        <a href="2026/03/22/my-first-oss-commit-turns-20-today/">
+          Continue reading
+        </a>
+      </nav>
+    
+  </div>
+</article>
       
         <article class="md-post md-post--excerpt">
   <header class="md-post__header">
@@ -1252,62 +1337,6 @@ Python implementations: CPython, PyPy and GraalPython.</p>
     
       <nav class="md-post__action">
         <a href="2021/07/15/hpy-002-first-public-release/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2021-05-12 00:00:00+00:00">May 12, 2021</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="category/post/" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="hpy-python-language-summit"><a class="toclink" href="2021/05/12/hpy--python-language-summit/">HPy @ Python Language Summit</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://hpyproject.org/blog/posts/2021/05/hpy-python-language-summit/">HPy blog</a>.</p>
-</div>
-<p>Yesterday I had the privilege to give a talk about HPy
-(<a href="https://hpyproject.org/talks/2021/05/hpy-present-and-future.pdf">sildes</a>) at the
-<a href="https://us.pycon.org/2021/summits/language/">Python Language Summit 2021</a>.</p>
-<p>The organizers of the summit will soon publish a full report about the event
-(edit: now available
-<a href="https://pyfound.blogspot.com/2021/05/the-2021-python-language-summit.html">here</a>),
-but <a href="https://pyfound.blogspot.com/2021/05/the-2021-python-language-summit-hpy.html">for the HPy-specific
-part</a>,
-we got generally good feedback. Someone has a few concerns that if CPython is
-to change the API, HPy might not be going far enough. Others said that Python
-shouldn't wait for the "perfect" API if HPy can be the "good" one that helps it
-evolve.</p>
-<p>Everyone was open to have HPy-compatible wheels on PyPI, once the HPy
-Universal ABI stays relatively stable. Many people suggested that we should
-really write a PEP to propose HPy as a "semi-official" API for Python.</p>
-
-    
-      <nav class="md-post__action">
-        <a href="2021/05/12/hpy--python-language-summit/">
           Continue reading
         </a>
       </nav>
