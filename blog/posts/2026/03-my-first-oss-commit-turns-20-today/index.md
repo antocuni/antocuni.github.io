@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 date: 2026-03-22
 title: "My first OSS commit turns 20 today"
 categories:
