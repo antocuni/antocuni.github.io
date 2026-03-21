@@ -74,11 +74,48 @@ PATH when running autorun commands.
 import argparse
 import hashlib
 import os
+import pty
 import re
-import time
-ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m')
+import select
 import subprocess
+import time
 from pathlib import Path
+
+ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m')
+
+
+def run_in_pty(cmd: str, cwd, env) -> tuple[str, int]:
+    """Run *cmd* inside a pseudo-TTY so programs emit ANSI colour codes."""
+    master_fd, slave_fd = pty.openpty()
+    proc = subprocess.Popen(
+        cmd, shell=True, cwd=cwd, env=env,
+        stdin=slave_fd, stdout=slave_fd, stderr=slave_fd,
+    )
+    os.close(slave_fd)
+    chunks: list[bytes] = []
+    while True:
+        try:
+            r, _, _ = select.select([master_fd], [], [], 0.05)
+        except (ValueError, OSError):
+            break
+        if r:
+            try:
+                chunks.append(os.read(master_fd, 4096))
+            except OSError:
+                break
+        elif proc.poll() is not None:
+            # Drain any remaining output
+            try:
+                while True:
+                    chunks.append(os.read(master_fd, 4096))
+            except OSError:
+                pass
+            break
+    proc.wait()
+    os.close(master_fd)
+    raw = b''.join(chunks).decode('utf-8', errors='replace')
+    raw = raw.replace('\r\n', '\n').replace('\r', '\n')
+    return raw, proc.returncode
 
 from watchdog.events import FileSystemEventHandler, FileSystemEvent
 from watchdog.observers import Observer
@@ -92,7 +129,12 @@ EXTRA_PATH = [
     '/home/antocuni/anaconda/spy/venv/bin',
 ]
 
-_ENV = {**os.environ, 'PATH': ':'.join(EXTRA_PATH) + ':' + os.environ.get('PATH', '')}
+_ENV = {
+    **os.environ,
+    'PATH': ':'.join(EXTRA_PATH) + ':' + os.environ.get('PATH', ''),
+    'PAGER': 'cat',
+    'GIT_PAGER': 'cat',
+}
 
 
 
@@ -217,17 +259,7 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
             cmd = stripped[2:]
             print(f'  running ({cwd.name}/): {cmd}')
             try:
-                result = subprocess.run(
-                    cmd,
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    cwd=cwd,
-                    env=_ENV,
-                )
-                raw_output = result.stdout
-                if result.returncode != 0 and result.stderr:
-                    raw_output += result.stderr
+                raw_output, returncode = run_in_pty(cmd, cwd=cwd, env=_ENV)
             except Exception as exc:
                 raw_output = f'ERROR: {exc}\n'
             # Strip the local absolute path prefix so it doesn't leak into
