@@ -8,14 +8,14 @@ tags:
   - oss
   - pypy
   - spy
+og:
+  description: "A bit of software archaeology and a personal retrospective"
+  image: "og-pypy-email.png"
+  author: "Antonio Cuni"
 
 ---
 
 # My first OSS commit turns 20 today
-
-<meta property="og:title" content="My first OSS commit turns 20 today">
-<meta property="og:image" content="https://antocuni.eu/2026/03-my-first-oss-commit-turns-20-today/og-pypy-email.png">
-<meta name="author" content="Antonio Cuni">
 
 
 Some time ago I realized that it was 20 years since I started to contribute to
