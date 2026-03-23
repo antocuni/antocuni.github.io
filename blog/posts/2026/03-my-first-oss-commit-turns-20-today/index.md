@@ -32,7 +32,7 @@ Date:   Wed Mar 22 14:01:42 2006 +0000
 
     Funny thing, the original commit was not in `git`, which was just a few months old
     at the time. In 2006 PyPy was using `subversion`, then a few years later [migrated
-    to mercurial](/2010/12/14/pypy-migrates-to-mercurial/), and many years later
+    to mercurial](../../2010/12/pypy-migrates-to-mercurial-3308736161543832134.md), and many years later
     [migrated to git](https://pypy.org/posts/2023/12/pypy-moved-to-git-github.html).
 
     I managed to find traces of the original `svn` commit in the archives of the

@@ -9,7 +9,7 @@ tags:
 
 ---
 
-# Inside SPy🥸, part 1: Motivations and Goals
+# Inside SPy 🥸, part 1: Motivations and Goals
 
 This is the first of a series of posts in which I will try to give a deep explanation of
 [SPy](https://github.com/spylang/spy), including motivations, goals, rules of the

@@ -9,9 +9,9 @@ tags:
 
 ---
 
-<!-- spy git commit: e5a8d272 -->
+# Inside SPy 🥸, part 2: Language semantics
 
-# Inside SPy🥸, part 2: Language semantics
+<!-- spy git commit: e5a8d272 -->
 
 This is the second post of the *Inside SPy* series. The [first
 post](../../2025/10-spy-motivations-and-goals/index.md) was mostly about motivations and
@@ -262,6 +262,7 @@ Finally, we can build an executable:
 ```autorun
 $ spy build hello.spy
 [debug] build/hello
+
 $ ./build/hello
 Hello world!
 ```
@@ -485,6 +486,7 @@ def main() -> None:
 $ spy dynamic_dispatch.spy
 3
 hello world
+
 $ spy redshift dynamic_dispatch.spy
 def add(x: dynamic, y: dynamic) -> dynamic:
     return `operator::dynamic_add`(x, y)
