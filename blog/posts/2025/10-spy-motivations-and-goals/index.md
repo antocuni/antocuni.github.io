@@ -405,7 +405,7 @@ In the section "Why Python is slow", we listed three problems:
   3. cache unfriendliness
 
 The PyPy JIT actually solves (1) and (2) very well, by taking advantage of what we
-realized in [RealPython is a subset of Python](#real-python-is-a-subset-of-python): a
+realized in [RealPython is a subset of Python](#realpython-is-a-subset-of-python): a
 lot of the "crazy things" don't actually happen in practice, or happen very rarely. The
 essence is that it speculatively assumes conditions such as:
 
