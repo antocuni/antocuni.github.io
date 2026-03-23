@@ -4,6 +4,7 @@ import hashlib
 import logging
 import re
 import shutil
+import subprocess
 import warnings
 from pathlib import Path, PurePosixPath
 
@@ -182,6 +183,77 @@ def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
 
 
 # ---------------------------------------------------------------------------
+# SPy playground helpers (hardcoded for the 2026-03-spy-semantics post)
+# ---------------------------------------------------------------------------
+
+_PLAYGROUND_POST = 'posts/2026/03-spy-semantics/index.md'
+_PLAYGROUND_BASE_URL = (
+    'https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/'
+)
+_CREATE_SNIPPET_PY = Path(
+    '/home/antocuni/anaconda/spy/playground/create_snippet.py'
+)
+
+_TITLE_IN_INFO_RE = re.compile(r'\btitle=(?:"([^"]+)"|\'([^\']+)\'|(\S+))')
+
+# Matches python blocks that carry the autowrite attribute.
+_PLAYGROUND_BLOCK_RE = re.compile(
+    r'^(?P<fence>`{3,}|~{3,})python\s+(?P<attrs>[^\n]*\bautowrite\b[^\n]*)\n'
+    r'(?P<body>.*?)'
+    r'^(?P=fence)[ \t]*$',
+    re.MULTILINE | re.DOTALL,
+)
+
+
+def _playground_url(spy_file: Path) -> str:
+    result = subprocess.run(
+        ['python', str(_CREATE_SNIPPET_PY), str(spy_file),
+         '--url', _PLAYGROUND_BASE_URL],
+        capture_output=True, text=True, check=True,
+    )
+    return result.stdout.strip()
+
+
+def _process_playground_blocks(markdown, autorun_dir, redirect_list):
+    """Replace python+autowrite blocks with code block + Try yourself link."""
+    def replace(match):
+        fence = match.group('fence')
+        attrs = match.group('attrs')
+        body = match.group('body')
+
+        tm = _TITLE_IN_INFO_RE.search(attrs)
+        if not tm:
+            return match.group(0)
+        filename = tm.group(1) or tm.group(2) or tm.group(3)
+
+        clean_attrs = re.sub(r'\s*\bautowrite\b', '', attrs).strip()
+        new_fence = f'{fence}python {clean_attrs}' if clean_attrs else f'{fence}python'
+
+        spy_file = autorun_dir / filename
+        if spy_file.exists():
+            try:
+                pg_url = _playground_url(spy_file)
+            except subprocess.CalledProcessError:
+                pg_url = None
+        else:
+            pg_url = None
+
+        if pg_url:
+            redirect_list.append((filename, pg_url))
+            link = (
+                f'\n<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;">'
+                f'<a href="go/{filename}/" target="_blank">▶ Try it yourself</a>'
+                f'</p>\n'
+            )
+        else:
+            link = ''
+
+        return f'{new_fence}\n{body}{fence}\n{link}'
+
+    return _PLAYGROUND_BLOCK_RE.sub(replace, markdown)
+
+
+# ---------------------------------------------------------------------------
 # Plugin
 # ---------------------------------------------------------------------------
 
@@ -196,6 +268,9 @@ class MyPlugin(BasePlugin):
         # Files referenced by antocuni-popup blocks that need to be copied
         # to the built site. List of (src_abs_path, site_relative_path).
         self._popup_assets = []
+
+        # Playground redirects: list of (page_dest_dir, filename, playground_url).
+        self._playground_redirects = []
 
         print('hello from mkdocs_antocuni')
 
@@ -221,8 +296,19 @@ class MyPlugin(BasePlugin):
         markdown = re.sub(r'^(`{3,}|~{3,})spy\b', r'\1python', markdown,
                           flags=re.MULTILINE)
 
-        # Strip 'autowrite' attribute from fence info strings (it's only
-        # meaningful to autorun.py, not to pymdownx).
+        # For the playground post: inject "Try yourself" links and record
+        # redirects, then strip autowrite.  For all other pages: just strip.
+        if page.file.src_path == _PLAYGROUND_POST:
+            page_dest_dir = str(PurePosixPath(page.file.dest_uri).parent)
+            redirect_list: list[tuple[str, str]] = []
+            markdown = _process_playground_blocks(
+                markdown, page_src_dir / 'autorun', redirect_list,
+            )
+            for filename, pg_url in redirect_list:
+                self._playground_redirects.append((page_dest_dir, filename, pg_url))
+
+        # Strip any remaining 'autowrite' attributes (pages other than the
+        # playground post, or blocks where the spy file was missing).
         markdown = re.sub(
             r'^((?:`{3,}|~{3,})[^\n]*?)\s*\bautowrite\b[^\S\n]*',
             r'\1',
@@ -265,10 +351,26 @@ class MyPlugin(BasePlugin):
         return markdown
 
     def on_post_build(self, config):
-        """Copy popup asset files that mkdocs doesn't know about."""
+        """Copy popup assets and write playground redirect pages."""
         site_dir = Path(config['site_dir'])
         for src_abs, site_rel in self._popup_assets:
             if src_abs.exists():
                 dest = site_dir / site_rel
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src_abs, dest)
+
+        for page_dest_dir, filename, pg_url in self._playground_redirects:
+            redirect_html = (
+                '<!DOCTYPE html>\n'
+                '<html>\n'
+                '<head>\n'
+                f'<meta http-equiv="refresh" content="0; url={pg_url}">\n'
+                f'<link rel="canonical" href="{pg_url}">\n'
+                '</head>\n'
+                '<body></body>\n'
+                '</html>\n'
+            )
+            dest = site_dir / page_dest_dir / 'go' / filename / 'index.html'
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(redirect_html)
+        self._playground_redirects.clear()
