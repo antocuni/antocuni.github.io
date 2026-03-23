@@ -215,11 +215,14 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
             print(f'  wrote {out_path}')
 
     # --- pass 2: autorun blocks (may modify the .md file) ---
-    # Iterate in reverse so that inserting lines doesn't shift earlier indices.
     blocks = list(parse_blocks(lines))
     modified = False
 
-    for start, end, info, body_lines in reversed(blocks):
+    # First pass: run commands in forward order (so earlier blocks execute first).
+    # Collect (start, end, info, new_body) for blocks that need updating.
+    pending: list[tuple[int, int, str, list[str]]] = []
+
+    for start, end, info, body_lines in blocks:
         if info not in ('autorun', 'autorun x'):
             continue
         if not body_lines:
@@ -274,7 +277,10 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
                 output_lines[-1] += '\n'
             new_body.extend(output_lines)
 
-        # Replace the block body in-place (start+1 .. end are the body lines).
+        pending.append((start, end, info, new_body))
+
+    # Second pass: apply replacements in reverse order so earlier indices stay valid.
+    for start, end, info, new_body in reversed(pending):
         lines[start + 1:end] = new_body
         if info == 'autorun x':
             lines[start] = lines[start].replace('autorun x', 'autorun', 1)
