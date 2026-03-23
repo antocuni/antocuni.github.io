@@ -10,7 +10,7 @@ tags:
   - spy
 og:
   description: "A bit of software archaeology and a personal retrospective"
-  image: "og-pypy-email.png"
+  image: "og-commit.png"
   author: "Antonio Cuni"
 
 ---

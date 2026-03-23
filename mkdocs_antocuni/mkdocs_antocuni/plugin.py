@@ -284,8 +284,18 @@ class MyPlugin(BasePlugin):
             dest_uri = img_file.dest_uri.removeprefix('./')
             og_meta['image'] = f'{site_url}/{dest_uri}'
 
-        tags = '\n'.join(_meta_tag(k, v) for k, v in og_meta.items())
-        return output.replace('</head>', f'{tags}\n</head>', 1)
+        og_tags = '\n'.join(_meta_tag(k, v) for k, v in og_meta.items())
+
+        twitter_map = {'title': 'title', 'description': 'description', 'image': 'image'}
+        twitter_card = 'summary_large_image' if og_meta.get('image') else 'summary'
+        twitter_tags = f'<meta name="twitter:card" content="{twitter_card}">\n'
+        twitter_tags += '\n'.join(
+            f'<meta name="twitter:{tw_key}" content="{og_meta[og_key]}">'
+            for og_key, tw_key in twitter_map.items()
+            if og_key in og_meta
+        )
+
+        return output.replace('</head>', f'{og_tags}\n{twitter_tags}\n</head>', 1)
 
     def on_post_build(self, config):
         """Copy popup asset files that mkdocs doesn't know about."""
