@@ -183,10 +183,9 @@ def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
 
 
 # ---------------------------------------------------------------------------
-# SPy playground helpers (hardcoded for the 2026-03-spy-semantics post)
+# SPy playground helpers
 # ---------------------------------------------------------------------------
 
-_PLAYGROUND_POST = 'posts/2026/03-spy-semantics/index.md'
 _PLAYGROUND_BASE_URL = (
     'https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/'
 )
@@ -296,9 +295,9 @@ class MyPlugin(BasePlugin):
         markdown = re.sub(r'^(`{3,}|~{3,})spy\b', r'\1python', markdown,
                           flags=re.MULTILINE)
 
-        # For the playground post: inject "Try yourself" links and record
-        # redirects, then strip autowrite.  For all other pages: just strip.
-        if page.file.src_path == _PLAYGROUND_POST:
+        # For pages with playground_links: inject "Try yourself" links and
+        # record redirects, then strip autowrite.  For all other pages: just strip.
+        if page.meta.get('antocuni', {}).get('playground_links'):
             page_dest_dir = str(PurePosixPath(page.file.dest_uri).parent)
             redirect_list: list[tuple[str, str]] = []
             markdown = _process_playground_blocks(
