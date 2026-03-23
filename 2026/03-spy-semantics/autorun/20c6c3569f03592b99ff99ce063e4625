@@ -1,9 +1,0 @@
-[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
-    [00mprint_i32[00m([35;01m`blue_generic::add[i32]::impl`[00m([33;01m2[00m, [33;01m3[00m))
-    [00mprint_str[00m([35;01m`blue_generic::add[str]::impl`[00m([32;01m'hello '[00m, [32;01m'world'[00m))
-
-[34;01mdef[00m [35;01m`blue_generic::add[i32]::impl`[00m(a: [35;01mi32[00m, b: [35;01mi32[00m) -> [35;01mi32[00m:
-    [34;01mreturn[00m a + b
-
-[34;01mdef[00m [35;01m`blue_generic::add[str]::impl`[00m(a: [35;01mstr[00m, b: [35;01mstr[00m) -> [35;01mstr[00m:
-    [34;01mreturn[00m [35;01m`operator::str_add`[00m(a, b)

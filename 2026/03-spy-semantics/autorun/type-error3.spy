@@ -1,4 +1,0 @@
-
-def main() -> None:
-    x = 2 + "hello"
-    print(x)
