@@ -10,6 +10,9 @@ tags:
 links:
 - Inside SPy, part 1: posts/2025/10-spy-motivations-and-goals/index.md
 
+antocuni:
+  playground_links: true
+
 ---
 
 # Inside SPy 🥸, part 2: Language semantics
@@ -151,7 +154,7 @@ interpreter**.
     That said, the long term goal for SPy's interpreter is to have performance
     comparable to CPython.
 
-    I/n the very early days of the project, SPy was bytecode based. Then
+    In the very early days of the project, SPy was bytecode based. Then
     [PR #4](https://github.com/spylang/spy/pull/4) switched to the AST interpreter and we
     never looked back. Having an AST-based IR makes it **much** simpler to implement
     [Redshifting](#redshifting) and the C backend.
@@ -189,7 +192,7 @@ After `import`, we can run the code in three different modes:
 
     At this stage we are trying to optimize for time to market. Emitting C code is much
     simpler, easier to develop and easier to debug, while still getting performance which
-    are comparable or better than LLVM.
+    are comparable to LLVM.
 
     Moreover, by using C as the commond ground we automatically have lots of great
     existing tools at our disposal, like debuggers, profilers, build systems, etc.  And
@@ -201,15 +204,16 @@ After `import`, we can run the code in three different modes:
 From the point of view of the user, SPy code runs in three distinct **execution
 phases**:
 
-1. Import time: this is when we run all the module-level code, including global variable
-   initializers, decorators, metaclasses, etc.
+1. **Import time**: this is when we run all the module-level code, including global
+   variable initializers, decorators, metaclasses, etc.. After this phase, **all the
+   globals are frozen**.
 
-2. Redshift: during this phase we apply partial evaluation to all expressions that are safe
-   to be evaluated eagerly.  This is an optional phase which happens only during
-   compilation or when explicitly requested.  The presence/absence of redshift **should
-   not have any visible effects** on the behavior of the program.
+2. **Redshift**: during this phase we apply partial evaluation to all expressions that
+   are safe to be evaluated eagerly.  This is an optional phase which happens only
+   during compilation or when explicitly requested.  The presence/absence of redshift
+   **should not have any visible effects** on the behavior of the program.
 
-3. Runtime: the actual execution of the program, starting from a `main` function.
+3. **Runtime**: the actual execution of the program, starting from a `main` function.
 
 In **interpreted mode**, the interpreter runs "Import time" and then "Runtime".
 
@@ -237,6 +241,14 @@ We can run it in interpreted mode, as we would do in Python:
 $ spy hello.spy
 Hello world!
 ```
+
+!!! note "The SPy playground"
+
+    The [SPy playground](https://spylang.github.io/spy) is a PyScript based app which
+    you can use to try SPy directly in the browser.  The version linked in this box is
+    the official one which tracks the latest git `main` branch. However, all the code
+    snippets on this page have a `Try it yourself` button which opens the example into a
+    SPy playground pinned to commit `e5a8d272`.
 
 We can do redshifting and inspect the transformed version. By default `spy redshift` (or
 `spy rs`) have a pretty printer which shows typed AST in source code form, which is
@@ -286,8 +298,8 @@ void spy_hello$main(void) {
 ```
 
 
-By default, it compiles to debug mode for the `native` platform, but there are flags to
-switch to `--release` mode and to target a different platform.
+By default, it compiles to debug mode for the `native` platform, but you can use
+`--release` to switch to release mode and `--target` to select a different platform.
 
 You can also use `spy build -x` to compile **and** automatically execute the resulting
 binary.
@@ -356,8 +368,8 @@ $ spy type-inference.spy
 ## Operator dispatch
 
 In SPy, as in Python, almost every syntactical form is turned into an operator call. So
-e.g. `+` is equivalent to `operator.add`, `a.b` is equivalent to `getattr`, etc., and in
-turn they call the various `__add__`, `__getattr__`, etc.
+e.g. `+` is equivalent to `operator.add`, `a.b` is equivalent to `getattr`, and in turn
+they call the various `__add__`, `__getattr__`, etc.
 
 Whereas in Python operator dispatch happens dynamically, in SPy it happens
 statically. An example if worth 1000 words:
@@ -517,7 +529,7 @@ are **red**.  Examples of **blue** expressions are:
   3. function calls if the **target function is known** at compile time, it's **pure**,
      and all the arguments are blue;
 
-  4. function call which are explicitly marked as `@blue`.
+  4. function calls which are explicitly marked as `@blue`.
 
 Examples of **red** expressions are:
 
@@ -598,12 +610,14 @@ url: autorun/build/rs1_rs.html
 During redshifting we find all the subtrees which are fully blue, and replace them with
 a single constant node containing the result.  In this case, the whole subtree `2 * 3`
 has been replaced by a single node `6`. This also explain **why it's called
-redshifting**: because the resulting tree is "less blue" and thus "more red".
+redshifting**: because the resulting tree is "less blue" and the averge color "shifts to
+the red".
 
 Moreover, the remaining BinOp `x + 6` has been converted into a concrete call to
-`i32_add`. Note that the node for `i32_add` is blue, because the **callee** is constant
-and known at compile time, but the `Call` itself is red because the function will be
-called at runtime.
+`i32_add` as we saw in the [Operator Dispatch](#operator-dispatch) section above. Note
+that the node for `i32_add` is blue, because the **callee** is constant and known at
+compile time, but the `Call` itself is red because the function will be called at
+runtime.
 
 
 ## `@blue` functions
@@ -665,7 +679,20 @@ def main() -> None:
 completely removed from the redshifted output and it will never be seen by the C
 backend. What is left after redshifting is just the `main` function with constant value.
 
+!!! note "Is the compiler Turing complete?"
+
+    In short: yes. `@blue` function can run arbitrary code, and thus potentially not
+    even terminate.  From the purest theoretical Computer Science point of view, this is
+    A Bad Thing.  However, Python shows that in practice it's less of a problem than you
+    would think: after all, in Python, "import time" is also Turing complete,
+
+    One possible way to deal with it is to give a certain amount of "computing power" to
+    use use during import time and redshift: each operation decreaes the remaining power
+    by one, if it reaches zero we abort.  However, we didn't feel the need to do that so
+    far.
+
 Things become more interesting when we create closures:
+
 
 ```python title="adder.spy" autowrite
 @blue
@@ -723,7 +750,7 @@ def `adder::make_adder::add#2`(x: i32) -> i32:
 ```
 
 Each invocation of `make_adder` creates a *new* specialized copy of `add`, each bound to
-a different value; Each version is given an unique FQN.
+a different value; each version is given an unique Fully Qualified Name (FQN).
 
 `add5` and `add7` are created at module level, while `add9` is created inside the
 `main`, but the end result is the same.  It's also worth to note that the second call to
@@ -772,9 +799,8 @@ int32_t spy_adder$make_adder$add$2(int32_t x) {
 ```
 
 As in Python, nested function can access names defined in the outer scope. If the outer
-scope is a `@blue` function, those names are automatically blue.
-
-We can see it clearly by inspecting the AST of the nested `add`: the `n` node is blue.
+scope is a `@blue` function, those names are automatically blue.  We can see it clearly
+by inspecting the AST of the nested `add`: the `n` node is blue.
 
 ```autorun
 $ spy colorize -f html adder.spy
@@ -808,6 +834,29 @@ def main() -> None:
     print(add_str("hello ", "world"))
 ```
 
+!!! note "Why `add` doesn't have a return type?"
+
+    Type annotations of parameters and return type of `@blue` functions are
+    **optional**. If they are specified, then they are checked. If they are omitted,
+    they default to `dynamic`.  So in the example above, if we try to call
+    `add("hello")` we get a type error, but `add` can return an object of any type.
+
+    This is just a pragmatic choice: when you use `@blue` function to do
+    metaprogramming, the types become quickly very complex and writing the correct types
+    become harder than just writing the code.
+
+    If you have ever tried to write a non-trivial decorator in Python, you know the pain
+    of spelling `typing.Callable[...stuff stuff stuff...]`. By defaulting to `dynamic`,
+    SPy removes the need of that pain, **without compromising on type safety**: the
+    signature of the function says `dynamic`, but since it's blue, the **concrete**
+    value returned by each single invocation is fully known to the compiler. This means
+    that if you do e.g. `add(int) + "hello"`, you get the appropriate **compile time**
+    `TypeError` because you cannot add a function and a string.
+
+    This is very different to what happens with Python type checkers, which stop doing
+    any type checking on values annotated as `Any`.
+
+
 Again, it works as expected:
 
 ```autorun
@@ -836,11 +885,11 @@ def main() -> None:
 ```
 
 This is how SPy does **generics**: a generic function is a `@blue` function which take
-one or more types, and create a specialized nested function (same for generic types,
-which we will see later).
+one or more types and/or values, and create a specialized nested function (same for
+generic types, which we will see later in the series).
 
-However, we would like to use square brackets for generics, for compatibility with
-Python and because they look nicer. We can achieve that by using the decorator
+However, we would like to write `add[int]` instead of `add(int)`, because this is the
+way generics are normally spelled in Python. We can achieve that by using the decorator
 `@blue.generic`:
 
 ```python title="add_T2.spy" autowrite
@@ -929,7 +978,7 @@ x = opimpl(a, b)
 The trick is that `STATIC_TYPE` and `ADD` are both `@blue` functions, so during
 redshifting they are partially evaluated away, leaving just `opimpl(a, b)`.
 
-We can even call `operator.ADD` manually:
+Normally `operator.ADD` is automaticaly called by the interpreter, but we can also call it manually:
 ```python title="op1.spy" autowrite
 from operator import ADD
 
@@ -948,8 +997,7 @@ $ spy op1.spy
 
 In reality, `ADD` doesn't receive the *types* of the operand: it receive objects which
 *describes* the operands: this description include the static type, but also e.g. the
-source code location of the expression, the color and the concrete value if it's
-`blue`.
+source code location of the expression, the color and the concrete value if it's `blue`.
 
 These "argument description" objects are called **meta args**. A function which takes
 meta args end returns an opimpl is a **meta function**.
@@ -1048,9 +1096,38 @@ This happens because all `@blue` calls are evaluated eagerly during redshifting,
 including the implicit `operator.ADD`.
 
 This also means that we can **programmatically generated compilation errors** by raising
-the appropriate exceptions from `@blue` functions.
+the appropriate exceptions from `@blue` functions:
 
-XXX write an example
+```python title="smallstring.spy" autowrite
+@blue.generic
+def SmallString(size: int):
+    if size > 32:
+        raise StaticError("SmallString must be at most 32 chars")
+    return str # just kidding :)
+
+def say_hello(name: SmallString[64]) -> None:
+    print(name)
+
+def main() -> None:
+    pass
+```
+
+```autorun
+$ spy build smallstring.spy
+Traceback (most recent call last):
+  * [module] smallstring at /.../autorun/smallstring.spy:7
+  | def say_hello(name: SmallString[64]) -> None:
+  |                     |_____________|
+  * smallstring::SmallString at /.../autorun/smallstring.spy:4
+  |         raise StaticError("SmallString must be at most 32 chars")
+  |         |_______________________________________________________|
+
+StaticError: SmallString must be at most 32 chars
+
+```
+
+Note that it's a real **compile time** error, as it is raised at `build` time even if
+`say_hello` it's never called.
 
 
 ## Powerful metaprogramming with `@blue` functions
@@ -1058,7 +1135,7 @@ XXX write an example
 We can do arbitrary operations on blue values, and we have the full power of the
 language at blue time.  This makes it possible to write very interesting code: for
 example, this is a revised version of `make_adder`, which works for *arbitrary types*:
-the blue function dynamically get the type `T` of the argument and uses it in the
+the blue function dynamically get the type `T` of the argument and then uses it in the
 signature of the nested functon:
 
 ```python title="meta1.spy" autowrite
@@ -1074,16 +1151,26 @@ add_world = make_adder(" world")
 add5 = make_adder(5)
 
 def main() -> None:
+    print(STATIC_TYPE(add_world))
     print(add_world("hello"))
+    print("---")
+    print(STATIC_TYPE(add5))
     print(add5(2))
 
 ```
 
 ```autorun
 $ spy meta1.spy
+<spy type 'def(str) -> str'>
 hello world
+---
+<spy type 'def(i32) -> i32'>
 7
+```
 
+Redshifted version:
+
+```autorun
 $ spy redshift meta1.spy
 add_world = `meta1::make_adder::add`
 add5 = `meta1::make_adder::add#1`
@@ -1095,7 +1182,10 @@ def `meta1::make_adder::add#1`(x: i32) -> i32:
     return x + 5
 
 def main() -> None:
+    print_str("<spy type 'def(str) -> str'>")
     print_str(`meta1::make_adder::add`('hello'))
+    print_str('---')
+    print_str("<spy type 'def(i32) -> i32'>")
     print_i32(`meta1::make_adder::add#1`(2))
 ```
 
