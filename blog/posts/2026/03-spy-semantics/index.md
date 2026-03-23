@@ -177,9 +177,7 @@ are imported solely inside function bodies (and even if those functions are neve
 executed).
 
 This is a big departure from CPython semantics, but it is also an essential part to
-enable many important features of SPy. We will talk more about it in the [relevant
-section](...).
-
+enable many important features of SPy. We will talk more about it later in this series.
 
 After `import`, we can run the code in three different modes:
 
