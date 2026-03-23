@@ -7,6 +7,9 @@ categories:
 tags:
   - spy
 
+links:
+- Inside SPy, part 2: posts/2026/03-spy-semantics/index.md
+
 ---
 
 # Inside SPy 🥸, part 1: Motivations and Goals

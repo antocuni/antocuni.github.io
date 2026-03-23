@@ -1,11 +1,14 @@
 ---
 draft: true
-date: 2026-03-16
+date: 2026-03-25
 title: "Inside SPy, part 2: Language semantics"
 categories:
   - Post
 tags:
   - spy
+
+links:
+- Inside SPy, part 1: posts/2025/10-spy-motivations-and-goals/index.md
 
 ---
 
