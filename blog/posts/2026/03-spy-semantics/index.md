@@ -21,10 +21,11 @@ antocuni:
 
 This is the second post of the *Inside SPy* series. The [first
 post](../../2025/10-spy-motivations-and-goals/index.md) was mostly about motivations and
-goals of SPy. This post will cover more in detail the semantics of SPy, including the
-parts which makes it different that CPython.
+goals of SPy. This post will cover in more detail the semantics of SPy, including the
+parts which makes it different from CPython.
 
-XXX write something more here.
+We will talk about phases of execution, *colors*, redshifting, the very peculiar way
+SPy implements static typing, and we will start to dive into metaprogramming.
 
 !!! Success ""
     Before diving in, I want to express my gratitude to my employer,
@@ -35,6 +36,13 @@ XXX write something more here.
 <!-- more -->
 
 ## Motivation and goals, recap
+
+!!! warning "Shameless plug: give SPy a star ⭐"
+
+    I admit I never cared much about GitHub stars, but it looks like nowadays it's what
+    you need to be [considered
+    important](https://claude.com/contact-sales/claude-for-oss). We are at 678 stars at
+    the moment of writing, [let's try](https://github.com/spylang/spy) to get to 5000!
 
 [Part 1](../../2025/10-spy-motivations-and-goals/index.md) describes motivations and
 goals in great detail, but let's do a quick recap.
