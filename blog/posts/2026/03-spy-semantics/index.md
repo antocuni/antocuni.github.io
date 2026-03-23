@@ -1278,3 +1278,26 @@ interesting examples later in the series.
     happens at... well, compilation time. In SPy, `@blue` functions are evaluated by the
     interpreter, with all the usual advantages. For example, you can totally insert a
     `breakpoint()` in a `@blue` function to do step-by-step debugging.
+
+
+## Next steps
+
+There is still a lot to talk about, but this post is already too long. In the next
+post(s) of the series we will talk about things like:
+
+  - compile-time decorators;
+
+  - advanced metaprogramming patters;
+
+  - blue-time support for `__dunder__` methods, including `__getattr__`, `__setattr__`
+    and the descriptor protocol;
+
+  - low-level memory management and the `unsafe` module;
+
+  - custom types and `@struct`;
+
+  - how to use all of this to build zero costs high level abstractions from low-level
+    constructs.
+
+For those who are curious, I suggest to have a look at the
+[stdlib](https://github.com/spylang/spy/tree/main/stdlib). In particular, the builtin types [`list`](https://github.com/spylang/spy/blob/e5a8d27282b7825031ca2134aef92e6fba649393/stdlib/_list.spy), [`dict`](https://github.com/spylang/spy/blob/e5a8d27282b7825031ca2134aef92e6fba649393/stdlib/_dict.spy) and [`tuple`](https://github.com/spylang/spy/blob/e5a8d27282b7825031ca2134aef92e6fba649393/stdlib/_tuple.spy) are implemented **in pure SPy**.
