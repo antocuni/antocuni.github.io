@@ -10,25 +10,18 @@ USAGE
 BLOCK TYPES
 -----------
 
-1. FILENAME BLOCKS
-   Any fenced block whose first line is a comment of the form:
+1. AUTOWRITE BLOCKS
+   Any fenced block whose info string contains "autowrite" and a title= attribute:
 
-       # filename: hello.spy
-
-   The rest of the block content is written to:
-       <md_dir>/examples/<filename>
-
-   The examples/ directory is created if it doesn't exist.  The file is only
-   (re)written when its content has actually changed.
-
-   Example:
-
-       ```python
-       # filename: hello.spy
-
+       ```spy title="hello.spy" autowrite
        def main() -> None:
            print("Hello world!")
        ```
+
+   The block content is written to:
+       <md_dir>/autorun/<title>
+
+   The file is only (re)written when its content has actually changed.
 
 2. AUTORUN BLOCKS
    Fenced blocks with the info string "autorun".  Each line starting with
@@ -184,7 +177,8 @@ def parse_blocks(lines: list[str]):
 # Per-file processing
 # ---------------------------------------------------------------------------
 
-FILENAME_RE = re.compile(r'^#\s*filename:\s*(\S+)')
+AUTOWRITE_RE = re.compile(r'\bautowrite\b')
+TITLE_IN_INFO_RE = re.compile(r'\btitle=(?:"([^"]+)"|\'([^\']+)\'|(\S+))')
 
 
 def process_md_file(md_path: Path, force: bool = False) -> bool:
@@ -200,16 +194,16 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
     autorun_dir = md_path.parent / 'autorun'
 
     # --- pass 1: extract filename blocks (read-only w.r.t. the .md file) ---
-    for _start, _end, _info, body_lines in parse_blocks(lines):
-        if not body_lines:
+    for _start, _end, info, body_lines in parse_blocks(lines):
+        if not AUTOWRITE_RE.search(info):
             continue
-        m = FILENAME_RE.match(body_lines[0])
-        if not m:
+        tm = TITLE_IN_INFO_RE.search(info)
+        if not tm:
             continue
-        filename = m.group(1)
+        filename = tm.group(1) or tm.group(2) or tm.group(3)
         autorun_dir.mkdir(exist_ok=True)
         out_path = autorun_dir / filename
-        file_content = ''.join(body_lines[1:])
+        file_content = ''.join(body_lines)
         if not out_path.exists() or out_path.read_text() != file_content:
             out_path.write_text(file_content)
             print(f'  wrote {out_path}')

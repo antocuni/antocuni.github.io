@@ -217,6 +217,19 @@ class MyPlugin(BasePlugin):
         """Replace custom fenced blocks with HTML."""
         page_src_dir = Path(page.file.abs_src_path).parent
 
+        # spy blocks: highlight as Python
+        markdown = re.sub(r'^(`{3,}|~{3,})spy\b', r'\1python', markdown,
+                          flags=re.MULTILINE)
+
+        # Strip 'autowrite' attribute from fence info strings (it's only
+        # meaningful to autorun.py, not to pymdownx).
+        markdown = re.sub(
+            r'^((?:`{3,}|~{3,})[^\n]*?)\s*\bautowrite\b[^\S\n]*',
+            r'\1',
+            markdown,
+            flags=re.MULTILINE,
+        )
+
         # autorun blocks
         autorun_dir = page_src_dir / 'autorun'
         if autorun_dir.is_dir():

@@ -226,9 +226,7 @@ always executed "at compile time".
 
 Thus, this is the hello world in SPy:
 
-```python
-# filename: hello.spy
-
+```python title="hello.spy" autowrite
 def main() -> None:
     print("Hello world!")
 ```
@@ -281,7 +279,7 @@ int main(void) {
     spy_hello$main();
     return 0;
 }
-#line SPY_LINE(2, 18)
+#line SPY_LINE(1, 18)
 void spy_hello$main(void) {
     spy_builtins$print_str(&SPY_g_str0 /* 'Hello world!' */);
 }
@@ -300,8 +298,7 @@ In SPy, **type annotations are always enforced**. This is probably the biggest d
 from CPython semantics, which explicitly ignore type annotations at runtime. After all,
 the **S** stands for static :).
 
-```python
-# filename: type-error1.spy
+```python title="type-error1.spy" autowrite
 def main() -> None:
     x: int = "hello"
     print(x)
@@ -333,8 +330,7 @@ optional for variables.  In that case, we do a very limited form of type inferen
 automatically declare the variable using the type of its initializer.  We can use the
 special function `STATIC_TYPE` to inspect it:
 
-```python
-# filename: type-inference.spy
+```python title="type-inference.spy" autowrite
 def main() -> None:
     x = "hello"
     print(STATIC_TYPE(x))
@@ -366,8 +362,7 @@ turn they call the various `__add__`, `__getattr__`, etc.
 Whereas in Python operator dispatch happens dynamically, in SPy it happens
 statically. An example if worth 1000 words:
 
-```python
-# filename: op_dispatch.spy
+```python title="op_dispatch.spy" autowrite
 def add_int(x: int, y: int) -> int:
     return x + y
 
@@ -412,8 +407,7 @@ dynamic types of expression:
   - the **dynamic type** (or just the "type") is the actual type of the concrete object
     in memory.
 
-```python
-# filename: static-dynamic-types.spy
+```python title="static-dynamic-types.spy" autowrite
 def print_types(x: object) -> None:
     print(STATIC_TYPE(x))
     print(type(x))
@@ -437,8 +431,7 @@ This has interesting consequences, and it's another big departure from Python. T
 example below fails because the dispatch of `+` happen on the static type, which is
 `object`:
 
-```python
-# filename: type-error2.spy
+```python title="type-error2.spy" autowrite
 def add(x: object, y: object) -> object:
     return x + y
 
@@ -475,8 +468,7 @@ TypeError: cannot do `object` + `object`
 It is possible to explicitly opt-in for dynamic dispatch by using the special type
 `dynamic`:
 
-```python
-# filename: dynamic_dispatch.spy
+```python title="dynamic_dispatch.spy" autowrite
 def add(x: dynamic, y: dynamic) -> dynamic:
     return x + y
 
@@ -533,8 +525,7 @@ Examples of **red** expressions are:
 
 Let's start with a silly example:
 
-```python
-# filename: rs1.spy
+```python title="rs1.spy" autowrite
 def foo(x: int) -> int:
     return x + 2 * 3
 ```
@@ -628,8 +619,7 @@ interpreter** during redshifting.
 In the next sections we will see how they enable interesting metaprogramming patterns,
 but let's start from a simple example first:
 
-```python
-# filename: pi.spy
+```python title="pi.spy" autowrite
 from math import fabs
 
 @blue
@@ -677,9 +667,7 @@ backend. What is left after redshifting is just the `main` function with constan
 
 Things become more interesting when we create closures:
 
-```python
-# filename: adder.spy
-
+```python title="adder.spy" autowrite
 @blue
 def make_adder(n: int):
     def add(x: int) -> int:
@@ -757,26 +745,26 @@ $ spy build adder.spy
 [debug] build/adder
 
 $ tail -24 build/src/adder.c | pygmentize -l C -f terminal
-#line SPY_LINE(4, 18)
+#line SPY_LINE(3, 18)
 int32_t spy_adder$make_adder$add(int32_t x) {
     return x + 5;
     abort(); /* reached the end of the function without a `return` */
 }
-#line SPY_LINE(4, 23)
+#line SPY_LINE(3, 23)
 int32_t spy_adder$make_adder$add$1(int32_t x) {
     return x + 7;
     abort(); /* reached the end of the function without a `return` */
 }
-#line SPY_LINE(12, 28)
+#line SPY_LINE(11, 28)
 void spy_adder$main(void) {
-    #line SPY_LINE(14, 30)
+    #line SPY_LINE(13, 30)
     spy_builtins$print_i32(spy_adder$make_adder$add(10));
     spy_builtins$print_i32(spy_adder$make_adder$add$1(10));
     spy_builtins$print_i32(spy_adder$make_adder$add$2(10));
-    #line SPY_LINE(19, 34)
+    #line SPY_LINE(18, 34)
     spy_builtins$print_i32(spy_adder$make_adder$add(10));
 }
-#line SPY_LINE(4, 37)
+#line SPY_LINE(3, 37)
 int32_t spy_adder$make_adder$add$2(int32_t x) {
     return x + 9;
     abort(); /* reached the end of the function without a `return` */
@@ -804,9 +792,7 @@ Types are first order values as in Python, and thus they can be freely manipulat
 `@blue` functions. Here, we build a different type-specialized versions of an `add`
 function:
 
-```python
-# filename: add_T1.spy
-
+```python title="add_T1.spy" autowrite
 @blue
 def add(T: type):
     def impl(a: T, b: T) -> T:
@@ -857,9 +843,7 @@ However, we would like to use square brackets for generics, for compatibility wi
 Python and because they look nicer. We can achieve that by using the decorator
 `@blue.generic`:
 
-```python
-# filename: add_T2.spy
-
+```python title="add_T2.spy" autowrite
 @blue.generic
 def add(T: type):
     def impl(a: T, b: T) -> T:
@@ -946,8 +930,7 @@ The trick is that `STATIC_TYPE` and `ADD` are both `@blue` functions, so during
 redshifting they are partially evaluated away, leaving just `opimpl(a, b)`.
 
 We can even call `operator.ADD` manually:
-```python
-# filename: op1.spy
+```python title="op1.spy" autowrite
 from operator import ADD
 
 def main() -> None:
@@ -986,8 +969,7 @@ of a subsequent blog post.
 
 Now, if we try to add two unrelated things, we get an error:
 
-```python
-# filename: op2.spy
+```python title="op2.spy" autowrite
 def main() -> None:
     x = 1 + "hello"
     print(x)
@@ -1023,9 +1005,7 @@ SPy, **compilation errors are errors which are raised from @blue functions**.
 Now, consider this other example. If we run in the interpreter, it works fine because
 `add` is never called:
 
-```python
-# filename: op3.spy
-
+```python title="op3.spy" autowrite
 def add(x: int, y: str) -> int:
     return x + y
 
@@ -1044,20 +1024,20 @@ However, if we try to `build` or `redshift` it, we get an error:
 $ spy redshift op3.spy
 Static error during redshift:
 Traceback (most recent call last):
-  * [redshift] op3::add at /.../autorun/op3.spy:3
+  * [redshift] op3::add at /.../autorun/op3.spy:2
   |     return x + y
   |            |___|
 
 TypeError: cannot do `i32` + `str`
-  | /.../autorun/op3.spy:3
+  | /.../autorun/op3.spy:2
   |     return x + y
   |            ^ this is `i32`
 
-  | /.../autorun/op3.spy:3
+  | /.../autorun/op3.spy:2
   |     return x + y
   |                ^ this is `str`
 
-  | /.../autorun/op3.spy:3
+  | /.../autorun/op3.spy:2
   |     return x + y
   |            |___| operator::ADD called here
 
@@ -1081,9 +1061,7 @@ example, this is a revised version of `make_adder`, which works for *arbitrary t
 the blue function dynamically get the type `T` of the argument and uses it in the
 signature of the nested functon:
 
-```python
-# filename: meta1.spy
-
+```python title="meta1.spy" autowrite
 @blue
 def make_adder(y: dynamic):
     T = type(y)
@@ -1137,9 +1115,7 @@ generic type `T`? For example, for ints it's `0`, but for strings is `""`.
 
 This is a possible solution:
 
-```python
-# filename: meta2.spy
-
+```python title="meta2.spy" autowrite
 @blue.generic
 def zero(T):
     "Return the 'zero' value for the given type"
