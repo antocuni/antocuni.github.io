@@ -1142,7 +1142,7 @@ We can do arbitrary operations on blue values, and we have the full power of the
 language at blue time.  This makes it possible to write very interesting code: for
 example, this is a revised version of `make_adder`, which works for *arbitrary types*:
 the blue function dynamically get the type `T` of the argument and then uses it in the
-signature of the nested functon:
+signature of the nested function:
 
 ```python title="meta1.spy" autowrite
 @blue
