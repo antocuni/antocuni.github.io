@@ -101,7 +101,7 @@ Now, time to dive deeper into the language.
 
 !!! note "SPy version"
 
-    At the moment of writing SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit e5a8d272](https://github.com/spylang/spy/tree/e5a8d272)
+    At the moment of writing, SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit e5a8d272](https://github.com/spylang/spy/tree/e5a8d272)
 
 ## Compilation pipeline
 
@@ -144,20 +144,17 @@ interpreter**.
 
     Why using the AST instead of a bytecode as CPython does?
 
-    The main advantage of direct AST interpretation is that it's simpler and easier to
-    implement; bytecode-based execution is more complex because you need both the
+    In the very early days of the project, SPy was bytecode based. Then
+    [PR #4](https://github.com/spylang/spy/pull/4) switched to the AST interpreter.
+
+    The main advantage is that it's simpler and easier to implement, especially
+    redshifting; bytecode-based execution is more complex because you need both the
     bytecode compiler and the bytecode VM but tends to be faster to execute. This
     tradeoff makes a lot of sense for CPython, where bytecode is the only mean of
     execution but less for SPy where we also have a C backend.
 
     That said, the long term goal for SPy's interpreter is to have performance
     comparable to CPython.
-
-    In the very early days of the project, SPy was bytecode based. Then
-    [PR #4](https://github.com/spylang/spy/pull/4) switched to the AST interpreter and we
-    never looked back. Having an AST-based IR makes it **much** simpler to implement
-    [Redshifting](#redshifting) and the C backend.
-
 
 
 The `import` step is interesting: it imports the given module **and all its
