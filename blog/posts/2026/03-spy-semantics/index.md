@@ -251,14 +251,6 @@ $ spy hello.spy
 Hello world!
 ```
 
-!!! note "The SPy playground"
-
-    The [SPy playground](https://spylang.github.io/spy) is a PyScript based app which
-    you can use to try SPy directly in the browser.  The version linked in this box is
-    the official one which tracks the latest git `main` branch. However, all the code
-    snippets on this page have a `Try it yourself` button which opens the example into a
-    SPy playground pinned to commit `e5a8d272`.
-
 We can do redshifting and inspect the transformed version. By default `spy redshift` (or
 `spy rs`) have a pretty printer which shows typed AST in source code form, which is
 easier to read. In this case the redshifted version is very similar to the original, but
@@ -277,7 +269,6 @@ described above:
 $ spy redshift -x hello.spy
 Hello world!
 ```
-
 
 Finally, we can run in compiled mode by building an executable and then running it:
 
@@ -309,6 +300,16 @@ void spy_hello$main(void) {
 
 By default, it compiles to debug mode for the `native` platform, but you can use
 `--release` to switch to release mode and `--target` to select a different platform.
+
+!!! note "The SPy playground"
+
+    All the examples have a `Try it yourself` button which opens the code snippet in the
+    SPy Playground, a PyScript app to try SPy directly in the browser.
+
+    The [official SPy playground](https://spylang.github.io/spy) tracks the latest git
+    `main`, while this blog post uses a [custom
+    version](https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/) pinned
+    to commit `e5a8d272`
 
 ## Static typing
 
