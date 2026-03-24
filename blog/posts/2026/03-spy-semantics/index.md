@@ -114,11 +114,10 @@ This is a diagram representing the compilation pipeline:
 graph TD
 
     SRC["*.spy source"]
-    PYAST["CPython AST"]
-    AST["SPy AST"]
-    SYMAST["SPy AST + symtable"]
+    AST["Untyped AST"]
+    SYMAST["Untyped AST + symtable"]
     SPyVM["SPyVM"]
-    REDSHIFTED["Redshifted AST"]
+    REDSHIFTED["Typed AST"]
     OUT["Output"]
     C["C Source (.c)"]
     EXE_NAT["Native exe"]
@@ -126,22 +125,14 @@ graph TD
     EXE_EM["Emscripten exe"]
 
     %% Core pipeline
-    SRC -- pyparse --> PYAST -- parse --> AST -- ScopeAnalyzer --> SYMAST
+    SRC -- parse --> AST -- ScopeAnalyzer --> SYMAST
     SYMAST -- import --> SPyVM -- interp --> OUT
     SPyVM -- redshift --> REDSHIFTED -- cwrite --> C
     REDSHIFTED -- interp(doppler) --> OUT
-    C -- ninja --> EXE_NAT -- execute --> OUT
-    C -- ninja --> EXE_WASI -- execute --> OUT
-    C -- ninja --> EXE_EM -- execute --> OUT
+    C -- cc --> EXE_NAT -- execute --> OUT
+    C -- cc --> EXE_WASI -- execute --> OUT
+    C -- cc --> EXE_EM -- execute --> OUT
 ```
-
-!!! note "`parse` vs `pyparse`"
-
-    Why do we have two separate parsing steps? At the moment we rely on CPython parser:
-    `pyparse` converts the source code into CPython AST. Then the `parse` step convers CPython AST into [SPy AST](https://github.com/spylang/spy/blob/e5a8d272/spy/ast.py).
-
-    Eventually SPy will have its own parser and thus we will be able to drop `pyparse`.
-
 
 The first few step up to and including `ScopeAnalyzer` are classical compiler
 stages. Contrarily to CPython, SPy doesn't produce bytecode. In SPy, executable code is
