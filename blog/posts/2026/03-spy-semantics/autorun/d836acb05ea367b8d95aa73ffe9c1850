@@ -1,0 +1,5 @@
+<spy type 'def(str) -> str'>
+hello world
+---
+<spy type 'def(i32) -> i32'>
+7

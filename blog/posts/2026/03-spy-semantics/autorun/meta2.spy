@@ -1,0 +1,38 @@
+@blue.generic
+def zero(T):
+    "Return the 'zero' value for the given type"
+    if T == int:
+        return 0
+    elif T == str:
+        return ""
+    else:
+        return None
+
+
+@blue.generic
+def identity(T):
+    def impl(x: T) -> T:
+        return x
+    return impl
+
+@blue
+def make_adder(y: dynamic):
+    T = type(y)
+    z = zero[T]
+
+    if z is not None and y == z:
+        # use the identity function instead of doing + 0, for "efficiency"
+        return identity[T]
+
+    else:
+        # general case
+        def add(x: T) -> T:
+            return x + y
+
+        return add
+
+def main() -> None:
+    adds = make_adder(" world")
+    add0 = make_adder(0)
+    print(adds("hello"))
+    print(add0(2))

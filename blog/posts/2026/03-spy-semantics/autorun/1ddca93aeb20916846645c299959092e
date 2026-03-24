@@ -1,0 +1,6 @@
+[34;01mdef[00m [00madd[00m(x: [35;01mdynamic[00m, y: [35;01mdynamic[00m) -> [35;01mdynamic[00m:
+    [34;01mreturn[00m [35;01m`operator::dynamic_add`[00m(x, y)
+
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    [00mprint_dynamic[00m([35;01m`dynamic_dispatch::add`[00m([33;01m1[00m, [33;01m2[00m))
+    [00mprint_dynamic[00m([35;01m`dynamic_dispatch::add`[00m([32;01m'hello '[00m, [32;01m'world'[00m))

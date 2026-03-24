@@ -456,14 +456,7 @@ def main() -> None:
 
 ```autorun output-range=9-16
 $ spy type-error2.spy
-Traceback (most recent call last):
-  * type-error2::main at /.../autorun/type-error2.spy:5
-  |     print(add(1, 2))
-  |           |_______|
-  * type-error2::add at /.../autorun/type-error2.spy:2
-  |     return x + y
-  |            |___|
-
+[...]
 TypeError: cannot do `object` + `object`
   | /.../autorun/type-error2.spy:2
   |     return x + y
@@ -472,12 +465,7 @@ TypeError: cannot do `object` + `object`
   | /.../autorun/type-error2.spy:2
   |     return x + y
   |                ^ this is `object`
-
-  | /.../autorun/type-error2.spy:2
-  |     return x + y
-  |            |___| operator::ADD called here
-
-
+[...]
 ```
 
 It is possible to explicitly opt into dynamic dispatch by using the special type
@@ -1028,11 +1016,7 @@ def main() -> None:
 
 ```autorun output-range=6-
 $ spy op2.spy
-Traceback (most recent call last):
-  * op2::main at /.../autorun/op2.spy:2
-  |     x = 1 + "hello"
-  |         |_________|
-
+[...]
 TypeError: cannot do `i32` + `str`
   | /.../autorun/op2.spy:2
   |     x = 1 + "hello"
@@ -1073,12 +1057,7 @@ However, if we try to `build` or `redshift` it, we get an error:
 
 ```autorun output-range=7-
 $ spy redshift op3.spy
-Static error during redshift:
-Traceback (most recent call last):
-  * [redshift] op3::add at /.../autorun/op3.spy:2
-  |     return x + y
-  |            |___|
-
+[...]
 TypeError: cannot do `i32` + `str`
   | /.../autorun/op3.spy:2
   |     return x + y

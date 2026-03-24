@@ -1,0 +1,2 @@
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    [00mprint_str[00m([32;01m'Hello world!'[00m)

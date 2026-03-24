@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  * [35m[module] smallstring[00m at /.../autorun/smallstring.spy:7
+  | def say_hello(name: SmallString[64]) -> None:
+  | [31;01m                    |_____________|[00m
+  * [35msmallstring::SmallString[00m at /.../autorun/smallstring.spy:4
+  |         raise StaticError("SmallString must be at most 32 chars")
+  | [31;01m        |_______________________________________________________|[00m
+
+[31;01mStaticError[00m: SmallString must be at most 32 chars
+
