@@ -77,25 +77,25 @@ SPy](../../2025/10-spy-motivations-and-goals/index.md#the-zen-of-spy) contains t
 and design guidelines of SPy. This is a shortened version, see the link for full
 details:
 
-  1. **Easy to use and implement**.
+  1. Easy to use and implement.
 
-  2. We have an **interpreter**.
+  2. We have an interpreter.
 
-  3. We have a **compiler**.
+  3. We have a compiler.
 
-  4. **Static typing**.
+  4. Static typing.
 
-  5. **Performance matters**.
+  5. Performance matters.
 
-  6. **Predictable performance**.
+  6. Predictable performance.
 
-  7. **Rich metaprogramming capabilities**.
+  7. Rich metaprogramming capabilities.
 
-  8. **Zero cost abstractions**.
+  8. Zero cost abstractions.
 
-  9. **Opt-in dynamism**.
+  9. Opt-in dynamism.
 
- 10. **One language, two levels**.
+ 10. One language, two levels.
 
 Now, time to dive deeper into the language.
 
