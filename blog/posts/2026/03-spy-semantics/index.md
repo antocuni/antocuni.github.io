@@ -200,7 +200,8 @@ phases**:
 
 1. **Import time**: this is when we run all the module-level code, including global
    variable initializers, decorators, metaclasses, etc.. After this phase, **all the
-   globals are frozen**.
+   globals are frozen**.  This roughly corresponds to the steps `parse`, `ScopeAnalyzer`
+   and `import` of the diagram above.
 
 2. **Redshift**: during this phase we apply partial evaluation to all expressions that
    are safe to be evaluated eagerly.  This is an optional phase which happens only
@@ -294,9 +295,6 @@ void spy_hello$main(void) {
 
 By default, it compiles to debug mode for the `native` platform, but you can use
 `--release` to switch to release mode and `--target` to select a different platform.
-
-You can also use `spy build -x` to compile **and** automatically execute the resulting
-binary.
 
 ## Static typing
 
