@@ -932,8 +932,9 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
         ...
     ```
 
-    In SPy, this is just **syntax sugar** for `@blue.generic`. The line above is
-    equivalent to:
+    At the time of writing, type parameter syntax is not implemented in SPy.
+    It will be implemented as syntactic sugar for:
+
     ```python
     @blue.generic
     def func(T):
@@ -941,7 +942,6 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
             ...
         return impl
     ```
-    However, at the moment of writing it has not been implemented yet.
 
 ## Operator dispatch, revisited.
 
