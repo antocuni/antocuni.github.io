@@ -105,33 +105,66 @@ Now, time to dive deeper into the language.
 
 ## Compilation pipeline
 
-Some of the design choices easier to understand in view of how the
-interpreter and the compiler works.
+Some of the design choices easier to understand in view of how the interpreter and the
+compiler works.  This is a diagram representing the compilation pipeline in the
+simplified case of a single `.spy` file:
 
-This is a diagram representing the compilation pipeline:
 
 ```mermaid
 graph TD
 
-    SRC["*.spy source"]
-    AST["Untyped AST"]
-    SYMAST["Untyped AST + symtable"]
+    subgraph FRONTEND["Import time"]
+        SRC["*.spy source"]
+        AST["Untyped AST"]
+        SYMAST["Untyped AST + symtable"]
+        IMPORTLABEL(["import"]):::label
+
+        SRC -- parse --> AST
+        AST -- ScopeAnalyzer --> SYMAST
+        SYMAST --- IMPORTLABEL
+    end
+
     SPyVM["SPyVM"]
-    REDSHIFTED["Typed AST"]
-    OUT["Output"]
+    IMPORTLABEL --- SPyVM
+
+    subgraph RS[" "]
+        RSLABEL(["redshift"]):::label
+        REDSHIFTED["Typed AST"]
+        RSLABEL --> REDSHIFTED
+    end
+
     C["C Source (.c)"]
     EXE_NAT["Native exe"]
     EXE_WASI["WASI exe"]
     EXE_EM["Emscripten exe"]
 
-    %% Core pipeline
-    SRC -- parse --> AST -- ScopeAnalyzer --> SYMAST
-    SYMAST -- import --> SPyVM -- interp --> OUT
-    SPyVM -- redshift --> REDSHIFTED -- cwrite --> C
-    REDSHIFTED -- interp(doppler) --> OUT
-    C -- cc --> EXE_NAT -- execute --> OUT
-    C -- cc --> EXE_WASI -- execute --> OUT
-    C -- cc --> EXE_EM -- execute --> OUT
+    subgraph RT["Runtime"]
+        INTERP(["interp"]):::label
+        DOPPLER(["interp(doppler)"]):::label
+        EXECUTE_NAT(["execute"]):::label
+        EXECUTE_WASI(["execute"]):::label
+        EXECUTE_EM(["execute"]):::label
+        OUT["Output"]
+        INTERP --> OUT
+        DOPPLER --> OUT
+        EXECUTE_NAT --> OUT
+        EXECUTE_WASI --> OUT
+        EXECUTE_EM --> OUT
+    end
+
+    SPyVM --- INTERP
+    SPyVM --- RSLABEL
+    REDSHIFTED -- cwrite --> C
+    REDSHIFTED --- DOPPLER
+
+    C -- cc --> EXE_NAT --- EXECUTE_NAT
+    C -- cc --> EXE_WASI --- EXECUTE_WASI
+    C -- cc --> EXE_EM --- EXECUTE_EM
+
+    style RS fill:#e8e8e8,stroke:#ccc
+    style RT fill:#e8e8e8,stroke:#ccc
+    style FRONTEND fill:#e8e8e8,stroke:#ccc
+    classDef label fill:#e8e8e8,stroke:none,color:#333;
 ```
 
 The first steps up to and including `ScopeAnalyzer` are classical compiler
