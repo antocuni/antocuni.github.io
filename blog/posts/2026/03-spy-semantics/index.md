@@ -573,7 +573,7 @@ Notable things:
     more powerful than that.
 
 Internally, redshifting operates on the AST (Abstract Syntax Tree). First, let's look at
-the original AST; you can click on it to see the full interactive version:
+the original AST (click on it to open the full interactive version — it's worth it):
 
 ```autorun
 $ spy parse --format html rs1.spy
