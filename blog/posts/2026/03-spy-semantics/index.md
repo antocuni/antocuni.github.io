@@ -97,26 +97,36 @@ details:
 
  10. One language, two levels.
 
-Now, time to dive deeper into the language.
-
 !!! note "SPy version"
 
     At the moment of writing, SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit e5a8d272](https://github.com/spylang/spy/tree/e5a8d272)
 
-## Compilation pipeline
+## Phases of execution and compilation pipeline
 
-Some of the design choices easier to understand in view of how the interpreter and the
-compiler works.  This is a diagram representing the compilation pipeline in the
-simplified case of a single `.spy` file:
+From the point of view of the user, SPy code runs in three distinct **execution
+phases**:
 
+1. **Import time**: this is when we run all the module-level code, including global
+   variable initializers, decorators, metaclasses, etc.. After this phase, **all the
+   globals are frozen**.
+
+2. **Redshift**: during this phase we apply partial evaluation to all expressions that
+   are safe to be evaluated eagerly.  This is an optional phase which happens only
+   during compilation or when explicitly requested.  The presence/absence of redshift
+   **should not have any visible effects** on the behavior of the program.
+
+3. **Runtime**: the actual execution of the program, starting from a `main` function.
+
+The following is a diagram representing the compilation pipeline in the simplified case
+of a single `.spy` file:
 
 ```mermaid
 graph TD
 
     subgraph FRONTEND["Import time"]
-        SRC["*.spy source"]
-        AST["Untyped AST"]
-        SYMAST["Untyped AST + symtable"]
+        SRC["*.spy source"]:::node
+        AST["Untyped AST"]:::node
+        SYMAST["Untyped AST + symtable"]:::node
         IMPORTLABEL(["import"]):::label
 
         SRC -- parse --> AST
@@ -124,19 +134,18 @@ graph TD
         SYMAST --- IMPORTLABEL
     end
 
-    SPyVM["SPyVM"]
-    IMPORTLABEL --- SPyVM
+    SPyVM["SPyVM"]:::node
+    IMPORTLABEL --> SPyVM
 
     subgraph RS[" "]
         RSLABEL(["redshift"]):::label
-        REDSHIFTED["Typed AST"]
-        RSLABEL --> REDSHIFTED
+        REDSHIFTED["Typed AST"]:::node
     end
 
-    C["C Source (.c)"]
-    EXE_NAT["Native exe"]
-    EXE_WASI["WASI exe"]
-    EXE_EM["Emscripten exe"]
+    C["C Source (.c)"]:::node
+    EXE_NAT["Native exe"]:::node
+    EXE_WASI["WASI exe"]:::node
+    EXE_EM["Emscripten exe"]:::node
 
     subgraph RT["Runtime"]
         INTERP(["interp"]):::label
@@ -144,28 +153,27 @@ graph TD
         EXECUTE_NAT(["execute"]):::label
         EXECUTE_WASI(["execute"]):::label
         EXECUTE_EM(["execute"]):::label
-        OUT["Output"]
-        INTERP --> OUT
-        DOPPLER --> OUT
-        EXECUTE_NAT --> OUT
-        EXECUTE_WASI --> OUT
-        EXECUTE_EM --> OUT
     end
 
-    SPyVM --- INTERP
-    SPyVM --- RSLABEL
+    OUT["Output"]:::node
+    SPyVM --- INTERP --> OUT
+
+    SPyVM --- RSLABEL --> REDSHIFTED
     REDSHIFTED -- cwrite --> C
-    REDSHIFTED --- DOPPLER
+    REDSHIFTED --- DOPPLER --> OUT
 
-    C -- cc --> EXE_NAT --- EXECUTE_NAT
-    C -- cc --> EXE_WASI --- EXECUTE_WASI
-    C -- cc --> EXE_EM --- EXECUTE_EM
+    C -- cc --> EXE_NAT --- EXECUTE_NAT --> OUT
+    C -- cc --> EXE_WASI --- EXECUTE_WASI --> OUT
+    C -- cc --> EXE_EM --- EXECUTE_EM --> OUT
 
-    style RS fill:#e8e8e8,stroke:#ccc
-    style RT fill:#e8e8e8,stroke:#ccc
-    style FRONTEND fill:#e8e8e8,stroke:#ccc
-    classDef label fill:#e8e8e8,stroke:none,color:#333;
+    style FRONTEND fill:#fafaff,stroke:#9090cc,stroke-dasharray:5 5
+    style RS fill:#fafaff,stroke:#9090cc,stroke-dasharray:5 5
+    style RT fill:#fafaff,stroke:#9090cc,stroke-dasharray:5 5
+
+    classDef node fill:#e8eaf6,stroke:#5c6bc0,color:#1a237e;
+    classDef label fill:#fafaff,stroke:none,color:#1a237e;
 ```
+
 
 The first steps up to and including `ScopeAnalyzer` are classical compiler
 stages. Contrarily to CPython, SPy doesn't produce bytecode. In SPy, executable code is
@@ -193,27 +201,24 @@ interpreter**.
 The `import` step is interesting: it imports the given module **and all of its
 dependencies** in the running `SPyVM` instance.  The dependencies are determined and
 resolved statically, by scanning for the presence of `import` statements, recursively.
-This means that **all needed modules** are imported eagerly, including modules which
-are imported only inside of function bodies (even if those functions are never
-executed).
+This means that all needed modules are imported eagerly, including modules which are
+imported only inside of function bodies (even if those functions are never executed).
+This is a big departure from CPython semantics, but it is essential to the design of SPy
+and enables many important features. We will talk more about it later in this series.
 
-This is a big departure from CPython semantics, but it is essential to the design of SPy and
-enables many important features. We will talk more about it later in this series.
-
-After `import`, we can run the code in three different modes:
+"Import time" is always executed by the interpreter. After `import`, we can run the code
+in three different modes:
 
 - **interpreted mode**: the untyped AST is executed by the interpreter.
 
-- **compiled mode**: in this mode we first apply `redshift` to transform untyped AST
-  into typed AST, which is easier to compile. Then we feed the typed AST to the C
-  backend, which produces C code, which is finally compiled by `gcc`, `clang` or any
-  other C compiler. SPy supports traditional native targets as well as the WebAssembly targets WASI and Emscripten.
-  Emscripten.
+- **doppler mode**: `redshift` transforms untyped ASTs into typed ASTs, which are then
+  executed by the interpreter. This is mostly used by tests to ensure that the redshift
+  pass produces correct code.
 
-- **doppler mode**: the typed ASTs produced by `redshift` are executed by the
-  interpreter. This is mostly used by tests to ensure that the redshift pass produces
-  correct code.
-
+- **compiled mode**: `redshift` transforms untyped ASTs into into typed AST. Then we
+  feed the typed AST to the C backend, which produces C code, which is finally compiled
+  by `gcc`, `clang` or any other C compiler.  SPy supports traditional native targets as
+  well as the WebAssembly targets WASI and Emscripten.
 
 !!! note "Why C code and not LLVM?"
 
@@ -226,31 +231,7 @@ After `import`, we can run the code in three different modes:
     using C makes it very easy to target new platforms such as e.g. emscripten.
 
 
-## Phases of execution and hello world
-
-From the point of view of the user, SPy code runs in three distinct **execution
-phases**:
-
-1. **Import time**: this is when we run all the module-level code, including global
-   variable initializers, decorators, metaclasses, etc.. After this phase, **all the
-   globals are frozen**.  This roughly corresponds to the steps `parse`, `ScopeAnalyzer`
-   and `import` of the diagram above.
-
-2. **Redshift**: during this phase we apply partial evaluation to all expressions that
-   are safe to be evaluated eagerly.  This is an optional phase which happens only
-   during compilation or when explicitly requested.  The presence/absence of redshift
-   **should not have any visible effects** on the behavior of the program.
-
-3. **Runtime**: the actual execution of the program, starting from a `main` function.
-
-In **interpreted mode**, the interpreter runs "Import time" and then "Runtime".
-
-In **doppler mode** the interpreter runs "Import time"; then "Redshift" produces typed
-ASTs, which are executed by the interpreter.
-
-In **compiled mode**, the interpreter runs "Import time"; then "Redshift" produces typed
-ASTs, which are translated into C and compiled into an executable. The executable runs
-the "Runtime".
+## Hello world
 
 Unlike in Python, the main entry point of a program is not module-level code, but
 it's the `main` function. This is needed because as we saw above, module level code is
