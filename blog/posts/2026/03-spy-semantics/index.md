@@ -22,7 +22,7 @@ antocuni:
 This is the second post of the *Inside SPy* series. The [first
 post](../../2025/10-spy-motivations-and-goals/index.md) was mostly about motivations and
 goals of SPy. This post will cover in more detail the semantics of SPy, including the
-parts which makes it different from CPython.
+parts which make it different from CPython.
 
 We will talk about phases of execution, *colors*, redshifting, the very peculiar way
 SPy implements static typing, and we will start to dive into metaprogramming.
@@ -67,7 +67,7 @@ and:
 > SPy is a thought experiment to determine how much dynamicity we can remove from Python
 > while still feeling Pythonic.
 
-The part about "interpreter **and** compiler" is fundamental: the interpreter is needed
+The part about "interpreter _and_ compiler" is fundamental: the interpreter is needed
 for ease of development and debugging, the compiler is needed for speed. The job of SPy
 is to ensure that the two pieces have the exact same semantics so that the compilation
 step is just a transparent speedup.
@@ -105,7 +105,7 @@ Now, time to dive deeper into the language.
 
 ## Compilation pipeline
 
-Some of the design choices are better understood by taking into consideration how the
+Some of the design choices easier to understand in view of how the
 interpreter and the compiler works.
 
 This is a diagram representing the compilation pipeline:
@@ -143,7 +143,7 @@ graph TD
     Eventually SPy will have its own parser and thus we will be able to drop `pyparse`.
 
 
-The first few step up to and including `ScopeAnalyzer` are classical compiler
+The first steps up to and including `ScopeAnalyzer` are classical compiler
 stages. Contrarily to CPython, SPy doesn't produce bytecode. In SPy, executable code is
 kept in form of AST, which is then transformed during the various stages of the
 pipeline. **SPy AST is used as the internal IR of both the compiler and the
@@ -156,10 +156,10 @@ interpreter**.
     The main advantage of direct AST interpretation is that it's simpler and easier to
     implement; bytecode-based execution is more complex because you need both the
     bytecode compiler and the bytecode VM but tends to be faster to execute. This
-    tradeoff makes a lot of sense for CPython, where bytecode is the only mean of
-    execution but less for SPy where we also have a C backend.
+    tradeoff makes a lot of sense for CPython, where bytecode is the only means of
+    execution, but less for SPy where we also have a C backend.
 
-    That said, the long term goal for SPy's interpreter is to have performance
+    That said, the long-term goal for SPy's interpreter is to have performance
     comparable to CPython.
 
     In the very early days of the project, SPy was bytecode based. Then
@@ -169,27 +169,27 @@ interpreter**.
 
 
 
-The `import` step is interesting: it imports the given module **and all its
+The `import` step is interesting: it imports the given module **and all of its
 dependencies** in the running `SPyVM` instance.  The dependencies are determined and
 resolved statically, by scanning for the presence of `import` statements, recursively.
-This means that **all needed modules** are imported eagerly, including e.g. those who
-are imported solely inside function bodies (and even if those functions are never
+This means that **all needed modules** are imported eagerly, including modules which
+are imported only inside of function bodies (even if those functions are never
 executed).
 
-This is a big departure from CPython semantics, but it is also an essential part to
-enable many important features of SPy. We will talk more about it later in this series.
+This is a big departure from CPython semantics, but it is essential to the design of SPy and
+enables many important features. We will talk more about it later in this series.
 
 After `import`, we can run the code in three different modes:
 
-- **interpreted mode**: the untyped AST is executed as is by the interpreter.
+- **interpreted mode**: the untyped AST is executed by the interpreter.
 
-- **compiled mode**: in this mode we first apply **redshift** to transform _untyped AST_
-  into _typed AST_, which is easier to compile. Then we feed the typed AST to the C
+- **compiled mode**: in this mode we first apply `redshift` to transform untyped AST
+  into typed AST, which is easier to compile. Then we feed the typed AST to the C
   backend, which produces C code, which is finally compiled by `gcc`, `clang` or any
-  other C compiler. Multiple targets are supported, including native, WASM/WASI and
+  other C compiler. SPy supports traditional native targets as well as the WebAssembly targets WASI and Emscripten.
   Emscripten.
 
-- **doppler mode**: the typed ASTs produced by **redshift** are executed by the
+- **doppler mode**: the typed ASTs produced by `redshift` are executed by the
   interpreter. This is mostly used by tests to ensure that the redshift pass produces
   correct code.
 
@@ -197,8 +197,8 @@ After `import`, we can run the code in three different modes:
 !!! note "Why C code and not LLVM?"
 
     At this stage we are trying to optimize for time to market. Emitting C code is much
-    simpler, easier to develop and easier to debug, while still getting performance which
-    are comparable to LLVM.
+    simpler, easier to develop and easier to debug, while still getting performance
+    comparable to LLVM.
 
     Moreover, by using C as the commond ground we automatically have lots of great
     existing tools at our disposal, like debuggers, profilers, build systems, etc.  And
@@ -230,7 +230,7 @@ In **compiled mode**, the interpreter runs "Import time"; then "Redshift" produc
 ASTs, which are translated into C and compiled into an executable. The executable runs
 the "Runtime".
 
-Contrarily to Python, the main entry point of a program is not module-level code, but
+Unlike in Python, the main entry point of a program is not module-level code, but
 it's the `main` function. This is needed because as we saw above, module level code is
 always executed "at compile time".
 
@@ -267,7 +267,7 @@ def main() -> None:
     print_str('Hello world!')
 ```
 
-We can do redshifting **and execute** the code. This is equivalent to the doppler mode
+We can run it in doppler mode as follows:
 described above:
 
 ```autorun
@@ -276,7 +276,7 @@ Hello world!
 ```
 
 
-Finally, we can build an executable:
+Finally, we can run in compiled mode by building an executable and then running it:
 
 ```autorun
 $ spy build hello.spy
@@ -312,9 +312,9 @@ binary.
 
 ## Static typing
 
-In SPy, **type annotations are always enforced**. This is probably the biggest departure
-from CPython semantics, which explicitly ignore type annotations at runtime. After all,
-the **S** stands for static :).
+In SPy, **type annotations are always enforced**. After all,
+the **S** stands for static :). This is probably the biggest departure
+from CPython, which explicitly ignores type annotations at runtime. 
 
 ```python title="type-error1.spy" autowrite
 def main() -> None:
@@ -343,9 +343,8 @@ TypeError: mismatched types
 
 This also applies to e.g. function calls, `return` statements, etc.
 
-Type annotations are **mandatory** for function arguments and return types. They are
-optional for variables.  In that case, we do a very limited form of type inference and
-automatically declare the variable using the type of its initializer.  We can use the
+Type annotations are mandatory for function arguments and return types. They are
+optional for variables.  For variables with no type annotatation, we do a very limited form of type inference to determine the type of the variable from the type of its initializer.  We can use the
 special function `STATIC_TYPE` to inspect it:
 
 ```python title="type-inference.spy" autowrite
@@ -378,7 +377,7 @@ e.g. `+` is equivalent to `operator.add`, `a.b` is equivalent to `getattr`, and 
 they call the various `__add__`, `__getattr__`, etc.
 
 Whereas in Python operator dispatch happens dynamically, in SPy it happens
-statically. An example if worth 1000 words:
+statically. An example is worth a thousand words:
 
 ```python title="op_dispatch.spy" autowrite
 def add_int(x: int, y: int) -> int:
@@ -401,18 +400,15 @@ Here we see that after redshifting, the generic `+` operators have been replaced
 concrete `i32_add` and `str_add` calls, which the C backend then replaces with direct
 call to the appropriate function.
 
-!!! note "FQNs and `--full-fqn`"
+!!! note Fully Qualified Names and `--full-fqn`"
 
-    FQN stands for Fully Qualified Name. It's an unique identifier assigned to every
+    A Fully Qualified Name is a unique identifier assigned to every
     function, type and constant inside a running SPy VM.
 
     By default, `spy redshift` uses a special "pretty" output mode which is easier to
     read for humans and e.g. prints `i32` instead of `builtins::i32`, and `x + y`
-    instead of `operator::i32_add(x, y)`.
-
-    But the point of the example above was precisely to show the call to
-    `operator::i32_add`: `--full-fqn` turns off pretty printing. Try to run
-    `spy redshift op_dispatch.spy` and see the difference.
+    instead of `operator::i32_add(x, y)`. The `--full-fqn` option turns off pretty printing. Try running
+    `spy redshift op_dispatch.spy` to see the difference.
 
 
 ## Static vs dynamic types
@@ -483,7 +479,7 @@ TypeError: cannot do `object` + `object`
 
 ```
 
-It is possible to explicitly opt-in for dynamic dispatch by using the special type
+It is possible to explicitly opt into dynamic dispatch by using the special type
 `dynamic`:
 
 ```python title="dynamic_dispatch.spy" autowrite
@@ -510,7 +506,7 @@ def main() -> None:
 ```
 
 The rationale is that dynamic dispatch is costly and prevents many other
-optimization. By requiring an explicit opt-in, we can make sure that it's used only when
+optimizations. By requiring an explicit opt-in, we can make sure that it's used only when
 it's really needed without hurting the performance of "normal" code.
 
 !!! tip "Current Status: `dynamic`"
@@ -521,8 +517,8 @@ it's really needed without hurting the performance of "normal" code.
 
 Redshifting is a core concept of SPy to enable good performance without sacrificing
 usability.  The core idea is that given a piece of code, there are parts of it that can
-precomputed eagerly at compile time, leaving *less code* to run at runtime.  It's a form
-of *partial evaluation*.
+computed at compile time, leaving less code to run at runtime.  It's a form
+of partial evaluation.
 
 To do that, we introduce the concept of *color of an expression*: expressions whose value
 is known at compile time are **blue**; expressions which must be evaluated at runtime
@@ -588,7 +584,7 @@ img: rs1_parse.svg
 url: autorun/build/rs1_parse.html
 ```
 
-It's a standard "textbook" AST: each node represent a binary operation, with `left` and
+It's a textbook AST: each node represent a binary operation, with `left` and
 `right` children. Now let's look again at `spy colorize`, this time looking at the AST:
 
 ```autorun
@@ -628,16 +624,16 @@ runtime.
 
 ## `@blue` functions
 
-What we have seen so far it's a very complicated way to do simple numerical
+What we have seen so far is a very complicated way to do simple numerical
 optimizations, which is a bit underwhelming.  Redshifting becomes more interesting in
-combination with `@blue` function.
+combination with `@blue` functions.
 
 These are functions which are **guaranteed** to be eagerly evaluated. It is mandatory
 that all the arguments are blue as well, and the function is evaluated **by the
 interpreter** during redshifting.
 
 In the next sections we will see how they enable interesting metaprogramming patterns,
-but let's start from a simple example first:
+but let's start with a simple example first:
 
 ```python title="pi.spy" autowrite
 from math import fabs
@@ -683,18 +679,18 @@ def main() -> None:
 
 `get_pi` is a `@blue` function, and thus is evaluated at compile time. It's
 completely removed from the redshifted output and it will never be seen by the C
-backend. What is left after redshifting is just the `main` function with constant value.
+backend. What is left after redshifting is just the `main` function with a constant value.
 
 !!! note "Is the compiler Turing complete?"
 
     In short: yes. `@blue` function can run arbitrary code, and thus potentially not
     even terminate.  From the purest theoretical Computer Science point of view, this is
     A Bad Thing.  However, Python shows that in practice it's less of a problem than you
-    would think: after all, in Python, "import time" is also Turing complete,
+    would think: after all, in Python, "import time" is also Turing complete.
 
     One possible way to deal with it is to give a certain amount of "computing power" to
     use use during import time and redshift: each operation decreaes the remaining power
-    by one, if it reaches zero we abort.  However, we didn't feel the need to do that so
+    by one, if it reaches zero we abort.  However, we haven't felt the need to do that so
     far.
 
 Things become more interesting when we create closures:
@@ -756,7 +752,7 @@ def `adder::make_adder::add#2`(x: i32) -> i32:
 ```
 
 Each invocation of `make_adder` creates a *new* specialized copy of `add`, each bound to
-a different value; each version is given an unique Fully Qualified Name (FQN).
+a different value; each version is given an unique Fully Qualified Name.
 
 `add5` and `add7` are created at module level, while `add9` is created inside the
 `main`, but the end result is the same.  It's also worth to note that the second call to
@@ -820,7 +816,7 @@ url: autorun/build/adder_colorize.html
 
 ## Type manipulation and generics
 
-Types are first order values as in Python, and thus they can be freely manipulated by
+Types are first-order values as in Python, and thus they can be freely manipulated by
 `@blue` functions. Here, we build a different type-specialized versions of an `add`
 function:
 
@@ -966,7 +962,7 @@ is dispached to `operator::str_add`.
 How to we go from `a + b` to `operator::str_add(a, b)`?  Internally, operator dispatch
 happens in two steps:
 
-  1. first, we determine the implementation function (or **opimpl**) for the given types
+  1. first, we determine the operator implementation function (or **opimpl**) for the given types
 
   2. then, we call the opimpl with the actual values.
 
@@ -1016,12 +1012,12 @@ For example, take [`list.__getitem__`](https://github.com/spylang/spy/blob/e5a8d
 of the index, and then dispatches to specialized opimpls like `getitem_int` or
 `getitem_slice`.
 
-Meta functions are a very advanced concept. Describing them in depth will be the topic
+Meta functions are an advanced concept. Describing them in depth will be the topic
 of a subsequent blog post.
 
 ## Static typing as a special case of `@blue` evaluation
 
-Now, if we try to add two unrelated things, we get an error:
+If we try to add two unrelated things, we get an error:
 
 ```python title="op2.spy" autowrite
 def main() -> None:
@@ -1101,7 +1097,7 @@ TypeError: cannot do `i32` + `str`
 This happens because all `@blue` calls are evaluated eagerly during redshifting,
 including the implicit `operator.ADD`.
 
-This also means that we can **programmatically generated compilation errors** by raising
+This also means that we can **programmatically generate compilation errors** by raising
 the appropriate exceptions from `@blue` functions:
 
 ```python title="smallstring.spy" autowrite
@@ -1197,10 +1193,9 @@ def main() -> None:
 
 It is important to underline that **typechecking is fully aware of blue semantics**,
 meaning that the SPy compiler can keep track of the precise type of `add5` and
-`add_world` by construction, without any special support. By the time the typechecker
+`add_world` without any special support. By the time the typechecker
 runs, all the blue values are fully known.  This is a big improvements over classical
-type checkers for Python which typically cannot understand metaprogramming patterns, or
-they have ad-hoc support only for some.
+type checkers for Python which typically cannot understand metaprogramming patterns.
 
 Inside `@blue` functions we can use the full power of the language. Imagine that we want
 to "optimize" `make_adder(0)`: instead of adding 0, we can just return the identity
