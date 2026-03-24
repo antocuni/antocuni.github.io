@@ -15,7 +15,7 @@ from mkdocs.config import config_options
 
 # Matches a fenced autorun block (``` or ~~~, any length >= 3).
 AUTORUN_BLOCK_RE = re.compile(
-    r'^(?P<fence>`{3,}|~{3,})autorun[ \t]*\n(?P<body>.*?)^(?P=fence)[ \t]*$',
+    r'^(?P<fence>`{3,}|~{3,})autorun(?P<opts>[^\n]*)\n(?P<body>.*?)^(?P=fence)[ \t]*$',
     re.MULTILINE | re.DOTALL,
 )
 
@@ -158,9 +158,68 @@ def _replace_popup_block(match: re.Match, page_src_dir: Path,
     )
 
 
+def _parse_autorun_opts(opts_str: str):
+    """Parse output-range and lineno from the autorun info string."""
+    tokens = opts_str.split()
+    output_range = None
+    lineno = False
+    for tok in tokens:
+        if tok.startswith('output-range='):
+            parts = tok[len('output-range='):].split('-')
+            start = int(parts[0])
+            end = int(parts[1]) if parts[1] else None
+            output_range = (start, end)
+        elif tok == 'lineno':
+            lineno = True
+    return output_range, lineno
+
+
+def _apply_output_opts(text: str, output_range, lineno: bool) -> str:
+    """Apply output-range and lineno filtering to output text."""
+    if not output_range and not lineno:
+        return text
+
+    lines = text.splitlines(keepends=True)
+    total = len(lines)
+
+    if output_range:
+        start, end = output_range
+        if end is None:
+            end = total
+        else:
+            end = min(end, total)
+        selected = lines[start - 1:end]
+        max_lineno = end
+    else:
+        start = 1
+        end = total
+        selected = lines
+        max_lineno = total
+
+    result = []
+    if output_range and start > 1:
+        result.append('[...]\n')
+
+    if lineno:
+        width = len(str(max_lineno))
+        for i, line in enumerate(selected, start=start):
+            if line.endswith('\n'):
+                result.append(f'{i:{width}d} | {line}')
+            else:
+                result.append(f'{i:{width}d} | {line}\n')
+    else:
+        result.extend(selected)
+
+    if output_range and end < total:
+        result.append('[...]\n')
+
+    return ''.join(result)
+
+
 def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
     """Replace one autorun fenced block with terminal HTML."""
     body = match.group('body')
+    output_range, lineno = _parse_autorun_opts(match.group('opts'))
     entries: list[tuple[str, str]] = []
 
     for line in body.splitlines():
@@ -174,6 +233,7 @@ def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
         else:
             # Fall back to whatever stripped text is in the block.
             raw_output = '(output not available — run autorun.py first)\n'
+        raw_output = _apply_output_opts(raw_output, output_range, lineno)
         entries.append((cmd, raw_output))
 
     if not entries:

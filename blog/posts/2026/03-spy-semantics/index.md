@@ -454,7 +454,7 @@ def main() -> None:
     print(add(1, 2))
 ```
 
-```autorun
+```autorun output-range=9-16
 $ spy type-error2.spy
 Traceback (most recent call last):
   * type-error2::main at /.../autorun/type-error2.spy:5
@@ -1026,7 +1026,7 @@ def main() -> None:
     print(x)
 ```
 
-```autorun
+```autorun output-range=6-
 $ spy op2.spy
 Traceback (most recent call last):
   * op2::main at /.../autorun/op2.spy:2
@@ -1071,7 +1071,7 @@ hello
 
 However, if we try to `build` or `redshift` it, we get an error:
 
-```autorun
+```autorun output-range=7-
 $ spy redshift op3.spy
 Static error during redshift:
 Traceback (most recent call last):
