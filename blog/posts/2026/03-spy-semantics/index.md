@@ -38,11 +38,6 @@ SPy implements static typing, and we will start to dive into metaprogramming.
     [Anaconda](https://www.anaconda.com/), for giving me the opportunity to dedicate
     100% of my time to this open-source project.
 
-    I'd also like to thank all the other SPy contributors and members of the SPy
-    community. Bootstrapping a community from zero is not an easy task and honestly it's
-    something which makes me proud :).
-
-
 <!-- more -->
 
 ## Motivation and goals, recap
@@ -1300,3 +1295,10 @@ post(s) of the series we will talk about things like:
 
 For those who are curious, I suggest to have a look at the
 [stdlib](https://github.com/spylang/spy/tree/main/stdlib). In particular, the builtin types [`list`](https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_list.spy), [`dict`](https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_dict.spy) and [`tuple`](https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_tuple.spy) are implemented **in pure SPy**.
+
+
+Finally, I'd like to thank all the other SPy contributors and members of the SPy
+community. Bootstrapping a community from zero is not an easy task and honestly it's
+something which makes me proud :).
+
+Thanks also to Pierre Augier, Hood Chatham and Val Haenel for reviewing this blog post.
