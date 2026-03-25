@@ -912,7 +912,7 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
 
     The **only** difference between the two decorators is that `@blue` creates a blue
     function which is called via parentheses, while `@blue.generic` creates a blue
-    function which is called via square brackets. Apart that, they behave exactly the
+    function which is called via square brackets. Apart from that, they behave exactly the
     same.
 
     In particular, there is no limitation w.r.t. types of arguments and return
