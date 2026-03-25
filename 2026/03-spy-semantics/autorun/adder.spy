@@ -1,4 +1,3 @@
-
 @blue
 def make_adder(n: int):
     def add(x: int) -> int:

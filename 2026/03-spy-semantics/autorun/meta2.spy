@@ -1,4 +1,3 @@
-
 @blue.generic
 def zero(T):
     "Return the 'zero' value for the given type"

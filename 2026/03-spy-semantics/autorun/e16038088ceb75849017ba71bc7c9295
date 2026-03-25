@@ -1,19 +1,19 @@
 [31;01mStatic error during redshift:[00m
 Traceback (most recent call last):
-  * [35m[redshift] op3::add[00m at /.../autorun/op3.spy:3
+  * [35m[redshift] op3::add[00m at /.../autorun/op3.spy:2
   |     return x + y
   | [31;01m           |___|[00m
 
 [31;01mTypeError[00m: cannot do `i32` + `str`
-  | /.../autorun/op3.spy:3
+  | /.../autorun/op3.spy:2
   |     return x + y
   | [31;01m           ^ this is `i32`[00m
 
-  | /.../autorun/op3.spy:3
+  | /.../autorun/op3.spy:2
   |     return x + y
   | [31;01m               ^ this is `str`[00m
 
-  | /.../autorun/op3.spy:3
+  | /.../autorun/op3.spy:2
   |     return x + y
   | [32;01m           |___| operator::ADD called here[00m
 

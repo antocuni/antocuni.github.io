@@ -1,0 +1,11 @@
+@blue.generic
+def SmallString(size: int):
+    if size > 32:
+        raise StaticError("SmallString must be at most 32 chars")
+    return str # just kidding :)
+
+def say_hello(name: SmallString[64]) -> None:
+    print(name)
+
+def main() -> None:
+    pass

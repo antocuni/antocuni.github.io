@@ -8,5 +8,8 @@ add5 = [35;01m`meta1::make_adder::add#1`[00m
     [34;01mreturn[00m x + [33;01m5[00m
 
 [34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    [00mprint_str[00m([32;01m"<spy type 'def(str) -> str'>"[00m)
     [00mprint_str[00m([35;01m`meta1::make_adder::add`[00m([32;01m'hello'[00m))
+    [00mprint_str[00m([32;01m'---'[00m)
+    [00mprint_str[00m([32;01m"<spy type 'def(i32) -> i32'>"[00m)
     [00mprint_i32[00m([35;01m`meta1::make_adder::add#1`[00m([33;01m2[00m))

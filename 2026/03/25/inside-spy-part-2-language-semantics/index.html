@@ -1,0 +1,2349 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Antonio Cuni's blog">
+      
+      
+      
+        <link rel="canonical" href="https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/">
+      
+      
+        <link rel="prev" href="../../22/my-first-oss-commit-turns-20-today/">
+      
+      
+      
+        <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
+        <link rel="alternate" type="application/rss+xml" title="RSS feed of updated content" href="../../../../feed_rss_updated.xml">
+      
+      <link rel="icon" href="../../../../assets/logo.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.3">
+    
+    
+      
+        <title>Inside SPy, part 2: Language semantics - Antonio Cuni's blog</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  <!-- Cloudflare Web Analytics --><script defer="" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{&quot;token&quot;: &quot;d4f1a528574542379dff7343f8204da8&quot;}"></script><!-- End Cloudflare Web Analytics -->
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  <meta property="og:description" content="Language semantics: phases of execution, redshifting, static typing, and metaprogramming in SPy">
+<meta property="og:image" content="https://antocuni.eu/2026/03-spy-semantics/og-image.png">
+<meta name="author" content="Antonio Cuni">
+<meta property="og:title" content="Inside SPy, part 2: Language semantics">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Inside SPy, part 2: Language semantics">
+<meta name="twitter:description" content="Language semantics: phases of execution, redshifting, static typing, and metaprogramming in SPy">
+<meta name="twitter:image" content="https://antocuni.eu/2026/03-spy-semantics/og-image.png">
+<link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#inside-spy-part-2-language-semantics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Antonio Cuni's blog" class="md-header__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Antonio Cuni's blog
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Inside SPy, part 2: Language semantics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="red" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="cyan" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden="">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required="">
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix="">
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden="">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Antonio Cuni's blog" class="md-nav__button md-logo" aria-label="Antonio Cuni's blog" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.svg" alt="logo">
+
+    </a>
+    Antonio Cuni's blog
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix="">
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../tags/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tags
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../feed_rss_created.xml" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    RSS feed
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2026/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2026
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2021/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2021
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2019/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2019
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2018/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2018
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2017/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2017
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2012/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2012
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2011/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2011
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2010/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2010
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2009/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2009
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2008/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    2008
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix="">
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/post/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Post
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/talk/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Talk
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#motivation-and-goals-recap" class="md-nav__link">
+    <span class="md-ellipsis">
+      Motivation and goals, recap
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phases-of-execution-and-compilation-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Phases of execution and compilation pipeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hello-world" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hello world
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-typing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static typing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator-dispatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator dispatch
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-vs-dynamic-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static vs dynamic types
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#redshifting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redshifting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#blue-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      @blue functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#type-manipulation-and-generics" class="md-nav__link">
+    <span class="md-ellipsis">
+      Type manipulation and generics
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operator-dispatch-revisited" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operator dispatch, revisited.
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-typing-as-a-special-case-of-blue-evaluation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Static typing as a special case of @blue evaluation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#powerful-metaprogramming-with-blue-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Powerful metaprogramming with @blue functions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      Next steps
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+                        <time datetime="2026-03-25 00:00:00+00:00" class="md-ellipsis">Mar 25, 2026</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/post/">Post</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+                          <span class="md-ellipsis">
+                            
+                              23 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+              <ul class="md-post__meta md-nav__list">
+                <li class="md-nav__item md-nav__item--section">
+                  <div class="md-post__title">
+                    <span class="md-ellipsis">
+                      Related links
+                    </span>
+                  </div>
+                  <nav class="md-nav">
+                    <ul class="md-nav__list">
+                      
+                        
+                        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../2025/10/29/inside-spy-part-1-motivations-and-goals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Inside SPy, part 1
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+                      
+                    </ul>
+                  </nav>
+                </li>
+              </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+  <nav class="md-tags">
+    
+      
+      
+      
+        <a href="../../../../tags/#tag:spy" class="md-tag">spy</a>
+      
+    
+  </nav>
+
+
+
+<h1 id="inside-spy-part-2-language-semantics">Inside SPy 🥸, part 2: Language semantics<a class="headerlink" href="#inside-spy-part-2-language-semantics" title="Permanent link">¶</a></h1>
+<!-- spy git commit: 229235b8 -->
+
+<p>This is the second post of the <em>Inside SPy</em> series. The <a href="../../../../2025/10/29/inside-spy-part-1-motivations-and-goals/">first
+post</a> was mostly about motivations and
+goals of <a href="https://github.com/spylang/spy">SPy</a>. This post will cover in more detail the
+semantics of SPy, including the parts which make it different from CPython.</p>
+<p>We will talk about phases of execution, <em>colors</em>, redshifting, the very peculiar way
+SPy implements static typing, and we will start to dive into metaprogramming.</p>
+<div class="admonition success">
+<p>Before diving in, I want to express my gratitude to my employer,
+<a href="https://www.anaconda.com/">Anaconda</a>, for giving me the opportunity to dedicate
+100% of my time to this open-source project.</p>
+</div>
+<!-- more -->
+
+<h2 id="motivation-and-goals-recap">Motivation and goals, recap<a class="headerlink" href="#motivation-and-goals-recap" title="Permanent link">¶</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Shameless plug: give SPy a star ⭐</p>
+<p>I admit I never cared much about GitHub stars, but it looks like nowadays it's what
+you need to be <a href="https://claude.com/contact-sales/claude-for-oss">considered
+important</a>. We are at 678 stars at
+the moment of writing, <a href="https://github.com/spylang/spy">let's try</a> to get to 5000!</p>
+</div>
+<p><a href="../../../../2025/10/29/inside-spy-part-1-motivations-and-goals/">Part 1</a> describes motivations and
+goals in great detail, but let's do a quick recap.</p>
+<p>The main motivation is to make Python faster; by "faster" I mean comparable to C, Rust
+and Go.  After spending 20 years in this problem space, I am convinced that it's
+impossible to achieve such a goal without breaking compatibility.</p>
+<p>The second motivation is that static typing is playing a more and more important role in
+the Python community, but Python is not a language designed for that, which leads to a
+<a href="../../../../2025/10/29/inside-spy-part-1-motivations-and-goals/#static-typing-in-python">suboptimal
+experience</a>.</p>
+<p>There are two possible definitions of SPy; both of them are accurate, although from very
+different perspectives:</p>
+<blockquote>
+<p>SPy is an interpreter <em>and</em> a compiler for a <strong>statically typed variant</strong> of Python,
+with focus on performance.</p>
+</blockquote>
+<p>and:</p>
+<blockquote>
+<p>SPy is a thought experiment to determine how much dynamicity we can remove from Python
+while still feeling Pythonic.</p>
+</blockquote>
+<p>The part about "interpreter <em>and</em> compiler" is fundamental: the interpreter is needed
+for ease of development and debugging, the compiler is needed for speed. The job of SPy
+is to ensure that the two pieces have the exact same semantics so that the compilation
+step is just a transparent speedup.</p>
+<p>100% compatibility with Python is <strong>explicitly not a goal</strong>.  <a href="../../../../2025/10/29/inside-spy-part-1-motivations-and-goals/#the-zen-of-spy">The Zen of
+SPy</a> contains the goals
+and design guidelines of SPy. This is a shortened version, see the link for full
+details:</p>
+<ol>
+<li>
+<p>Easy to use and implement.</p>
+</li>
+<li>
+<p>We have an interpreter.</p>
+</li>
+<li>
+<p>We have a compiler.</p>
+</li>
+<li>
+<p>Static typing.</p>
+</li>
+<li>
+<p>Performance matters.</p>
+</li>
+<li>
+<p>Predictable performance.</p>
+</li>
+<li>
+<p>Rich metaprogramming capabilities.</p>
+</li>
+<li>
+<p>Zero cost abstractions.</p>
+</li>
+<li>
+<p>Opt-in dynamism.</p>
+</li>
+<li>
+<p>One language, two levels.</p>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">SPy version and playground</p>
+<p>At the moment of writing, SPy is still changing very rapidly and it's very likely
+that some of the examples will break in the future. We don't have any official
+release yet, but all the following examples have been tried on <a href="https://github.com/spylang/spy/tree/229235b8">SPy commit
+229235b8</a>.</p>
+<p>All the examples have a <code>Try it yourself</code> button which opens the code snippet in the
+SPy Playground, a PyScript app to try SPy directly in the browser. The <a href="https://spylang.github.io/spy">official SPy
+playground</a> tracks the latest git <code>main</code>, while this
+blog post uses a <a href="https://antocuni.eu/files/spy/playground/2026-03-20-main-229235b8/">custom
+version</a> pinned
+to this exact commit.</p>
+</div>
+<h2 id="phases-of-execution-and-compilation-pipeline">Phases of execution and compilation pipeline<a class="headerlink" href="#phases-of-execution-and-compilation-pipeline" title="Permanent link">¶</a></h2>
+<p>From the point of view of the user, SPy code runs in three distinct <strong>execution
+phases</strong>:</p>
+<ol>
+<li>
+<p><strong>Import time</strong>: this is when we run all the module-level code, including global
+   variable initializers, decorators, metaclasses, etc.. After this phase, <strong>all the
+   globals are frozen</strong>.</p>
+</li>
+<li>
+<p><strong>Redshift</strong>: during this phase we apply partial evaluation to all expressions that
+   are safe to be evaluated eagerly.  This is an optional phase which happens only
+   during compilation or when explicitly requested.  The presence/absence of redshift
+   <strong>should not have any visible effects</strong> on the behavior of the program.</p>
+</li>
+<li>
+<p><strong>Runtime</strong>: the actual execution of the program, starting from a <code>main</code> function.</p>
+</li>
+</ol>
+<p>The following is a diagram representing the compilation pipeline in the simplified case
+of a single <code>.spy</code> file:</p>
+<pre class="mermaid"><code>graph TD
+
+    subgraph FRONTEND["Import time"]
+        SRC["*.spy source"]:::node
+        AST["Untyped AST"]:::node
+        SYMAST["Untyped AST + symtable"]:::node
+        IMPORTLABEL(["import"]):::label
+
+        SRC -- parse --&gt; AST
+        AST -- ScopeAnalyzer --&gt; SYMAST
+        SYMAST --- IMPORTLABEL
+    end
+
+    SPyVM["SPyVM"]:::node
+    IMPORTLABEL --&gt; SPyVM
+
+    subgraph RS[" "]
+        RSLABEL(["redshift"]):::label
+        REDSHIFTED["Typed AST"]:::node
+    end
+
+    C["C Source (.c)"]:::node
+    EXE_NAT["Native exe"]:::node
+    EXE_WASI["WASI exe"]:::node
+    EXE_EM["Emscripten exe"]:::node
+
+    subgraph RT["Runtime"]
+        INTERP(["interp"]):::label
+        DOPPLER(["interp(doppler)"]):::label
+        EXECUTE_NAT(["execute"]):::label
+        EXECUTE_WASI(["execute"]):::label
+        EXECUTE_EM(["execute"]):::label
+    end
+
+    OUT["Output"]:::node
+    SPyVM --- INTERP --&gt; OUT
+
+    SPyVM --- RSLABEL --&gt; REDSHIFTED
+    REDSHIFTED -- cwrite --&gt; C
+    REDSHIFTED --- DOPPLER --&gt; OUT
+
+    C -- cc --&gt; EXE_NAT --- EXECUTE_NAT --&gt; OUT
+    C -- cc --&gt; EXE_WASI --- EXECUTE_WASI --&gt; OUT
+    C -- cc --&gt; EXE_EM --- EXECUTE_EM --&gt; OUT
+
+    style FRONTEND fill:#fafaff,stroke:#9090cc,stroke-dasharray:5 5
+    style RS fill:#fafaff,stroke:#9090cc,stroke-dasharray:5 5
+    style RT fill:#fafaff,stroke:#9090cc,stroke-dasharray:5 5
+
+    classDef node fill:#e8eaf6,stroke:#5c6bc0,color:#1a237e;
+    classDef label fill:#fafaff,stroke:none,color:#1a237e;</code></pre>
+<p>The first steps up to and including <code>ScopeAnalyzer</code> are classical compiler
+stages. Contrarily to CPython, SPy doesn't produce bytecode. In SPy, executable code is
+kept in form of AST, which is then transformed during the various stages of the
+pipeline. <strong>SPy AST is used as the internal IR of both the compiler and the
+interpreter</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">AST vs bytecode</p>
+<p>Why using the AST instead of a bytecode as CPython does?</p>
+<p>In the very early days of the project, SPy was bytecode based. Then
+<a href="https://github.com/spylang/spy/pull/4">PR #4</a> switched to the AST interpreter.</p>
+<p>The main advantage is that it's simpler and easier to implement, especially
+redshifting; bytecode-based execution is more complex because you need both the
+bytecode compiler and the bytecode VM but tends to be faster to execute. This
+tradeoff makes a lot of sense for CPython, where bytecode is the only means of
+execution, but less for SPy where we also have a C backend.</p>
+<p>That said, the long-term goal for SPy's interpreter is to have performance
+comparable to CPython.</p>
+</div>
+<p>The <code>import</code> step is interesting: it imports the given module <strong>and all of its
+dependencies</strong> in the running <code>SPyVM</code> instance.  The dependencies are determined and
+resolved statically, by scanning for the presence of <code>import</code> statements, recursively.
+This means that all needed modules are imported eagerly, including modules which are
+imported only inside of function bodies (even if those functions are never executed).
+This is a big departure from CPython semantics, but it is essential to the design of SPy
+and enables many important features. We will talk more about it later in this series.</p>
+<p>"Import time" is always executed by the interpreter. After that we can run the code
+in three different modes:</p>
+<ul>
+<li>
+<p><strong>interpreted mode</strong>: the untyped AST is executed by the interpreter.</p>
+</li>
+<li>
+<p><strong>doppler mode</strong>: <code>redshift</code> transforms untyped ASTs into typed ASTs, which are then
+  executed by the interpreter. This is mostly used by tests to ensure that the redshift
+  pass produces correct code.</p>
+</li>
+<li>
+<p><strong>compiled mode</strong>: <code>redshift</code> transforms untyped ASTs into typed ASTs. Then we
+  feed the typed AST to the C backend, which produces C code, which is finally compiled
+  by <code>gcc</code>, <code>clang</code> or any other C compiler.  SPy supports traditional native targets as
+  well as the WebAssembly targets WASI and Emscripten.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Why C code and not LLVM?</p>
+<p>At this stage we are trying to optimize for time to market. Emitting C code is much
+simpler, easier to develop and easier to debug, while still getting performance
+comparable to LLVM.</p>
+<p>Moreover, by using C as the common ground we automatically have lots of great
+existing tools at our disposal, like debuggers, profilers, build systems, etc.  And
+using C makes it very easy to target new platforms such as e.g. emscripten.</p>
+</div>
+<h2 id="hello-world">Hello world<a class="headerlink" href="#hello-world" title="Permanent link">¶</a></h2>
+<p>Unlike in Python, the main entry point of a program is not module-level code, but
+it's the <code>main</code> function. This is needed because as we saw above, module level code is
+always executed "at compile time".</p>
+<p>Thus, this is the hello world in SPy:</p>
+<div class="highlight"><span class="filename">hello.spy</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"Hello world!"</span><span class="p">)</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/hello.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<p>We can run it in interpreted mode, as we would do in Python:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy hello.spy
+Hello world!
+</code></pre></div>
+
+<p>We can do redshifting and inspect the transformed version. By default <code>spy redshift</code> (or
+<code>spy rs</code>) has a pretty printer which shows typed AST in source code form, which is
+easier to read. In this case the redshifted version is very similar to the original, but
+e.g. we can see that <code>print</code> has been specialized to <code>print_str</code>:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift hello.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_str(<span style="font-weight: bold; color: #50FA7B">'Hello world!'</span>)
+</code></pre></div>
+
+<p>We can run it in doppler mode as follows:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift -x hello.spy
+Hello world!
+</code></pre></div>
+
+<p>Finally, we can run in compiled mode by building an executable and then running it:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy build hello.spy
+[debug] build/hello 
+
+$ ./build/hello
+Hello world!
+</code></pre></div>
+
+<p>If you are curious, you can have a look at the generated C code. We will talk in depth
+about it later during this series:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ tail -10 build/src/hello.c | pygmentize -l C -f terminal
+<span style="color: #BFBFBF">// content of the module</span>
+<span style="color: #BFBFBF"></span>
+<span style="color: #8BE9FD">int</span><span style="color: #BFBFBF"> </span><span style="color: #50FA7B">main</span>(<span style="color: #8BE9FD">void</span>)<span style="color: #BFBFBF"> </span>{<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>spy_hello$main();<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span><span style="color: #BD93F9">return</span><span style="color: #BFBFBF"> </span><span style="color: #BD93F9">0</span>;<span style="color: #BFBFBF"></span>
+}<span style="color: #BFBFBF"></span>
+<span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(1, 18)</span><span style="color: #8BE9FD"></span>
+<span style="color: #8BE9FD">void</span><span style="color: #BFBFBF"> </span><span style="color: #50FA7B">spy_hello$main</span>(<span style="color: #8BE9FD">void</span>)<span style="color: #BFBFBF"> </span>{<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>spy_builtins$print_str(&amp;SPY_g_str0<span style="color: #BFBFBF"> </span><span style="color: #BFBFBF">/* 'Hello world!' */</span>);<span style="color: #BFBFBF"></span>
+}<span style="color: #BFBFBF"></span>
+</code></pre></div>
+
+<p>By default, it compiles to debug mode for the <code>native</code> platform, but you can use
+<code>--release</code> to switch to release mode and <code>--target</code> to select a different platform.</p>
+<h2 id="static-typing">Static typing<a class="headerlink" href="#static-typing" title="Permanent link">¶</a></h2>
+<p>In SPy, <strong>type annotations are always enforced</strong>. After all,
+the <strong>S</strong> stands for <em>static</em> :). This is probably the biggest departure
+from CPython, which explicitly ignores type annotations at runtime.</p>
+<div class="highlight"><span class="filename">type-error1.spy</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">x</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">"hello"</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/type-error1.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy type-error1.spy
+Traceback (most recent call last):
+  * <span style="color: #FF79C6">type-error1::main</span> at /.../autorun/type-error1.spy:2
+  |     x: int = "hello"
+  | <span style="font-weight: bold; color: #FF5555">             |_____|</span>
+
+<span style="font-weight: bold; color: #FF5555">TypeError</span>: mismatched types
+  | /.../autorun/type-error1.spy:2
+  |     x: int = "hello"
+  | <span style="font-weight: bold; color: #FF5555">             |_____| expected `i32`, got `str`</span>
+
+  | /.../autorun/type-error1.spy:2
+  |     x: int = "hello"
+  | <span style="font-weight: bold; color: #50FA7B">       |_| expected `i32` because of type declaration</span>
+
+
+</code></pre></div>
+
+<p>This also applies to e.g. function calls, <code>return</code> statements, etc.</p>
+<p>Type annotations are mandatory for function arguments and return types. They are
+optional for variables.  For variables with no type annotation, we do a very limited form of type inference to determine the type of the variable from the type of its initializer.  We can use the
+special function <code>STATIC_TYPE</code> to inspect it:</p>
+<div class="highlight"><span class="filename">type-inference.spy</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">x</span> <span class="o">=</span> <span class="s2">"hello"</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">STATIC_TYPE</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/type-inference.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy type-inference.spy
+&lt;spy type 'str'&gt;
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title">Type annotation of <code>@blue</code> functions</p>
+<p>Type annotations are mandatory only for "red" functions. For "blue" functions they
+are optional and they default to <code>dynamic</code>. We will talk about this in the
+appropriate section.  <code>@blue</code> functions are explained <a href="#blue-functions">later</a>.</p>
+</div>
+<h2 id="operator-dispatch">Operator dispatch<a class="headerlink" href="#operator-dispatch" title="Permanent link">¶</a></h2>
+<p>In SPy, as in Python, almost every syntactical form is turned into an operator call. So
+e.g. <code>+</code> is equivalent to <code>operator.add</code>, <code>a.b</code> is equivalent to <code>getattr</code>, and in turn
+they call the various <code>__add__</code>, <code>__getattr__</code>, etc.</p>
+<p>Whereas in Python operator dispatch happens dynamically, in SPy it happens
+statically. An example is worth a thousand words:</p>
+<div class="highlight"><span class="filename">op_dispatch.spy</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_int</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">add_str</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/op_dispatch.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift --full-fqn op_dispatch.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`op_dispatch::add_int`</span>(x: <span style="font-weight: bold; color: #FF79C6">`builtins::i32`</span>, y: <span style="font-weight: bold; color: #FF79C6">`builtins::i32`</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">`builtins::i32`</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::i32_add`</span>(x, y)
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`op_dispatch::add_str`</span>(x: <span style="font-weight: bold; color: #FF79C6">`builtins::str`</span>, y: <span style="font-weight: bold; color: #FF79C6">`builtins::str`</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">`builtins::str`</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::str_add`</span>(x, y)
+</code></pre></div>
+
+<p>Here we see that after redshifting, the generic <code>+</code> operators have been replaced by
+concrete <code>i32_add</code> and <code>str_add</code> calls, which the C backend then replaces with direct
+call to the appropriate function.</p>
+<div class="admonition note">
+<p class="admonition-title">Fully Qualified Names and <code>--full-fqn</code></p>
+<p>A Fully Qualified Name is a unique identifier assigned to every
+function, type and constant inside a running SPy VM.</p>
+<p>By default, <code>spy redshift</code> uses a special "pretty" output mode which is easier to
+read for humans and e.g. prints <code>i32</code> instead of <code>builtins::i32</code>, and <code>x + y</code>
+instead of <code>operator::i32_add(x, y)</code>. The <code>--full-fqn</code> option turns off pretty printing. Try running
+<code>spy redshift op_dispatch.spy</code> to see the difference.</p>
+</div>
+<h2 id="static-vs-dynamic-types">Static vs dynamic types<a class="headerlink" href="#static-vs-dynamic-types" title="Permanent link">¶</a></h2>
+<p>Operator dispatch is based on <strong>static types</strong>. SPy distinguishes between static and
+dynamic types of expression:</p>
+<ul>
+<li>
+<p>the <strong>static type</strong> is the type as known by the compiler;</p>
+</li>
+<li>
+<p>the <strong>dynamic type</strong> (or just the "type") is the actual type of the concrete object
+    in memory.</p>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Static/dynamic <em>types</em> vs static/dynamic <em>typing</em></p>
+<p>Don't confuse this with the more familiar distinction between <a href="https://en.wikipedia.org/wiki/Type_system#Static_and_dynamic_type_checking_in_practice">statically typed and
+dynamically typed
+<em>languages</em></a>. That
+refers to <strong>when</strong> types are checked (at compile time vs at runtime). Here we are
+talking about something different: every single expression has both a static type
+and a <a href="https://en.wikipedia.org/wiki/Type_system#Dynamic_type_checking_and_runtime_type_information">dynamic
+type</a>,
+and they may differ. The <strong>static type</strong> is what the compiler knows; the <strong>dynamic
+type</strong> is what the value actually is at runtime.</p>
+<p>I agree it's confusing, but at the same time it's standard programming-language
+terminology, commonly used in languages like C++, Java and C#. Naming things is hard
+:).</p>
+</div>
+<div class="highlight"><span class="filename">static-dynamic-types.spy</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">print_types</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">STATIC_TYPE</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">print_types</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"---"</span><span class="p">)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">print_types</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">)</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/static-dynamic-types.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy static-dynamic-types.spy
+&lt;spy type 'object'&gt;
+&lt;spy type 'i32'&gt;
+---
+&lt;spy type 'object'&gt;
+&lt;spy type 'str'&gt;
+</code></pre></div>
+
+<p>This has interesting consequences, and it's another big departure from Python. The
+example below fails because the dispatch of <code>+</code> happens on the static type, which is
+<code>object</code>:</p>
+<div class="highlight"><span class="filename">type-error2.spy</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">object</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/type-error2.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy type-error2.spy
+[...]
+<span style="font-weight: bold; color: #FF5555">TypeError</span>: cannot do `object` + `object`
+  | /.../autorun/type-error2.spy:2
+  |     return x + y
+  | <span style="font-weight: bold; color: #FF5555">           ^ this is `object`</span>
+
+  | /.../autorun/type-error2.spy:2
+  |     return x + y
+  | <span style="font-weight: bold; color: #FF5555">               ^ this is `object`</span>
+[...]
+</code></pre></div>
+
+<p>It is possible to explicitly opt into dynamic dispatch by using the special type
+<code>dynamic</code>:</p>
+<div class="highlight"><span class="filename">dynamic_dispatch.spy</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">dynamic</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">dynamic</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">dynamic</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="s2">"hello "</span><span class="p">,</span> <span class="s2">"world"</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/dynamic_dispatch.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy dynamic_dispatch.spy
+3
+hello world
+
+$ spy redshift dynamic_dispatch.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> add(x: <span style="font-weight: bold; color: #FF79C6">dynamic</span>, y: <span style="font-weight: bold; color: #FF79C6">dynamic</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">dynamic</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::dynamic_add`</span>(x, y)
+
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_dynamic(<span style="font-weight: bold; color: #FF79C6">`dynamic_dispatch::add`</span>(<span style="font-weight: bold; color: #F1FA8C">1</span>, <span style="font-weight: bold; color: #F1FA8C">2</span>))
+    print_dynamic(<span style="font-weight: bold; color: #FF79C6">`dynamic_dispatch::add`</span>(<span style="font-weight: bold; color: #50FA7B">'hello '</span>, <span style="font-weight: bold; color: #50FA7B">'world'</span>))
+</code></pre></div>
+
+<p>The rationale is that dynamic dispatch is costly and prevents many other
+optimizations. By requiring an explicit opt-in, we can make sure that it's used only when
+it's really needed without hurting the performance of "normal" code.</p>
+<div class="admonition tip">
+<p class="admonition-title">Current Status: <code>dynamic</code></p>
+<p>At the time of writing, <code>dynamic</code> works in the interpreter, but not yet in the
+compiler.</p>
+</div>
+<h2 id="redshifting">Redshifting<a class="headerlink" href="#redshifting" title="Permanent link">¶</a></h2>
+<p>Redshifting is a core concept of SPy to enable good performance without sacrificing
+usability.  The core idea is that given a piece of code, there are parts of it that can be
+computed at compile time, leaving less code to run at runtime.  It's a form
+of partial evaluation.</p>
+<p>To do that, we introduce the concept of <em>color of an expression</em>: expressions whose value
+is known at compile time are <strong>blue</strong>; expressions which must be evaluated at runtime
+are <strong>red</strong>.  Examples of blue expressions are:</p>
+<ol>
+<li>
+<p>literals, like <code>42</code> or <code>"hello"</code>;</p>
+</li>
+<li>
+<p>module-level constants;</p>
+</li>
+<li>
+<p>function calls if the <strong>target function is known</strong> at compile time, it's <strong>pure</strong>,
+     and all the arguments are blue;</p>
+</li>
+<li>
+<p>function calls which are explicitly marked as <code>@blue</code>.</p>
+</li>
+</ol>
+<p>Examples of <strong>red</strong> expressions are:</p>
+<ol>
+<li>everything else :).</li>
+</ol>
+<p>Let's start with a silly example:</p>
+<div class="highlight"><span class="filename">rs1.spy</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">3</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/rs1.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<p>We can see the colors and the result of redshifting by running <code>spy colorize</code>, and <code>spy
+redshift</code>; <code>colorize</code> shows the <strong>original</strong> source code with colors; <code>redshift</code> shows
+the redshifted source code:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy colorize rs1.spy
+def foo(x: int) -&gt; int:
+    return <span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">x + </span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">2 * 3</span>
+
+$ spy redshift rs1.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> foo(x: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> x + <span style="font-weight: bold; color: #F1FA8C">6</span>
+</code></pre></div>
+
+<p>Notable things:</p>
+<ul>
+<li>
+<p><code>2</code> and <code>3</code> are blue because they are literals;</p>
+</li>
+<li>
+<p><code>2 * 3</code> is blue because it's a pure operation between blue values;</p>
+</li>
+<li>
+<p><code>x + ...</code> is red because <code>x</code> is a function argument and thus unknown at compile
+    time;</p>
+</li>
+<li>
+<p>in the redshifted version, <code>2 * 3</code> has been replaced by <code>6</code>. This is a silly
+    optimization which any compiler can do, but as we will see later redshifting is much
+    more powerful than that.</p>
+</li>
+</ul>
+<p>Internally, redshifting operates on the AST (Abstract Syntax Tree). First, let's look at
+the original AST (click on it to open the full interactive version — it's worth it):</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy parse --format html rs1.spy
+Written build/rs1_parse.html
+</code></pre></div>
+
+<div class="antocuni-popup-wrapper"><div onclick="var el=document.getElementById('antocuni-popup-1');el.style.display='flex';document.body.style.overflow='hidden';" style="cursor:pointer;text-align:center;"><img src="/posts/2026/03-spy-semantics/rs1_parse.svg" class="off-glb" style="max-width:100%;cursor:pointer;"><div style="font-size:0.85em;color:#888;margin-top:4px;">click to expand</div></div><div id="antocuni-popup-1" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;overflow:hidden;touch-action:none;" onclick="var el=document.getElementById('antocuni-popup-1');el.style.display='none';document.body.style.overflow='';"><div style="position:relative;width:92vw;height:92vh;max-height:calc(100dvh - 4vh);background:white;border-radius:8px;overflow:hidden;" onclick="event.stopPropagation()"><button onclick="var el=document.getElementById('antocuni-popup-1');el.style.display='none';document.body.style.overflow='';" style="position:absolute;top:8px;right:12px;z-index:10000;font-size:1.5em;background:none;border:none;cursor:pointer;color:#333;">×</button><iframe src="/posts/2026/03-spy-semantics/autorun/build/rs1_parse.html" style="width:100%;height:100%;border:none;"></iframe></div></div></div>
+
+<p>It's a textbook AST: each node represent a binary operation, with <code>left</code> and
+<code>right</code> children. Now let's look again at <code>spy colorize</code>, this time looking at the AST:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy colorize --format html rs1.spy
+Written build/rs1_colorize.html
+</code></pre></div>
+
+<div class="antocuni-popup-wrapper"><div onclick="var el=document.getElementById('antocuni-popup-2');el.style.display='flex';document.body.style.overflow='hidden';" style="cursor:pointer;text-align:center;"><img src="/posts/2026/03-spy-semantics/rs1_colorize.svg" class="off-glb" style="max-width:100%;cursor:pointer;"><div style="font-size:0.85em;color:#888;margin-top:4px;">click to expand</div></div><div id="antocuni-popup-2" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;overflow:hidden;touch-action:none;" onclick="var el=document.getElementById('antocuni-popup-2');el.style.display='none';document.body.style.overflow='';"><div style="position:relative;width:92vw;height:92vh;max-height:calc(100dvh - 4vh);background:white;border-radius:8px;overflow:hidden;" onclick="event.stopPropagation()"><button onclick="var el=document.getElementById('antocuni-popup-2');el.style.display='none';document.body.style.overflow='';" style="position:absolute;top:8px;right:12px;z-index:10000;font-size:1.5em;background:none;border:none;cursor:pointer;color:#333;">×</button><iframe src="/posts/2026/03-spy-semantics/autorun/build/rs1_colorize.html" style="width:100%;height:100%;border:none;"></iframe></div></div></div>
+
+<p>Finally, the redshifted version:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift --format html rs1.spy
+Written build/rs1_rs.html
+</code></pre></div>
+
+<div class="antocuni-popup-wrapper"><div onclick="var el=document.getElementById('antocuni-popup-3');el.style.display='flex';document.body.style.overflow='hidden';" style="cursor:pointer;text-align:center;"><img src="/posts/2026/03-spy-semantics/rs1_rs.svg" class="off-glb" style="max-width:100%;cursor:pointer;"><div style="font-size:0.85em;color:#888;margin-top:4px;">click to expand</div></div><div id="antocuni-popup-3" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;overflow:hidden;touch-action:none;" onclick="var el=document.getElementById('antocuni-popup-3');el.style.display='none';document.body.style.overflow='';"><div style="position:relative;width:92vw;height:92vh;max-height:calc(100dvh - 4vh);background:white;border-radius:8px;overflow:hidden;" onclick="event.stopPropagation()"><button onclick="var el=document.getElementById('antocuni-popup-3');el.style.display='none';document.body.style.overflow='';" style="position:absolute;top:8px;right:12px;z-index:10000;font-size:1.5em;background:none;border:none;cursor:pointer;color:#333;">×</button><iframe src="/posts/2026/03-spy-semantics/autorun/build/rs1_rs.html" style="width:100%;height:100%;border:none;"></iframe></div></div></div>
+
+<p>During redshifting we find all the subtrees which are fully blue, and replace them with
+a single constant node containing the result.  In this case, the whole subtree <code>2 * 3</code>
+has been replaced by a single node <code>6</code>. This also explain <strong>why it's called
+redshifting</strong>: because the resulting tree is "less blue" and the average color "shifts to
+the red".</p>
+<p>Moreover, the remaining BinOp <code>x + 6</code> has been converted into a concrete call to
+<code>i32_add</code> as we saw in the <a href="#operator-dispatch">Operator Dispatch</a> section above. Note
+that the node for <code>i32_add</code> is blue, because the <strong>callee</strong> is constant and known at
+compile time, but the <code>Call</code> itself is red because the function will be called at
+runtime.</p>
+<h2 id="blue-functions"><code>@blue</code> functions<a class="headerlink" href="#blue-functions" title="Permanent link">¶</a></h2>
+<p>What we have seen so far is a very complicated way to do simple numerical
+optimizations, which is a bit underwhelming.  Redshifting becomes more interesting in
+combination with <code>@blue</code> functions.</p>
+<p>These are functions which are <strong>guaranteed</strong> to be eagerly evaluated. It is mandatory
+that all the arguments are blue as well, and the function is evaluated <strong>by the
+interpreter</strong> during redshifting.</p>
+<p>In the next sections we will see how they enable interesting metaprogramming patterns,
+but let's start with a simple example first:</p>
+<div class="highlight"><span class="filename">pi.spy</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="n">fabs</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nd">@blue</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_pi</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="sd">"""</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="sd">    Compute an approximation of PI using the Leibniz series</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="sd">    """</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">tol</span> <span class="o">=</span> <span class="mf">0.001</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">pi_approx</span> <span class="o">=</span> <span class="mf">0.0</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">term</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Initial term to enter the loop</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>    <span class="k">while</span> <span class="n">fabs</span><span class="p">(</span><span class="n">term</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>        <span class="k">if</span> <span class="n">k</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>            <span class="n">term</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>        <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>            <span class="n">term</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>        <span class="n">pi_approx</span> <span class="o">=</span> <span class="n">pi_approx</span> <span class="o">+</span> <span class="n">term</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">1</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>    <span class="k">return</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">pi_approx</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>    <span class="n">pi</span> <span class="o">=</span> <span class="n">get_pi</span><span class="p">()</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"pi:"</span><span class="p">)</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/pi.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy pi.spy
+pi:
+3.143588659585789
+
+$ spy redshift pi.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_str(<span style="font-weight: bold; color: #50FA7B">'pi:'</span>)
+    print_f64(<span style="font-weight: bold; color: #F1FA8C">3.143588659585789</span>)
+</code></pre></div>
+
+<p><code>get_pi</code> is a <code>@blue</code> function, and thus is evaluated at compile time. It's
+completely removed from the redshifted output and it will never be seen by the C
+backend. What is left after redshifting is just the <code>main</code> function with a constant value.</p>
+<div class="admonition note">
+<p class="admonition-title">Is the compiler Turing complete?</p>
+<p>In short: yes. <code>@blue</code> function can run arbitrary code, and thus potentially not
+even terminate.  From the purest theoretical Computer Science point of view, this is
+A Bad Thing.  However, Python shows that in practice it's less of a problem than you
+would think: after all, in Python, "import time" is also Turing complete.</p>
+<p>One possible way to deal with it is to give a certain amount of "computing power" to
+use during import time and redshift: each operation decreases the remaining power
+by one, if it reaches zero we abort.  However, we haven't felt the need to do that so
+far.</p>
+</div>
+<p>Things become more interesting when we create closures:</p>
+<div class="highlight"><span class="filename">adder.spy</span><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@blue</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_adder</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">n</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="k">return</span> <span class="n">add</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">add5</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">add7</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>    <span class="n">add9</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add5</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add7</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add9</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="n">add5_again</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add5_again</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/adder.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<p>This example works "as expected": if you ignore the <code>@blue</code> decorator, it works exactly
+as in CPython:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy adder.spy
+15
+17
+19
+15
+</code></pre></div>
+
+<p>However, <code>redshift</code> shows the magic:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift adder.spy
+add5 = <span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add`</span>
+add7 = <span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add#1`</span>
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add`</span>(x: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> x + <span style="font-weight: bold; color: #F1FA8C">5</span>
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add#1`</span>(x: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> x + <span style="font-weight: bold; color: #F1FA8C">7</span>
+
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add`</span>(<span style="font-weight: bold; color: #F1FA8C">10</span>))
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add#1`</span>(<span style="font-weight: bold; color: #F1FA8C">10</span>))
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add#2`</span>(<span style="font-weight: bold; color: #F1FA8C">10</span>))
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add`</span>(<span style="font-weight: bold; color: #F1FA8C">10</span>))
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`adder::make_adder::add#2`</span>(x: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> x + <span style="font-weight: bold; color: #F1FA8C">9</span>
+</code></pre></div>
+
+<p>Each invocation of <code>make_adder</code> creates a <em>new</em> specialized copy of <code>add</code>, each bound to
+a different value; each version is given an unique Fully Qualified Name.</p>
+<p><code>add5</code> and <code>add7</code> are created at module level, while <code>add9</code> is created inside the
+<code>main</code>, but the end result is the same.  It's also worth to note that the second call to
+<code>make_adder(5)</code> does <strong>NOT</strong> create yet another copy: <code>@blue</code> calls are automatically
+memoized, thus subsequent calls with the same arguments reuse the previously computed
+value.</p>
+<div class="admonition note">
+<p class="admonition-title">Where is <code>add9</code>?</p>
+<p>We don't see any mention of <code>add9</code> in the redshifted version. This happens because
+<code>add9</code> is just a local variable of <code>main</code> which is optimized away, and the code
+contains a direct call to <code>make_adder::add#2</code>.</p>
+</div>
+<p>We can also have a look at the C code to confirm that each <code>add</code> is translated into a
+specific C function:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy build adder.spy
+[debug] build/adder 
+
+$ tail -24 build/src/adder.c | pygmentize -l C -f terminal
+<span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(3, 18)</span><span style="color: #8BE9FD"></span>
+<span style="color: #8BE9FD">int32_t</span><span style="color: #BFBFBF"> </span><span style="color: #50FA7B">spy_adder$make_adder$add</span>(<span style="color: #8BE9FD">int32_t</span><span style="color: #BFBFBF"> </span>x)<span style="color: #BFBFBF"> </span>{<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span><span style="color: #BD93F9">return</span><span style="color: #BFBFBF"> </span>x<span style="color: #BFBFBF"> </span>+<span style="color: #BFBFBF"> </span><span style="color: #BD93F9">5</span>;<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>abort();<span style="color: #BFBFBF"> </span><span style="color: #BFBFBF">/* reached the end of the function without a `return` */</span><span style="color: #BFBFBF"></span>
+}<span style="color: #BFBFBF"></span>
+<span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(3, 23)</span><span style="color: #8BE9FD"></span>
+<span style="color: #8BE9FD">int32_t</span><span style="color: #BFBFBF"> </span><span style="color: #50FA7B">spy_adder$make_adder$add$1</span>(<span style="color: #8BE9FD">int32_t</span><span style="color: #BFBFBF"> </span>x)<span style="color: #BFBFBF"> </span>{<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span><span style="color: #BD93F9">return</span><span style="color: #BFBFBF"> </span>x<span style="color: #BFBFBF"> </span>+<span style="color: #BFBFBF"> </span><span style="color: #BD93F9">7</span>;<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>abort();<span style="color: #BFBFBF"> </span><span style="color: #BFBFBF">/* reached the end of the function without a `return` */</span><span style="color: #BFBFBF"></span>
+}<span style="color: #BFBFBF"></span>
+<span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(11, 28)</span><span style="color: #8BE9FD"></span>
+<span style="color: #8BE9FD">void</span><span style="color: #BFBFBF"> </span><span style="color: #50FA7B">spy_adder$main</span>(<span style="color: #8BE9FD">void</span>)<span style="color: #BFBFBF"> </span>{<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span><span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(13, 30)</span><span style="color: #8BE9FD"></span>
+<span style="color: #BFBFBF">    </span>spy_builtins$print_i32(spy_adder$make_adder$add(<span style="color: #BD93F9">10</span>));<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>spy_builtins$print_i32(spy_adder$make_adder$add$1(<span style="color: #BD93F9">10</span>));<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>spy_builtins$print_i32(spy_adder$make_adder$add$2(<span style="color: #BD93F9">10</span>));<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span><span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(18, 34)</span><span style="color: #8BE9FD"></span>
+<span style="color: #BFBFBF">    </span>spy_builtins$print_i32(spy_adder$make_adder$add(<span style="color: #BD93F9">10</span>));<span style="color: #BFBFBF"></span>
+}<span style="color: #BFBFBF"></span>
+<span style="color: #8BE9FD">#</span><span style="color: #8BE9FD">line SPY_LINE(3, 37)</span><span style="color: #8BE9FD"></span>
+<span style="color: #8BE9FD">int32_t</span><span style="color: #BFBFBF"> </span><span style="color: #50FA7B">spy_adder$make_adder$add$2</span>(<span style="color: #8BE9FD">int32_t</span><span style="color: #BFBFBF"> </span>x)<span style="color: #BFBFBF"> </span>{<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span><span style="color: #BD93F9">return</span><span style="color: #BFBFBF"> </span>x<span style="color: #BFBFBF"> </span>+<span style="color: #BFBFBF"> </span><span style="color: #BD93F9">9</span>;<span style="color: #BFBFBF"></span>
+<span style="color: #BFBFBF">    </span>abort();<span style="color: #BFBFBF"> </span><span style="color: #BFBFBF">/* reached the end of the function without a `return` */</span><span style="color: #BFBFBF"></span>
+}<span style="color: #BFBFBF"></span>
+</code></pre></div>
+
+<p>As in Python, nested function can access names defined in the outer scope. If the outer
+scope is a <code>@blue</code> function, those names are automatically blue.  We can see it clearly
+by inspecting the AST of the nested <code>add</code>: the <code>n</code> node is blue.</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy colorize -f html adder.spy
+Written build/adder_colorize.html
+</code></pre></div>
+
+<div class="antocuni-popup-wrapper"><div onclick="var el=document.getElementById('antocuni-popup-4');el.style.display='flex';document.body.style.overflow='hidden';" style="cursor:pointer;text-align:center;"><img src="/posts/2026/03-spy-semantics/adder_colorize.svg" class="off-glb" style="max-width:100%;cursor:pointer;"><div style="font-size:0.85em;color:#888;margin-top:4px;">click to expand</div></div><div id="antocuni-popup-4" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;overflow:hidden;touch-action:none;" onclick="var el=document.getElementById('antocuni-popup-4');el.style.display='none';document.body.style.overflow='';"><div style="position:relative;width:92vw;height:92vh;max-height:calc(100dvh - 4vh);background:white;border-radius:8px;overflow:hidden;" onclick="event.stopPropagation()"><button onclick="var el=document.getElementById('antocuni-popup-4');el.style.display='none';document.body.style.overflow='';" style="position:absolute;top:8px;right:12px;z-index:10000;font-size:1.5em;background:none;border:none;cursor:pointer;color:#333;">×</button><iframe src="/posts/2026/03-spy-semantics/autorun/build/adder_colorize.html" style="width:100%;height:100%;border:none;"></iframe></div></div></div>
+
+<h2 id="type-manipulation-and-generics">Type manipulation and generics<a class="headerlink" href="#type-manipulation-and-generics" title="Permanent link">¶</a></h2>
+<p>Types are first-order values as in Python, and thus they can be freely manipulated by
+<code>@blue</code> functions. Here, we build different type-specialized versions of an <code>add</code>
+function:</p>
+<div class="highlight"><span class="filename">add_T1.spy</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@blue</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">impl</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="k">return</span> <span class="n">impl</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="n">add_int</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="n">add_str</span> <span class="o">=</span> <span class="n">add</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add_int</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add_str</span><span class="p">(</span><span class="s2">"hello "</span><span class="p">,</span> <span class="s2">"world"</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/add_T1.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<p>Again, it works as expected:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy add_T1.spy
+5
+hello world
+</code></pre></div>
+
+<p>And <code>redshift</code> creates two specialized versions of <code>add</code>, one for ints and one for
+strings:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift add_T1.spy
+add_int = <span style="font-weight: bold; color: #FF79C6">`add_T1::add[i32]::impl`</span>
+add_str = <span style="font-weight: bold; color: #FF79C6">`add_T1::add[str]::impl`</span>
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`add_T1::add[i32]::impl`</span>(a: <span style="font-weight: bold; color: #FF79C6">i32</span>, b: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> a + b
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`add_T1::add[str]::impl`</span>(a: <span style="font-weight: bold; color: #FF79C6">str</span>, b: <span style="font-weight: bold; color: #FF79C6">str</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">str</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::str_add`</span>(a, b)
+
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`add_T1::add[i32]::impl`</span>(<span style="font-weight: bold; color: #F1FA8C">2</span>, <span style="font-weight: bold; color: #F1FA8C">3</span>))
+    print_str(<span style="font-weight: bold; color: #FF79C6">`add_T1::add[str]::impl`</span>(<span style="font-weight: bold; color: #50FA7B">'hello '</span>, <span style="font-weight: bold; color: #50FA7B">'world'</span>))
+</code></pre></div>
+
+<p>This is how SPy does <strong>generics</strong>: a generic function is a <code>@blue</code> function which takes
+one or more types and/or values, and creates a specialized nested function (same for
+generic types, which we will see later in the series).</p>
+<div class="admonition note">
+<p class="admonition-title">Why <code>add</code> doesn't have a return type?</p>
+<p>Type annotations of parameters and return type of <code>@blue</code> functions are
+<strong>optional</strong>. If they are specified, then they are checked. If they are omitted,
+they default to <code>dynamic</code>.  So in the example above, if we try to call
+<code>add("hello")</code> we get a type error, but <code>add</code> can return an object of any type.</p>
+<p>This is just a pragmatic choice: when you use <code>@blue</code> function to do
+metaprogramming, the types become quickly very complex and writing the correct types
+become harder than just writing the code.</p>
+<p>If you have ever tried to write a non-trivial decorator in Python, you know the pain
+of spelling <code>typing.Callable[...stuff stuff stuff...]</code>. By defaulting to <code>dynamic</code>,
+SPy removes the need of that pain, <strong>without compromising on type safety</strong>: the
+signature of the function says <code>dynamic</code>, but since it's blue, the <strong>concrete</strong>
+value returned by each single invocation is fully known to the compiler. This means
+that if you do e.g. <code>add(int) + "hello"</code>, you get the appropriate <strong>compile time</strong>
+<code>TypeError</code> because you cannot add a function and a string.</p>
+<p>This is very different to what happens with Python type checkers, which stop doing
+any type checking on values annotated as <code>Any</code>.</p>
+</div>
+<p>However, we would like to write <code>add[int]</code> instead of <code>add(int)</code>, because this is the
+way generics are normally spelled in Python. We can achieve that by using the decorator
+<code>@blue.generic</code>:</p>
+<div class="highlight"><span class="filename">add_T2.spy</span><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nd">@blue</span><span class="o">.</span><span class="n">generic</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">T</span><span class="p">:</span> <span class="nb">type</span><span class="p">):</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">impl</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="k">return</span> <span class="n">impl</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="p">[</span><span class="nb">int</span><span class="p">](</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add</span><span class="p">[</span><span class="nb">str</span><span class="p">](</span><span class="s2">"hello "</span><span class="p">,</span> <span class="s2">"world"</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/add_T2.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy add_T2.spy
+5
+hello world
+
+$ spy redshift add_T2.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`add_T2::add[i32]::impl`</span>(<span style="font-weight: bold; color: #F1FA8C">2</span>, <span style="font-weight: bold; color: #F1FA8C">3</span>))
+    print_str(<span style="font-weight: bold; color: #FF79C6">`add_T2::add[str]::impl`</span>(<span style="font-weight: bold; color: #50FA7B">'hello '</span>, <span style="font-weight: bold; color: #50FA7B">'world'</span>))
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`add_T2::add[i32]::impl`</span>(a: <span style="font-weight: bold; color: #FF79C6">i32</span>, b: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> a + b
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`add_T2::add[str]::impl`</span>(a: <span style="font-weight: bold; color: #FF79C6">str</span>, b: <span style="font-weight: bold; color: #FF79C6">str</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">str</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::str_add`</span>(a, b)
+</code></pre></div>
+
+<div class="admonition note">
+<p class="admonition-title"><code>@blue</code> vs <code>@blue.generic</code></p>
+<p>The <strong>only</strong> difference between the two decorators is that <code>@blue</code> creates a blue
+function which is called via parentheses, while <code>@blue.generic</code> creates a blue
+function which is called via square brackets. Apart from that, they behave exactly the
+same.</p>
+<p>In particular, there is no limitation w.r.t. types of arguments and return
+type. Generic function can take as many arguments as they want, of any type, and
+they can return objects of any type.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Current status: PEP 695 - Type parameter syntax</p>
+<p><a href="https://peps.python.org/pep-0695/">PEP 695</a> introduced the "Type parameter syntax":
+</p><div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">[</span><span class="n">T</span><span class="p">](</span><span class="n">a</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="o">...</span>
+</code></pre></div><p></p>
+<p>At the time of writing, type parameter syntax is not implemented in SPy.
+It will be implemented as syntactic sugar for:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@blue</span><span class="o">.</span><span class="n">generic</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">func</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">impl</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">T</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>        <span class="o">...</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="k">return</span> <span class="n">impl</span>
+</code></pre></div>
+</div>
+<h2 id="operator-dispatch-revisited">Operator dispatch, revisited.<a class="headerlink" href="#operator-dispatch-revisited" title="Permanent link">¶</a></h2>
+<p>Now that we know about <code>@blue</code> functions, we can understand better how operator dispatch
+works. We remember from <a href="#operator-dispatch">the previous section</a> that e.g. <code>str + str</code>
+is dispatched to <code>operator::str_add</code>.</p>
+<p>How to we go from <code>a + b</code> to <code>operator::str_add(a, b)</code>?  Internally, operator dispatch
+happens in two steps:</p>
+<ol>
+<li>
+<p>first, we determine the operator implementation function (or <strong>opimpl</strong>) for the given types</p>
+</li>
+<li>
+<p>then, we call the opimpl with the actual values.</p>
+</li>
+</ol>
+<p>In pseudocode, <code>a + b</code> becomes:
+</p><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">ADD</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># x = a + b</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">Ta</span> <span class="o">=</span> <span class="n">STATIC_TYPE</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="n">Tb</span> <span class="o">=</span> <span class="n">STATIC_TYPE</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="n">opimpl</span> <span class="o">=</span> <span class="n">ADD</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tb</span><span class="p">)</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="n">x</span> <span class="o">=</span> <span class="n">opimpl</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div><p></p>
+<p>The trick is that <code>STATIC_TYPE</code> and <code>ADD</code> are both <code>@blue</code> functions, so during
+redshifting they are partially evaluated away, leaving just <code>opimpl(a, b)</code>.</p>
+<p>Normally <code>operator.ADD</code> is automatically called by the interpreter, but we can also call it manually:
+</p><div class="highlight"><span class="filename">op1.spy</span><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">ADD</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="n">fn1</span> <span class="o">=</span> <span class="n">ADD</span><span class="p">(</span><span class="n">i32</span><span class="p">,</span> <span class="n">i32</span><span class="p">)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="n">fn2</span> <span class="o">=</span> <span class="n">ADD</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">fn1</span><span class="p">)</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">fn2</span><span class="p">)</span>
+</code></pre></div><p></p>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/op1.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy op1.spy
+&lt;OpImpl `def(i32, i32) -&gt; i32` for `operator::i32_add`&gt;
+&lt;OpImpl `def(str, str) -&gt; str` for `operator::str_add`&gt;
+</code></pre></div>
+
+<p>In reality, <code>ADD</code> doesn't receive the <em>types</em> of the operands: it receives objects which
+<em>describes</em> the operands: this description include the static type, but also e.g. the
+source code location of the expression, the color and the concrete value if it's <code>blue</code>.</p>
+<p>These "argument description" objects are called <strong>meta args</strong>. A function which takes
+meta args and returns an opimpl is a <strong>meta function</strong>.</p>
+<p>As in Python, custom types can override dunder methods like <code>__add__</code>, <code>__getitem__</code>,
+<code>__getattr__</code>, etc., and they can implement them either as normal function or as meta
+functions.  This is a very powerful mechanism which unlocks lots of opportunities.</p>
+<p>For example, take <a href="https://github.com/spylang/spy/blob/229235b8/stdlib/_list.spy#L81-L130"><code>list.__getitem__</code></a>: it's a meta function which checks the static type
+of the index, and then dispatches to specialized opimpls like <code>getitem_int</code> or
+<code>getitem_slice</code>.</p>
+<p>Meta functions are an advanced concept. Describing them in depth will be the topic
+of a subsequent blog post.</p>
+<h2 id="static-typing-as-a-special-case-of-blue-evaluation">Static typing as a special case of <code>@blue</code> evaluation<a class="headerlink" href="#static-typing-as-a-special-case-of-blue-evaluation" title="Permanent link">¶</a></h2>
+<p>If we try to add two unrelated things, we get an error:</p>
+<div class="highlight"><span class="filename">op2.spy</span><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="s2">"hello"</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/op2.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy op2.spy
+[...]
+<span style="font-weight: bold; color: #FF5555">TypeError</span>: cannot do `i32` + `str`
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | <span style="font-weight: bold; color: #FF5555">        ^ this is `i32`</span>
+
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | <span style="font-weight: bold; color: #FF5555">            |_____| this is `str`</span>
+
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | <span style="font-weight: bold; color: #50FA7B">        |_________| operator::ADD called here</span>
+
+
+</code></pre></div>
+
+<p>From the error message we see that the <code>TypeError</code> is raised by <code>operator.ADD</code>, which we
+know being a <code>@blue</code> function.  This directly leads us to this important property: in
+SPy, <strong>compilation errors are errors which are raised from @blue functions</strong>.</p>
+<p>Now, consider this other example. If we run in the interpreter, it works fine because
+<code>add</code> is never called:</p>
+<div class="highlight"><span class="filename">op3.spy</span><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">)</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/op3.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy op3.spy
+hello
+</code></pre></div>
+
+<p>However, if we try to <code>build</code> or <code>redshift</code> it, we get an error:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift op3.spy
+[...]
+<span style="font-weight: bold; color: #FF5555">TypeError</span>: cannot do `i32` + `str`
+  | /.../autorun/op3.spy:2
+  |     return x + y
+  | <span style="font-weight: bold; color: #FF5555">           ^ this is `i32`</span>
+
+  | /.../autorun/op3.spy:2
+  |     return x + y
+  | <span style="font-weight: bold; color: #FF5555">               ^ this is `str`</span>
+
+  | /.../autorun/op3.spy:2
+  |     return x + y
+  | <span style="font-weight: bold; color: #50FA7B">           |___| operator::ADD called here</span>
+
+
+</code></pre></div>
+
+<p>This happens because all <code>@blue</code> calls are evaluated eagerly during redshifting,
+including the implicit <code>operator.ADD</code>.</p>
+<p>This also means that we can <strong>programmatically generate compilation errors</strong> by raising
+the appropriate exceptions from <code>@blue</code> functions:</p>
+<div class="highlight"><span class="filename">smallstring.spy</span><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nd">@blue</span><span class="o">.</span><span class="n">generic</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">SmallString</span><span class="p">(</span><span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">32</span><span class="p">:</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>        <span class="k">raise</span> <span class="n">StaticError</span><span class="p">(</span><span class="s2">"SmallString must be at most 32 chars"</span><span class="p">)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>    <span class="k">return</span> <span class="nb">str</span> <span class="c1"># just kidding :)</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">def</span><span class="w"> </span><span class="nf">say_hello</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="n">SmallString</span><span class="p">[</span><span class="mi">64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="k">pass</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/smallstring.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy build smallstring.spy
+Traceback (most recent call last):
+  * <span style="color: #FF79C6">[module] smallstring</span> at /.../autorun/smallstring.spy:7
+  | def say_hello(name: SmallString[64]) -&gt; None:
+  | <span style="font-weight: bold; color: #FF5555">                    |_____________|</span>
+  * <span style="color: #FF79C6">smallstring::SmallString</span> at /.../autorun/smallstring.spy:4
+  |         raise StaticError("SmallString must be at most 32 chars")
+  | <span style="font-weight: bold; color: #FF5555">        |_______________________________________________________|</span>
+
+<span style="font-weight: bold; color: #FF5555">StaticError</span>: SmallString must be at most 32 chars
+
+</code></pre></div>
+
+<p>Note that it's a real <strong>compile time</strong> error, as it is raised at <code>build</code> time even if
+<code>say_hello</code> is never called.</p>
+<h2 id="powerful-metaprogramming-with-blue-functions">Powerful metaprogramming with <code>@blue</code> functions<a class="headerlink" href="#powerful-metaprogramming-with-blue-functions" title="Permanent link">¶</a></h2>
+<p>We can do arbitrary operations on blue values, and we have the full power of the
+language at blue time.  This makes it possible to write very interesting code: for
+example, this is a revised version of <code>make_adder</code>, which works for <em>arbitrary types</em>:
+the blue function dynamically ("dynamically", but still at compile time!) gets the type
+<code>T</code> of the argument and then uses it in the signature of the nested function:</p>
+<div class="highlight"><span class="filename">meta1.spy</span><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@blue</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_adder</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">dynamic</span><span class="p">):</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="n">T</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="k">return</span> <span class="n">add</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="n">add_world</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="s2">" world"</span><span class="p">)</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a><span class="n">add5</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">STATIC_TYPE</span><span class="p">(</span><span class="n">add_world</span><span class="p">))</span>
+<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add_world</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">))</span>
+<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="s2">"---"</span><span class="p">)</span>
+<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">STATIC_TYPE</span><span class="p">(</span><span class="n">add5</span><span class="p">))</span>
+<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add5</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/meta1.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy meta1.spy
+&lt;spy type 'def(str) -&gt; str'&gt;
+hello world
+---
+&lt;spy type 'def(i32) -&gt; i32'&gt;
+7
+</code></pre></div>
+
+<p>Redshifted version:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift meta1.spy
+add_world = <span style="font-weight: bold; color: #FF79C6">`meta1::make_adder::add`</span>
+add5 = <span style="font-weight: bold; color: #FF79C6">`meta1::make_adder::add#1`</span>
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`meta1::make_adder::add`</span>(x: <span style="font-weight: bold; color: #FF79C6">str</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">str</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::str_add`</span>(x, <span style="font-weight: bold; color: #50FA7B">' world'</span>)
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`meta1::make_adder::add#1`</span>(x: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> x + <span style="font-weight: bold; color: #F1FA8C">5</span>
+
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_str(<span style="font-weight: bold; color: #50FA7B">"&lt;spy type 'def(str) -&gt; str'&gt;"</span>)
+    print_str(<span style="font-weight: bold; color: #FF79C6">`meta1::make_adder::add`</span>(<span style="font-weight: bold; color: #50FA7B">'hello'</span>))
+    print_str(<span style="font-weight: bold; color: #50FA7B">'---'</span>)
+    print_str(<span style="font-weight: bold; color: #50FA7B">"&lt;spy type 'def(i32) -&gt; i32'&gt;"</span>)
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`meta1::make_adder::add#1`</span>(<span style="font-weight: bold; color: #F1FA8C">2</span>))
+</code></pre></div>
+
+<p>It is important to underline that <strong>typechecking is fully aware of blue semantics</strong>,
+meaning that the SPy compiler can keep track of the precise type of <code>add5</code> and
+<code>add_world</code> without any special support. By the time the typechecker
+runs, all the blue values are fully known.  This is a big improvement over classical
+type checkers for Python which typically cannot understand metaprogramming patterns.</p>
+<p>Inside <code>@blue</code> functions we can use the full power of the language. Imagine that we want
+to "optimize" <code>make_adder(0)</code>: instead of adding 0, we can just return the identity
+function. This is obviously a silly example, but hopefully it gives the idea.</p>
+<p>The problem is: how do we know what is the "zero" value since we are coding for a
+generic type <code>T</code>? For example, for ints it's <code>0</code>, but for strings is <code>""</code>.</p>
+<p>This is a possible solution:</p>
+<div class="highlight"><span class="filename">meta2.spy</span><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nd">@blue</span><span class="o">.</span><span class="n">generic</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">zero</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="s2">"Return the 'zero' value for the given type"</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="k">if</span> <span class="n">T</span> <span class="o">==</span> <span class="nb">int</span><span class="p">:</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>        <span class="k">return</span> <span class="mi">0</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>    <span class="k">elif</span> <span class="n">T</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>        <span class="k">return</span> <span class="s2">""</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>        <span class="k">return</span> <span class="kc">None</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="nd">@blue</span><span class="o">.</span><span class="n">generic</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">identity</span><span class="p">(</span><span class="n">T</span><span class="p">):</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">impl</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>        <span class="k">return</span> <span class="n">x</span>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>    <span class="k">return</span> <span class="n">impl</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="nd">@blue</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a><span class="k">def</span><span class="w"> </span><span class="nf">make_adder</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">dynamic</span><span class="p">):</span>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>    <span class="n">T</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>    <span class="n">z</span> <span class="o">=</span> <span class="n">zero</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>    <span class="k">if</span> <span class="n">z</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">y</span> <span class="o">==</span> <span class="n">z</span><span class="p">:</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>        <span class="c1"># use the identity function instead of doing + 0, for "efficiency"</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>        <span class="k">return</span> <span class="n">identity</span><span class="p">[</span><span class="n">T</span><span class="p">]</span>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>        <span class="c1"># general case</span>
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">T</span><span class="p">:</span>
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>            <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span>
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>
+<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>        <span class="k">return</span> <span class="n">add</span>
+<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>
+<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-20-35" name="__codelineno-20-35" href="#__codelineno-20-35"></a>    <span class="n">adds</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="s2">" world"</span><span class="p">)</span>
+<a id="__codelineno-20-36" name="__codelineno-20-36" href="#__codelineno-20-36"></a>    <span class="n">add0</span> <span class="o">=</span> <span class="n">make_adder</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<a id="__codelineno-20-37" name="__codelineno-20-37" href="#__codelineno-20-37"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">adds</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">))</span>
+<a id="__codelineno-20-38" name="__codelineno-20-38" href="#__codelineno-20-38"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">add0</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;"><a href="go/meta2.spy/" target="_blank">▶ Try it yourself</a></p>
+
+<p>After redshift, we can see that <code>add0</code> is actually <code>identity[i32]</code>:</p>
+<div style="background:#2E3436;border-radius:6px;padding:1em 1.2em;margin:1em 0;"><pre style="margin:0;color:var(--md-code-fg-color);direction:ltr;"><code style="background:transparent;color:#d4d4d4;padding:0;border-radius:0;word-break:normal;white-space:pre;overflow-x:auto;display:block;">$ spy redshift meta2.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+    print_str(<span style="font-weight: bold; color: #FF79C6">`meta2::make_adder::add`</span>(<span style="font-weight: bold; color: #50FA7B">'hello'</span>))
+    print_i32(<span style="font-weight: bold; color: #FF79C6">`meta2::identity[i32]::impl`</span>(<span style="font-weight: bold; color: #F1FA8C">2</span>))
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`meta2::make_adder::add`</span>(x: <span style="font-weight: bold; color: #FF79C6">str</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">str</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::str_add`</span>(x, <span style="font-weight: bold; color: #50FA7B">' world'</span>)
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`meta2::identity[i32]::impl`</span>(x: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+    <span style="font-weight: bold; color: #BD93F9">return</span> x
+</code></pre></div>
+
+<p>This is just a hint of the metaprogramming capabilities of SPy. We will see more
+interesting examples later in the series.</p>
+<div class="admonition note">
+<p class="admonition-title">Metaprogramming in other languages</p>
+<p>SPy is surely not the only language to allow metaprogramming. In C++ you can achieve
+similar goals by using <em>template metaprogramming</em>: the biggest drawback is that when
+using C++ templates in that way, you are effectively doing the metaprogramming part
+in a different language, and moreover C++ templates are infamous for their obscure
+error messages.</p>
+<p>Another language which is much closer to SPy is Zig: Zig's <code>comptime</code> is very
+similar to SPy's <code>@blue</code>.  The big difference in this case is in the implementation
+and in development experience: Zig is only compiled, and <code>comptime</code> evaluation
+happens at... well, compilation time. In SPy, <code>@blue</code> functions are evaluated by the
+interpreter, with all the usual advantages. For example, you can totally insert a
+<code>breakpoint()</code> in a <code>@blue</code> function to do step-by-step debugging.</p>
+</div>
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p>There is still a lot to talk about, but this post is already too long. In the next
+post(s) of the series we will talk about things like:</p>
+<ul>
+<li>
+<p>compile-time decorators;</p>
+</li>
+<li>
+<p>advanced metaprogramming patterns;</p>
+</li>
+<li>
+<p>blue-time support for <code>__dunder__</code> methods, including <code>__getattr__</code>, <code>__setattr__</code>
+    and the descriptor protocol;</p>
+</li>
+<li>
+<p>low-level memory management and the <code>unsafe</code> module;</p>
+</li>
+<li>
+<p>custom types and <code>@struct</code>;</p>
+</li>
+<li>
+<p>how to use all of this to build zero costs high level abstractions from low-level
+    constructs.</p>
+</li>
+</ul>
+<p>For those who are curious, I suggest to have a look at the
+<a href="https://github.com/spylang/spy/tree/main/stdlib">stdlib</a>. In particular, the builtin types <a href="https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_list.spy"><code>list</code></a>, <a href="https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_dict.spy"><code>dict</code></a> and <a href="https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_tuple.spy"><code>tuple</code></a> are implemented <strong>in pure SPy</strong>.</p>
+<p>Finally, I'd like to thank all the other SPy contributors and members of the SPy
+community. Bootstrapping a community from zero is not an easy task and honestly it's
+something which makes me proud :).</p>
+<p>Thanks also to Pierre Augier, Hood Chatham and Val Haenel for reviewing this blog post.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js" data-repo="antocuni/antocuni.github.io" data-repo-id="R_kgDON3STLg" data-category="Announcements" data-category-id="DIC_kwDON3STLs4Cm2EZ" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="light" data-lang="en" data-loading="lazy" crossorigin="anonymous" async="">
+</script>
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden="">
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2008 - 2026 Antonio Cuni
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+    <a href="feed_rss_created.xml" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M0 64c0-17.7 14.3-32 32-32 229.8 0 416 186.2 416 416 0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96 14.3 96 0 81.7 0 64m0 352a64 64 0 1 1 128 0 64 64 0 1 1-128 0m32-256c159.1 0 288 128.9 288 288 0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224-17.7 0-32-14.3-32-32s14.3-32 32-32"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/antocuni/" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"></path></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://mastodon.social/@antocuni" target="_blank" rel="noopener me" title="mastodon.social" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M433 179.11c0-97.2-63.71-125.7-63.71-125.7-62.52-28.7-228.56-28.4-290.48 0 0 0-63.72 28.5-63.72 125.7 0 115.7-6.6 259.4 105.63 289.1 40.51 10.7 75.32 13 103.33 11.4 50.81-2.8 79.32-18.1 79.32-18.1l-1.7-36.9s-36.31 11.4-77.12 10.1c-40.41-1.4-83-4.4-89.63-54a102.5 102.5 0 0 1-.9-13.9c85.63 20.9 158.65 9.1 178.75 6.7 56.12-6.7 105-41.3 111.23-72.9 9.8-49.8 9-121.5 9-121.5m-75.12 125.2h-46.63v-114.2c0-49.7-64-51.6-64 6.9v62.5h-46.33V197c0-58.5-64-56.6-64-6.9v114.2H90.19c0-122.1-5.2-147.9 18.41-175 25.9-28.9 79.82-30.8 103.83 6.1l11.6 19.5 11.6-19.5c24.11-37.1 78.12-34.8 103.83-6.1 23.71 27.3 18.4 53 18.4 175z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/antocuni.bsky.social" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M111.8 62.2C170.2 105.9 233 194.7 256 242.4c23-47.6 85.8-136.4 144.2-180.2 42.1-31.6 110.3-56 110.3 21.8 0 15.5-8.9 130.5-14.1 149.2-18.2 64.8-84.4 81.4-143.3 71.3C456 322 482.2 380 425.6 438c-107.4 110.2-154.3-27.6-166.3-62.9-1.7-4.9-2.6-7.8-3.3-7.8s-1.6 3-3.3 7.8c-12 35.3-59 173.1-166.3 62.9-56.5-58-30.4-116 72.5-133.5C100 314.6 33.8 298 15.7 233.1 10.4 214.4 1.5 99.4 1.5 83.9c0-77.8 68.2-53.4 110.3-21.8z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.linkedin.com/in/antocuni" target="_blank" rel="noopener" title="www.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5m282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.sections", "navigation.indexes", "navigation.top", "search.highlight", "search.suggest", "header.autohide"], "search": "../../../../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.f1b6f286.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@11/dist/mermaid.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>

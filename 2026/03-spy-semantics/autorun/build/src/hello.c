@@ -14,7 +14,7 @@ int main(void) {
     spy_hello$main();
     return 0;
 }
-#line SPY_LINE(2, 18)
+#line SPY_LINE(1, 18)
 void spy_hello$main(void) {
     spy_builtins$print_str(&SPY_g_str0 /* 'Hello world!' */);
 }
