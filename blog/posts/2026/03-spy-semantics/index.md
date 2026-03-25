@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 date: 2026-03-25
 title: "Inside SPy, part 2: Language semantics"
 categories:
