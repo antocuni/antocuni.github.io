@@ -318,7 +318,7 @@ By default, it compiles to debug mode for the `native` platform, but you can use
 ## Static typing
 
 In SPy, **type annotations are always enforced**. After all,
-the **S** stands for static :). This is probably the biggest departure
+the **S** stands for _static_ :). This is probably the biggest departure
 from CPython, which explicitly ignores type annotations at runtime.
 
 ```python title="type-error1.spy" autowrite
@@ -419,6 +419,22 @@ dynamic types of expression:
 
   - the **dynamic type** (or just the "type") is the actual type of the concrete object
     in memory.
+
+!!! note "Static/dynamic *types* vs static/dynamic *typing*"
+
+    Don't confuse this with the more familiar distinction between [statically typed and
+    dynamically typed
+    *languages*](https://en.wikipedia.org/wiki/Type_system#Static_and_dynamic_type_checking_in_practice). That
+    refers to **when** types are checked (at compile time vs at runtime). Here we are
+    talking about something different: every single expression has both a static type
+    and a [dynamic
+    type](https://en.wikipedia.org/wiki/Type_system#Dynamic_type_checking_and_runtime_type_information),
+    and they may differ. The **static type** is what the compiler knows; the **dynamic
+    type** is what the value actually is at runtime.
+
+    I agree it's confusing, but at the same time it's standard programming-language
+    terminology, commonly used in languages like C++, Java and C#. Naming things is hard
+    :).
 
 ```python title="static-dynamic-types.spy" autowrite
 def print_types(x: object) -> None:
