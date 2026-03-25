@@ -21,8 +21,8 @@ antocuni:
 
 This is the second post of the *Inside SPy* series. The [first
 post](../../2025/10-spy-motivations-and-goals/index.md) was mostly about motivations and
-goals of SPy. This post will cover in more detail the semantics of SPy, including the
-parts which make it different from CPython.
+goals of [SPy](https://github.com/spylang/spy). This post will cover in more detail the
+semantics of SPy, including the parts which make it different from CPython.
 
 We will talk about phases of execution, *colors*, redshifting, the very peculiar way
 SPy implements static typing, and we will start to dive into metaprogramming.
@@ -101,9 +101,19 @@ details:
 
  10. One language, two levels.
 
-!!! note "SPy version"
+!!! note "SPy version and playground"
 
-    At the moment of writing, SPy is still changing very rapidly and it's very likely that some of the examples will break in the future. We don't have any official release yet, but all the following examples have been tried on [SPy commit e5a8d272](https://github.com/spylang/spy/tree/e5a8d272)
+    At the moment of writing, SPy is still changing very rapidly and it's very likely
+    that some of the examples will break in the future. We don't have any official
+    release yet, but all the following examples have been tried on [SPy commit
+    e5a8d272](https://github.com/spylang/spy/tree/e5a8d272).
+
+    All the examples have a `Try it yourself` button which opens the code snippet in the
+    SPy Playground, a PyScript app to try SPy directly in the browser. The [official SPy
+    playground](https://spylang.github.io/spy) tracks the latest git `main`, while this
+    blog post uses a [custom
+    version](https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/) pinned
+    to this exact commit.
 
 ## Phases of execution and compilation pipeline
 
@@ -210,7 +220,7 @@ imported only inside of function bodies (even if those functions are never execu
 This is a big departure from CPython semantics, but it is essential to the design of SPy
 and enables many important features. We will talk more about it later in this series.
 
-"Import time" is always executed by the interpreter. After `import`, we can run the code
+"Import time" is always executed by the interpreter. After that we can run the code
 in three different modes:
 
 - **interpreted mode**: the untyped AST is executed by the interpreter.
@@ -304,16 +314,6 @@ void spy_hello$main(void) {
 By default, it compiles to debug mode for the `native` platform, but you can use
 `--release` to switch to release mode and `--target` to select a different platform.
 
-!!! note "The SPy playground"
-
-    All the examples have a `Try it yourself` button which opens the code snippet in the
-    SPy Playground, a PyScript app to try SPy directly in the browser.
-
-    The [official SPy playground](https://spylang.github.io/spy) tracks the latest git
-    `main`, while this blog post uses a [custom
-    version](https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/) pinned
-    to commit `e5a8d272`
-
 ## Static typing
 
 In SPy, **type annotations are always enforced**. After all,
@@ -367,12 +367,6 @@ $ spy type-inference.spy
     Type annotations are mandatory only for "red" functions. For "blue" functions they
     are optional and they default to `dynamic`. We will talk about this in the
     appropriate section.  `@blue` functions are explained [later](#blue-functions).
-
-!!! note "`STATIC_TYPE`"
-
-    Currently `STATIC_TYPE` has an uppercase name and lives in the `builtins` module,
-    for historical reasons. This might change. One option is to move it to the special
-    `__spy__` module and call it `static_type`.
 
 ## Operator dispatch
 
@@ -514,7 +508,7 @@ of partial evaluation.
 
 To do that, we introduce the concept of *color of an expression*: expressions whose value
 is known at compile time are **blue**; expressions which must be evaluated at runtime
-are **red**.  Examples of **blue** expressions are:
+are **red**.  Examples of blue expressions are:
 
   1. literals, like `42` or `"hello"`;
 
@@ -828,29 +822,6 @@ def main() -> None:
     print(add_str("hello ", "world"))
 ```
 
-!!! note "Why `add` doesn't have a return type?"
-
-    Type annotations of parameters and return type of `@blue` functions are
-    **optional**. If they are specified, then they are checked. If they are omitted,
-    they default to `dynamic`.  So in the example above, if we try to call
-    `add("hello")` we get a type error, but `add` can return an object of any type.
-
-    This is just a pragmatic choice: when you use `@blue` function to do
-    metaprogramming, the types become quickly very complex and writing the correct types
-    become harder than just writing the code.
-
-    If you have ever tried to write a non-trivial decorator in Python, you know the pain
-    of spelling `typing.Callable[...stuff stuff stuff...]`. By defaulting to `dynamic`,
-    SPy removes the need of that pain, **without compromising on type safety**: the
-    signature of the function says `dynamic`, but since it's blue, the **concrete**
-    value returned by each single invocation is fully known to the compiler. This means
-    that if you do e.g. `add(int) + "hello"`, you get the appropriate **compile time**
-    `TypeError` because you cannot add a function and a string.
-
-    This is very different to what happens with Python type checkers, which stop doing
-    any type checking on values annotated as `Any`.
-
-
 Again, it works as expected:
 
 ```autorun
@@ -881,6 +852,28 @@ def main() -> None:
 This is how SPy does **generics**: a generic function is a `@blue` function which takes
 one or more types and/or values, and creates a specialized nested function (same for
 generic types, which we will see later in the series).
+
+!!! note "Why `add` doesn't have a return type?"
+
+    Type annotations of parameters and return type of `@blue` functions are
+    **optional**. If they are specified, then they are checked. If they are omitted,
+    they default to `dynamic`.  So in the example above, if we try to call
+    `add("hello")` we get a type error, but `add` can return an object of any type.
+
+    This is just a pragmatic choice: when you use `@blue` function to do
+    metaprogramming, the types become quickly very complex and writing the correct types
+    become harder than just writing the code.
+
+    If you have ever tried to write a non-trivial decorator in Python, you know the pain
+    of spelling `typing.Callable[...stuff stuff stuff...]`. By defaulting to `dynamic`,
+    SPy removes the need of that pain, **without compromising on type safety**: the
+    signature of the function says `dynamic`, but since it's blue, the **concrete**
+    value returned by each single invocation is fully known to the compiler. This means
+    that if you do e.g. `add(int) + "hello"`, you get the appropriate **compile time**
+    `TypeError` because you cannot add a function and a string.
+
+    This is very different to what happens with Python type checkers, which stop doing
+    any type checking on values annotated as `Any`.
 
 However, we would like to write `add[int]` instead of `add(int)`, because this is the
 way generics are normally spelled in Python. We can achieve that by using the decorator
@@ -1120,8 +1113,8 @@ Note that it's a real **compile time** error, as it is raised at `build` time ev
 We can do arbitrary operations on blue values, and we have the full power of the
 language at blue time.  This makes it possible to write very interesting code: for
 example, this is a revised version of `make_adder`, which works for *arbitrary types*:
-the blue function dynamically gets the type `T` of the argument and then uses it in the
-signature of the nested function:
+the blue function dynamically ("dynamically", but still at compile time!) gets the type
+`T` of the argument and then uses it in the signature of the nested function:
 
 ```python title="meta1.spy" autowrite
 @blue
