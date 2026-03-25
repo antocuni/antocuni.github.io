@@ -246,9 +246,7 @@ def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
 # SPy playground helpers
 # ---------------------------------------------------------------------------
 
-_PLAYGROUND_BASE_URL = (
-    'https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/'
-)
+_PLAYGROUND_BASE_URL_DEFAULT = 'https://spylang.github.io/spy/'
 _CREATE_SNIPPET_PY = Path(
     '/home/antocuni/anaconda/spy/playground/create_snippet.py'
 )
@@ -264,16 +262,16 @@ _PLAYGROUND_BLOCK_RE = re.compile(
 )
 
 
-def _playground_url(spy_file: Path) -> str:
+def _playground_url(spy_file: Path, base_url: str) -> str:
     result = subprocess.run(
         ['python', str(_CREATE_SNIPPET_PY), str(spy_file),
-         '--url', _PLAYGROUND_BASE_URL],
+         '--url', base_url],
         capture_output=True, text=True, check=True,
     )
     return result.stdout.strip()
 
 
-def _process_playground_blocks(markdown, autorun_dir, redirect_list):
+def _process_playground_blocks(markdown, autorun_dir, redirect_list, base_url):
     """Replace python+autowrite blocks with code block + Try yourself link."""
     def replace(match):
         fence = match.group('fence')
@@ -291,7 +289,7 @@ def _process_playground_blocks(markdown, autorun_dir, redirect_list):
         spy_file = autorun_dir / filename
         if spy_file.exists():
             try:
-                pg_url = _playground_url(spy_file)
+                pg_url = _playground_url(spy_file, base_url)
             except subprocess.CalledProcessError:
                 pg_url = None
         else:
@@ -357,11 +355,14 @@ class MyPlugin(BasePlugin):
 
         # For pages with playground_links: inject "Try yourself" links and
         # record redirects, then strip autowrite.  For all other pages: just strip.
-        if page.meta.get('antocuni', {}).get('playground_links'):
+        antocuni_meta = page.meta.get('antocuni', {})
+        if antocuni_meta.get('playground_links'):
             page_dest_dir = str(PurePosixPath(page.file.dest_uri).parent)
+            base_url = antocuni_meta.get('playground_base_url',
+                                         _PLAYGROUND_BASE_URL_DEFAULT)
             redirect_list: list[tuple[str, str]] = []
             markdown = _process_playground_blocks(
-                markdown, page_src_dir / 'autorun', redirect_list,
+                markdown, page_src_dir / 'autorun', redirect_list, base_url,
             )
             for filename, pg_url in redirect_list:
                 self._playground_redirects.append((page_dest_dir, filename, pg_url))

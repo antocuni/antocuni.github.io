@@ -12,12 +12,13 @@ links:
 
 antocuni:
   playground_links: true
+  playground_base_url: https://antocuni.eu/files/spy/playground/2026-03-25-main-229235b8/
 
 ---
 
 # Inside SPy 🥸, part 2: Language semantics
 
-<!-- spy git commit: e5a8d272 -->
+<!-- spy git commit: 229235b8 -->
 
 This is the second post of the *Inside SPy* series. The [first
 post](../../2025/10-spy-motivations-and-goals/index.md) was mostly about motivations and
@@ -106,13 +107,13 @@ details:
     At the moment of writing, SPy is still changing very rapidly and it's very likely
     that some of the examples will break in the future. We don't have any official
     release yet, but all the following examples have been tried on [SPy commit
-    e5a8d272](https://github.com/spylang/spy/tree/e5a8d272).
+    229235b8](https://github.com/spylang/spy/tree/229235b8).
 
     All the examples have a `Try it yourself` button which opens the code snippet in the
     SPy Playground, a PyScript app to try SPy directly in the browser. The [official SPy
     playground](https://spylang.github.io/spy) tracks the latest git `main`, while this
     blog post uses a [custom
-    version](https://antocuni.eu/files/spy/playground/2026-03-20-main-e5a8d272/) pinned
+    version](https://antocuni.eu/files/spy/playground/2026-03-20-main-229235b8/) pinned
     to this exact commit.
 
 ## Phases of execution and compilation pipeline
@@ -993,7 +994,7 @@ As in Python, custom types can override dunder methods like `__add__`, `__getite
 `__getattr__`, etc., and they can implement them either as normal function or as meta
 functions.  This is a very powerful mechanism which unlocks lots of opportunities.
 
-For example, take [`list.__getitem__`](https://github.com/spylang/spy/blob/e5a8d272/stdlib/_list.spy#L81-L130): it's a meta function which checks the static type
+For example, take [`list.__getitem__`](https://github.com/spylang/spy/blob/229235b8/stdlib/_list.spy#L81-L130): it's a meta function which checks the static type
 of the index, and then dispatches to specialized opimpls like `getitem_int` or
 `getitem_slice`.
 
@@ -1277,4 +1278,4 @@ post(s) of the series we will talk about things like:
     constructs.
 
 For those who are curious, I suggest to have a look at the
-[stdlib](https://github.com/spylang/spy/tree/main/stdlib). In particular, the builtin types [`list`](https://github.com/spylang/spy/blob/e5a8d27282b7825031ca2134aef92e6fba649393/stdlib/_list.spy), [`dict`](https://github.com/spylang/spy/blob/e5a8d27282b7825031ca2134aef92e6fba649393/stdlib/_dict.spy) and [`tuple`](https://github.com/spylang/spy/blob/e5a8d27282b7825031ca2134aef92e6fba649393/stdlib/_tuple.spy) are implemented **in pure SPy**.
+[stdlib](https://github.com/spylang/spy/tree/main/stdlib). In particular, the builtin types [`list`](https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_list.spy), [`dict`](https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_dict.spy) and [`tuple`](https://github.com/spylang/spy/blob/229235b882b7825031ca2134aef92e6fba649393/stdlib/_tuple.spy) are implemented **in pure SPy**.
