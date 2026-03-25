@@ -929,7 +929,7 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
 
     The **only** difference between the two decorators is that `@blue` creates a blue
     function which is called via parentheses, while `@blue.generic` creates a blue
-    function which is called via square brackets. Apart that, they behave exactly the
+    function which is called via square brackets. Apart from that, they behave exactly the
     same.
 
     In particular, there is no limitation w.r.t. types of arguments and return
@@ -982,7 +982,7 @@ x = opimpl(a, b)
 The trick is that `STATIC_TYPE` and `ADD` are both `@blue` functions, so during
 redshifting they are partially evaluated away, leaving just `opimpl(a, b)`.
 
-Normally `operator.ADD` is automaticaly called by the interpreter, but we can also call it manually:
+Normally `operator.ADD` is automatically called by the interpreter, but we can also call it manually:
 ```python title="op1.spy" autowrite
 from operator import ADD
 
