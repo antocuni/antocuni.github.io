@@ -219,7 +219,7 @@ in three different modes:
   executed by the interpreter. This is mostly used by tests to ensure that the redshift
   pass produces correct code.
 
-- **compiled mode**: `redshift` transforms untyped ASTs into into typed AST. Then we
+- **compiled mode**: `redshift` transforms untyped ASTs into typed ASTs. Then we
   feed the typed AST to the C backend, which produces C code, which is finally compiled
   by `gcc`, `clang` or any other C compiler.  SPy supports traditional native targets as
   well as the WebAssembly targets WASI and Emscripten.
@@ -230,7 +230,7 @@ in three different modes:
     simpler, easier to develop and easier to debug, while still getting performance
     comparable to LLVM.
 
-    Moreover, by using C as the commond ground we automatically have lots of great
+    Moreover, by using C as the common ground we automatically have lots of great
     existing tools at our disposal, like debuggers, profilers, build systems, etc.  And
     using C makes it very easy to target new platforms such as e.g. emscripten.
 
@@ -256,7 +256,7 @@ Hello world!
 ```
 
 We can do redshifting and inspect the transformed version. By default `spy redshift` (or
-`spy rs`) have a pretty printer which shows typed AST in source code form, which is
+`spy rs`) has a pretty printer which shows typed AST in source code form, which is
 easier to read. In this case the redshifted version is very similar to the original, but
 e.g. we can see that `print` has been specialized to `print_str`:
 
@@ -267,7 +267,6 @@ def main() -> None:
 ```
 
 We can run it in doppler mode as follows:
-described above:
 
 ```autorun
 $ spy redshift -x hello.spy
@@ -349,7 +348,7 @@ TypeError: mismatched types
 This also applies to e.g. function calls, `return` statements, etc.
 
 Type annotations are mandatory for function arguments and return types. They are
-optional for variables.  For variables with no type annotatation, we do a very limited form of type inference to determine the type of the variable from the type of its initializer.  We can use the
+optional for variables.  For variables with no type annotation, we do a very limited form of type inference to determine the type of the variable from the type of its initializer.  We can use the
 special function `STATIC_TYPE` to inspect it:
 
 ```python title="type-inference.spy" autowrite
@@ -405,7 +404,7 @@ Here we see that after redshifting, the generic `+` operators have been replaced
 concrete `i32_add` and `str_add` calls, which the C backend then replaces with direct
 call to the appropriate function.
 
-!!! note Fully Qualified Names and `--full-fqn`"
+!!! note "Fully Qualified Names and `--full-fqn`"
 
     A Fully Qualified Name is a unique identifier assigned to every
     function, type and constant inside a running SPy VM.
@@ -447,7 +446,7 @@ $ spy static-dynamic-types.spy
 ```
 
 This has interesting consequences, and it's another big departure from Python. The
-example below fails because the dispatch of `+` happen on the static type, which is
+example below fails because the dispatch of `+` happens on the static type, which is
 `object`:
 
 ```python title="type-error2.spy" autowrite
@@ -509,7 +508,7 @@ it's really needed without hurting the performance of "normal" code.
 ## Redshifting
 
 Redshifting is a core concept of SPy to enable good performance without sacrificing
-usability.  The core idea is that given a piece of code, there are parts of it that can
+usability.  The core idea is that given a piece of code, there are parts of it that can be
 computed at compile time, leaving less code to run at runtime.  It's a form
 of partial evaluation.
 
@@ -605,7 +604,7 @@ url: autorun/build/rs1_rs.html
 During redshifting we find all the subtrees which are fully blue, and replace them with
 a single constant node containing the result.  In this case, the whole subtree `2 * 3`
 has been replaced by a single node `6`. This also explain **why it's called
-redshifting**: because the resulting tree is "less blue" and the averge color "shifts to
+redshifting**: because the resulting tree is "less blue" and the average color "shifts to
 the red".
 
 Moreover, the remaining BinOp `x + 6` has been converted into a concrete call to
@@ -682,7 +681,7 @@ backend. What is left after redshifting is just the `main` function with a const
     would think: after all, in Python, "import time" is also Turing complete.
 
     One possible way to deal with it is to give a certain amount of "computing power" to
-    use use during import time and redshift: each operation decreaes the remaining power
+    use during import time and redshift: each operation decreases the remaining power
     by one, if it reaches zero we abort.  However, we haven't felt the need to do that so
     far.
 
@@ -810,7 +809,7 @@ url: autorun/build/adder_colorize.html
 ## Type manipulation and generics
 
 Types are first-order values as in Python, and thus they can be freely manipulated by
-`@blue` functions. Here, we build a different type-specialized versions of an `add`
+`@blue` functions. Here, we build different type-specialized versions of an `add`
 function:
 
 ```python title="add_T1.spy" autowrite
@@ -879,8 +878,8 @@ def main() -> None:
     print_str(`add_T1::add[str]::impl`('hello ', 'world'))
 ```
 
-This is how SPy does **generics**: a generic function is a `@blue` function which take
-one or more types and/or values, and create a specialized nested function (same for
+This is how SPy does **generics**: a generic function is a `@blue` function which takes
+one or more types and/or values, and creates a specialized nested function (same for
 generic types, which we will see later in the series).
 
 However, we would like to write `add[int]` instead of `add(int)`, because this is the
@@ -920,7 +919,7 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
 
     The **only** difference between the two decorators is that `@blue` creates a blue
     function which is called via parentheses, while `@blue.generic` creates a blue
-    function which is valled via square bracket. Apart that, they behave exactly the
+    function which is called via square brackets. Apart that, they behave exactly the
     same.
 
     In particular, there is no limitation w.r.t. types of arguments and return
@@ -950,7 +949,7 @@ def `add_T2::add[str]::impl`(a: str, b: str) -> str:
 
 Now that we know about `@blue` functions, we can understand better how operator dispatch
 works. We remember from [the previous section](#operator-dispatch) that e.g. `str + str`
-is dispached to `operator::str_add`.
+is dispatched to `operator::str_add`.
 
 How to we go from `a + b` to `operator::str_add(a, b)`?  Internally, operator dispatch
 happens in two steps:
@@ -990,12 +989,12 @@ $ spy op1.spy
 <OpImpl `def(str, str) -> str` for `operator::str_add`>
 ```
 
-In reality, `ADD` doesn't receive the *types* of the operand: it receive objects which
+In reality, `ADD` doesn't receive the *types* of the operands: it receives objects which
 *describes* the operands: this description include the static type, but also e.g. the
 source code location of the expression, the color and the concrete value if it's `blue`.
 
 These "argument description" objects are called **meta args**. A function which takes
-meta args end returns an opimpl is a **meta function**.
+meta args and returns an opimpl is a **meta function**.
 
 As in Python, custom types can override dunder methods like `__add__`, `__getitem__`,
 `__getattr__`, etc., and they can implement them either as normal function or as meta
@@ -1113,7 +1112,7 @@ StaticError: SmallString must be at most 32 chars
 ```
 
 Note that it's a real **compile time** error, as it is raised at `build` time even if
-`say_hello` it's never called.
+`say_hello` is never called.
 
 
 ## Powerful metaprogramming with `@blue` functions
@@ -1121,7 +1120,7 @@ Note that it's a real **compile time** error, as it is raised at `build` time ev
 We can do arbitrary operations on blue values, and we have the full power of the
 language at blue time.  This makes it possible to write very interesting code: for
 example, this is a revised version of `make_adder`, which works for *arbitrary types*:
-the blue function dynamically get the type `T` of the argument and then uses it in the
+the blue function dynamically gets the type `T` of the argument and then uses it in the
 signature of the nested function:
 
 ```python title="meta1.spy" autowrite
@@ -1178,7 +1177,7 @@ def main() -> None:
 It is important to underline that **typechecking is fully aware of blue semantics**,
 meaning that the SPy compiler can keep track of the precise type of `add5` and
 `add_world` without any special support. By the time the typechecker
-runs, all the blue values are fully known.  This is a big improvements over classical
+runs, all the blue values are fully known.  This is a big improvement over classical
 type checkers for Python which typically cannot understand metaprogramming patterns.
 
 Inside `@blue` functions we can use the full power of the language. Imagine that we want
@@ -1272,7 +1271,7 @@ post(s) of the series we will talk about things like:
 
   - compile-time decorators;
 
-  - advanced metaprogramming patters;
+  - advanced metaprogramming patterns;
 
   - blue-time support for `__dunder__` methods, including `__getattr__`, `__setattr__`
     and the descriptor protocol;
