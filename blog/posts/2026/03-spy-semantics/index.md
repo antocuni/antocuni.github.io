@@ -32,6 +32,10 @@ SPy implements static typing, and we will start to dive into metaprogramming.
     [Anaconda](https://www.anaconda.com/), for giving me the opportunity to dedicate
     100% of my time to this open-source project.
 
+    I'd also like to thank all the other SPy contributors and members of the SPy
+    community. Bootstrapping a community from zero is not an easy task and honestly it's
+    something which makes me proud :).
+
 
 <!-- more -->
 
