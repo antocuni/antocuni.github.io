@@ -965,7 +965,7 @@ x = opimpl(a, b)
 The trick is that `STATIC_TYPE` and `ADD` are both `@blue` functions, so during
 redshifting they are partially evaluated away, leaving just `opimpl(a, b)`.
 
-Normally `operator.ADD` is automaticaly called by the interpreter, but we can also call it manually:
+Normally `operator.ADD` is automatically called by the interpreter, but we can also call it manually:
 ```python title="op1.spy" autowrite
 from operator import ADD
 
