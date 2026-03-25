@@ -4,6 +4,7 @@ import hashlib
 import logging
 import re
 import shutil
+import subprocess
 import warnings
 from pathlib import Path, PurePosixPath
 
@@ -14,7 +15,7 @@ from mkdocs.config import config_options
 
 # Matches a fenced autorun block (``` or ~~~, any length >= 3).
 AUTORUN_BLOCK_RE = re.compile(
-    r'^(?P<fence>`{3,}|~{3,})autorun[ \t]*\n(?P<body>.*?)^(?P=fence)[ \t]*$',
+    r'^(?P<fence>`{3,}|~{3,})autorun(?P<opts>[^\n]*)\n(?P<body>.*?)^(?P=fence)[ \t]*$',
     re.MULTILINE | re.DOTALL,
 )
 
@@ -157,9 +158,68 @@ def _replace_popup_block(match: re.Match, page_src_dir: Path,
     )
 
 
+def _parse_autorun_opts(opts_str: str):
+    """Parse output-range and lineno from the autorun info string."""
+    tokens = opts_str.split()
+    output_range = None
+    lineno = False
+    for tok in tokens:
+        if tok.startswith('output-range='):
+            parts = tok[len('output-range='):].split('-')
+            start = int(parts[0])
+            end = int(parts[1]) if parts[1] else None
+            output_range = (start, end)
+        elif tok == 'lineno':
+            lineno = True
+    return output_range, lineno
+
+
+def _apply_output_opts(text: str, output_range, lineno: bool) -> str:
+    """Apply output-range and lineno filtering to output text."""
+    if not output_range and not lineno:
+        return text
+
+    lines = text.splitlines(keepends=True)
+    total = len(lines)
+
+    if output_range:
+        start, end = output_range
+        if end is None:
+            end = total
+        else:
+            end = min(end, total)
+        selected = lines[start - 1:end]
+        max_lineno = end
+    else:
+        start = 1
+        end = total
+        selected = lines
+        max_lineno = total
+
+    result = []
+    if output_range and start > 1:
+        result.append('[...]\n')
+
+    if lineno:
+        width = len(str(max_lineno))
+        for i, line in enumerate(selected, start=start):
+            if line.endswith('\n'):
+                result.append(f'{i:{width}d} | {line}')
+            else:
+                result.append(f'{i:{width}d} | {line}\n')
+    else:
+        result.extend(selected)
+
+    if output_range and end < total:
+        result.append('[...]\n')
+
+    return ''.join(result)
+
+
 def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
     """Replace one autorun fenced block with terminal HTML."""
     body = match.group('body')
+    output_range, lineno = _parse_autorun_opts(match.group('opts'))
     entries: list[tuple[str, str]] = []
 
     for line in body.splitlines():
@@ -173,12 +233,81 @@ def _replace_autorun_block(match: re.Match, autorun_dir: Path) -> str:
         else:
             # Fall back to whatever stripped text is in the block.
             raw_output = '(output not available — run autorun.py first)\n'
+        raw_output = _apply_output_opts(raw_output, output_range, lineno)
         entries.append((cmd, raw_output))
 
     if not entries:
         return match.group(0)  # nothing to do, leave block as-is
 
     return _build_terminal_html(entries)
+
+
+# ---------------------------------------------------------------------------
+# SPy playground helpers
+# ---------------------------------------------------------------------------
+
+_PLAYGROUND_BASE_URL_DEFAULT = 'https://spylang.github.io/spy/'
+_CREATE_SNIPPET_PY = Path(
+    '/home/antocuni/anaconda/spy/playground/create_snippet.py'
+)
+
+_TITLE_IN_INFO_RE = re.compile(r'\btitle=(?:"([^"]+)"|\'([^\']+)\'|(\S+))')
+
+# Matches python blocks that carry the autowrite attribute.
+_PLAYGROUND_BLOCK_RE = re.compile(
+    r'^(?P<fence>`{3,}|~{3,})python\s+(?P<attrs>[^\n]*\bautowrite\b[^\n]*)\n'
+    r'(?P<body>.*?)'
+    r'^(?P=fence)[ \t]*$',
+    re.MULTILINE | re.DOTALL,
+)
+
+
+def _playground_url(spy_file: Path, base_url: str) -> str:
+    result = subprocess.run(
+        ['python', str(_CREATE_SNIPPET_PY), str(spy_file),
+         '--url', base_url],
+        capture_output=True, text=True, check=True,
+    )
+    return result.stdout.strip()
+
+
+def _process_playground_blocks(markdown, autorun_dir, redirect_list, base_url):
+    """Replace python+autowrite blocks with code block + Try yourself link."""
+    def replace(match):
+        fence = match.group('fence')
+        attrs = match.group('attrs')
+        body = match.group('body')
+
+        tm = _TITLE_IN_INFO_RE.search(attrs)
+        if not tm:
+            return match.group(0)
+        filename = tm.group(1) or tm.group(2) or tm.group(3)
+
+        clean_attrs = re.sub(r'\s*\bautowrite\b', '', attrs).strip()
+        new_fence = f'{fence}python {clean_attrs}' if clean_attrs else f'{fence}python'
+
+        spy_file = autorun_dir / filename
+        if spy_file.exists():
+            try:
+                pg_url = _playground_url(spy_file, base_url)
+            except subprocess.CalledProcessError:
+                pg_url = None
+        else:
+            pg_url = None
+
+        if pg_url:
+            redirect_list.append((filename, pg_url))
+            link = (
+                f'\n<p style="text-align:right;margin-top:-0.8em;font-size:0.85em;">'
+                f'<a href="go/{filename}/" target="_blank">▶ Try it yourself</a>'
+                f'</p>\n'
+            )
+        else:
+            link = ''
+
+        return f'{new_fence}\n{body}{fence}\n{link}'
+
+    return _PLAYGROUND_BLOCK_RE.sub(replace, markdown)
 
 
 # ---------------------------------------------------------------------------
@@ -202,6 +331,9 @@ class MyPlugin(BasePlugin):
         self._popup_assets = []
         self._files = None
 
+        # Playground redirects: list of (page_dest_dir, filename, playground_url).
+        self._playground_redirects = []
+
         print('hello from mkdocs_antocuni')
 
         # Create a custom filter to suppress redirects warnings
@@ -221,6 +353,33 @@ class MyPlugin(BasePlugin):
     def on_page_markdown(self, markdown, page, config, files):
         """Replace custom fenced blocks with HTML."""
         page_src_dir = Path(page.file.abs_src_path).parent
+
+        # spy blocks: highlight as Python
+        markdown = re.sub(r'^(`{3,}|~{3,})spy\b', r'\1python', markdown,
+                          flags=re.MULTILINE)
+
+        # For pages with playground_links: inject "Try yourself" links and
+        # record redirects, then strip autowrite.  For all other pages: just strip.
+        antocuni_meta = page.meta.get('antocuni', {})
+        if antocuni_meta.get('playground_links'):
+            page_dest_dir = str(PurePosixPath(page.file.dest_uri).parent)
+            base_url = antocuni_meta.get('playground_base_url',
+                                         _PLAYGROUND_BASE_URL_DEFAULT)
+            redirect_list: list[tuple[str, str]] = []
+            markdown = _process_playground_blocks(
+                markdown, page_src_dir / 'autorun', redirect_list, base_url,
+            )
+            for filename, pg_url in redirect_list:
+                self._playground_redirects.append((page_dest_dir, filename, pg_url))
+
+        # Strip any remaining 'autowrite' attributes (pages other than the
+        # playground post, or blocks where the spy file was missing).
+        markdown = re.sub(
+            r'^((?:`{3,}|~{3,})[^\n]*?)\s*\bautowrite\b[^\S\n]*',
+            r'\1',
+            markdown,
+            flags=re.MULTILINE,
+        )
 
         # autorun blocks
         autorun_dir = page_src_dir / 'autorun'
@@ -298,10 +457,26 @@ class MyPlugin(BasePlugin):
         return output.replace('</head>', f'{og_tags}\n{twitter_tags}\n</head>', 1)
 
     def on_post_build(self, config):
-        """Copy popup asset files that mkdocs doesn't know about."""
+        """Copy popup assets and write playground redirect pages."""
         site_dir = Path(config['site_dir'])
         for src_abs, site_rel in self._popup_assets:
             if src_abs.exists():
                 dest = site_dir / site_rel
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src_abs, dest)
+
+        for page_dest_dir, filename, pg_url in self._playground_redirects:
+            redirect_html = (
+                '<!DOCTYPE html>\n'
+                '<html>\n'
+                '<head>\n'
+                f'<meta http-equiv="refresh" content="0; url={pg_url}">\n'
+                f'<link rel="canonical" href="{pg_url}">\n'
+                '</head>\n'
+                '<body></body>\n'
+                '</html>\n'
+            )
+            dest = site_dir / page_dest_dir / 'go' / filename / 'index.html'
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(redirect_html)
+        self._playground_redirects.clear()

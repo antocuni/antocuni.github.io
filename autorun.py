@@ -10,25 +10,18 @@ USAGE
 BLOCK TYPES
 -----------
 
-1. FILENAME BLOCKS
-   Any fenced block whose first line is a comment of the form:
+1. AUTOWRITE BLOCKS
+   Any fenced block whose info string contains "autowrite" and a title= attribute:
 
-       # filename: hello.spy
-
-   The rest of the block content is written to:
-       <md_dir>/examples/<filename>
-
-   The examples/ directory is created if it doesn't exist.  The file is only
-   (re)written when its content has actually changed.
-
-   Example:
-
-       ```python
-       # filename: hello.spy
-
+       ```spy title="hello.spy" autowrite
        def main() -> None:
            print("Hello world!")
        ```
+
+   The block content is written to:
+       <md_dir>/autorun/<title>
+
+   The file is only (re)written when its content has actually changed.
 
 2. AUTORUN BLOCKS
    Fenced blocks with the info string "autorun".  Each line starting with
@@ -82,6 +75,81 @@ import time
 from pathlib import Path
 
 ANSI_ESCAPE_RE = re.compile(r'\x1b\[[0-9;]*m')
+
+
+def parse_autorun_opts(info):
+    """Parse 'autorun [x] [output-range=A-B] [lineno]' info string.
+
+    Returns None if not an autorun block, otherwise a dict with:
+      force: bool
+      output_range: (start, end) or None  (1-based, inclusive)
+      lineno: bool
+    """
+    if not info.startswith('autorun'):
+        return None
+    rest = info[len('autorun'):].strip()
+    tokens = rest.split()
+    # reject info strings like 'autorun-foo'
+    for tok in tokens:
+        if tok not in ('x', 'lineno') and not tok.startswith('output-range='):
+            return None
+    force = 'x' in tokens
+    output_range = None
+    lineno = False
+    for tok in tokens:
+        if tok.startswith('output-range='):
+            parts = tok[len('output-range='):].split('-')
+            start = int(parts[0])
+            end = int(parts[1]) if parts[1] else None
+            output_range = (start, end)
+        elif tok == 'lineno':
+            lineno = True
+    return {'force': force, 'output_range': output_range, 'lineno': lineno}
+
+
+def apply_output_opts(text, output_range=None, lineno=False):
+    """Apply output-range and lineno filtering to output text.
+
+    Returns the modified text.
+    """
+    if not output_range and not lineno:
+        return text
+
+    lines = text.splitlines(keepends=True)
+    total = len(lines)
+
+    if output_range:
+        start, end = output_range
+        if end is None:
+            end = total
+        else:
+            end = min(end, total)
+        selected = lines[start - 1:end]
+        max_lineno = end
+    else:
+        start = 1
+        end = total
+        selected = lines
+        max_lineno = total
+
+    result = []
+    if output_range and start > 1:
+        result.append('[...]\n')
+
+    if lineno:
+        width = len(str(max_lineno))
+        for i, line in enumerate(selected, start=start):
+            if line.endswith('\n'):
+                result.append(f'{i:{width}d} | {line}')
+            else:
+                result.append(f'{i:{width}d} | {line}\n')
+    else:
+        result.extend(selected)
+
+    if output_range and end < total:
+        result.append('[...]\n')
+
+    return ''.join(result)
 
 
 def run_in_pty(cmd: str, cwd, env) -> tuple[str, int]:
@@ -184,7 +252,8 @@ def parse_blocks(lines: list[str]):
 # Per-file processing
 # ---------------------------------------------------------------------------
 
-FILENAME_RE = re.compile(r'^#\s*filename:\s*(\S+)')
+AUTOWRITE_RE = re.compile(r'\bautowrite\b')
+TITLE_IN_INFO_RE = re.compile(r'\btitle=(?:"([^"]+)"|\'([^\']+)\'|(\S+))')
 
 
 def process_md_file(md_path: Path, force: bool = False) -> bool:
@@ -200,32 +269,36 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
     autorun_dir = md_path.parent / 'autorun'
 
     # --- pass 1: extract filename blocks (read-only w.r.t. the .md file) ---
-    for _start, _end, _info, body_lines in parse_blocks(lines):
-        if not body_lines:
+    for _start, _end, info, body_lines in parse_blocks(lines):
+        if not AUTOWRITE_RE.search(info):
             continue
-        m = FILENAME_RE.match(body_lines[0])
-        if not m:
+        tm = TITLE_IN_INFO_RE.search(info)
+        if not tm:
             continue
-        filename = m.group(1)
+        filename = tm.group(1) or tm.group(2) or tm.group(3)
         autorun_dir.mkdir(exist_ok=True)
         out_path = autorun_dir / filename
-        file_content = ''.join(body_lines[1:])
+        file_content = ''.join(body_lines)
         if not out_path.exists() or out_path.read_text() != file_content:
             out_path.write_text(file_content)
             print(f'  wrote {out_path}')
 
     # --- pass 2: autorun blocks (may modify the .md file) ---
-    # Iterate in reverse so that inserting lines doesn't shift earlier indices.
     blocks = list(parse_blocks(lines))
     modified = False
 
-    for start, end, info, body_lines in reversed(blocks):
-        if info not in ('autorun', 'autorun x'):
+    # First pass: run commands in forward order (so earlier blocks execute first).
+    # Collect (start, end, info, new_body) for blocks that need updating.
+    pending: list[tuple[int, int, str, list[str]]] = []
+
+    for start, end, info, body_lines in blocks:
+        opts = parse_autorun_opts(info)
+        if opts is None:
             continue
         if not body_lines:
             continue
 
-        block_force = force or (info == 'autorun x')
+        block_force = force or opts['force']
 
         # "No output yet" means every non-empty line starts with '$ '.
         has_output = any(
@@ -269,14 +342,20 @@ def process_md_file(md_path: Path, force: bool = False) -> bool:
             raw_path = autorun_dir / hashlib.md5(cmd.encode()).hexdigest()
             raw_path.write_text(raw_output)
             output = ANSI_ESCAPE_RE.sub('', raw_output)
+            output = apply_output_opts(
+                output, opts['output_range'], opts['lineno']
+            )
             output_lines = output.splitlines(keepends=True)
             if output_lines and not output_lines[-1].endswith('\n'):
                 output_lines[-1] += '\n'
             new_body.extend(output_lines)
 
-        # Replace the block body in-place (start+1 .. end are the body lines).
+        pending.append((start, end, opts, new_body))
+
+    # Second pass: apply replacements in reverse order so earlier indices stay valid.
+    for start, end, opts, new_body in reversed(pending):
         lines[start + 1:end] = new_body
-        if info == 'autorun x':
+        if opts['force']:
             lines[start] = lines[start].replace('autorun x', 'autorun', 1)
         modified = True
 
@@ -303,7 +382,7 @@ def show_themes(md_path: Path) -> None:
     # Collect (cmd, raw_output) pairs per block.
     blocks_data: list[list[tuple[str, str]]] = []
     for _start, _end, info, body_lines in parse_blocks(lines):
-        if info != 'autorun':
+        if parse_autorun_opts(info) is None:
             continue
         entries: list[tuple[str, str]] = []
         for line in body_lines:

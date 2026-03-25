@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  * [35mop2::main[00m at /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | [31;01m        |_________|[00m
+
+[31;01mTypeError[00m: cannot do `i32` + `str`
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | [31;01m        ^ this is `i32`[00m
+
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | [31;01m            |_____| this is `str`[00m
+
+  | /.../autorun/op2.spy:2
+  |     x = 1 + "hello"
+  | [32;01m        |_________| operator::ADD called here[00m
+
+

@@ -1,0 +1,2 @@
+<OpImpl `def(i32, i32) -> i32` for `operator::i32_add`>
+<OpImpl `def(str, str) -> str` for `operator::str_add`>

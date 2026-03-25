@@ -1,0 +1,7 @@
+from operator import ADD
+
+def main() -> None:
+    fn1 = ADD(i32, i32)
+    fn2 = ADD(str, str)
+    print(fn1)
+    print(fn2)
