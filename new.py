@@ -59,6 +59,10 @@ categories:
   - Post
 tags:
   - spy
+og:
+  description: ""
+  image: "og.png"
+  author: "Antonio Cuni"
 
 ---
 

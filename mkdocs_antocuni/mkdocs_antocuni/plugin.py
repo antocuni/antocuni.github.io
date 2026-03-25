@@ -320,11 +320,16 @@ class MyPlugin(BasePlugin):
         ('silent', config_options.Type(bool, default=True)),
     )
 
+    def on_env(self, env, config, files):
+        """Store the files collection for asset URL resolution."""
+        self._files = files
+
     def on_startup(self, command, dirty):
         """Suppress redirects warnings."""
         # Files referenced by antocuni-popup blocks that need to be copied
         # to the built site. List of (src_abs_path, site_relative_path).
         self._popup_assets = []
+        self._files = None
 
         # Playground redirects: list of (page_dest_dir, filename, playground_url).
         self._playground_redirects = []
@@ -409,6 +414,47 @@ class MyPlugin(BasePlugin):
             markdown,
         )
         return markdown
+
+    def on_post_page(self, output, page, config):
+        """Inject og: meta tags into the page <head>."""
+        og_meta = dict(page.meta.get('og') or {})
+        og_meta.setdefault('title', page.title)
+        if not og_meta:
+            return output
+        def _meta_tag(key, value):
+            if key == 'author':
+                return f'<meta name="author" content="{value}">'
+            return f'<meta property="og:{key}" content="{value}">'
+
+        image = og_meta.get('image')
+        if image and not image.startswith(('http://', 'https://')):
+            abs_image = Path(page.file.abs_src_path).parent / image
+            if not abs_image.exists():
+                raise FileNotFoundError(
+                    f'og.image not found: {abs_image} (in {page.file.src_path})'
+                )
+            img_src_path = str(PurePosixPath(page.file.src_path).parent / image)
+            img_file = self._files.get_file_from_path(img_src_path)
+            if img_file is None:
+                raise FileNotFoundError(
+                    f'og.image not found in mkdocs files: {img_src_path}'
+                )
+            site_url = config.get('site_url', '').rstrip('/')
+            dest_uri = img_file.dest_uri.removeprefix('./')
+            og_meta['image'] = f'{site_url}/{dest_uri}'
+
+        og_tags = '\n'.join(_meta_tag(k, v) for k, v in og_meta.items())
+
+        twitter_map = {'title': 'title', 'description': 'description', 'image': 'image'}
+        twitter_card = 'summary_large_image' if og_meta.get('image') else 'summary'
+        twitter_tags = f'<meta name="twitter:card" content="{twitter_card}">\n'
+        twitter_tags += '\n'.join(
+            f'<meta name="twitter:{tw_key}" content="{og_meta[og_key]}">'
+            for og_key, tw_key in twitter_map.items()
+            if og_key in og_meta
+        )
+
+        return output.replace('</head>', f'{og_tags}\n{twitter_tags}\n</head>', 1)
 
     def on_post_build(self, config):
         """Copy popup assets and write playground redirect pages."""

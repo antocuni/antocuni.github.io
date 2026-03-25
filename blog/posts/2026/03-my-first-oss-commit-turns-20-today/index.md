@@ -8,10 +8,15 @@ tags:
   - oss
   - pypy
   - spy
+og:
+  description: "A bit of software archaeology and a personal retrospective"
+  image: "og-commit.png"
+  author: "Antonio Cuni"
 
 ---
 
 # My first OSS commit turns 20 today
+
 
 Some time ago I realized that it was 20 years since I started to contribute to
 Open Source. It's easy to remember, because I started to work on PyPy as part of my
