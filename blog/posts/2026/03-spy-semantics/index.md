@@ -14,6 +14,11 @@ antocuni:
   playground_links: true
   playground_base_url: https://antocuni.eu/files/spy/playground/2026-03-25-main-229235b8/
 
+og:
+  description: "Language semantics: phases of execution, redshifting, static typing, and metaprogramming in SPy"
+  image: "og-image.png"
+  author: "Antonio Cuni"
+
 ---
 
 # Inside SPy 🥸, part 2: Language semantics
