@@ -7,13 +7,11 @@
       
       
       
-        <link rel="canonical" href="https://antocuni.eu/category/post/page/2/">
+        <link rel="canonical" href="https://antocuni.eu/2026/05/01/why-python-is-slow-talking-about-spy-on-the-behind-the-commit-podcast/">
       
       
-        <link rel="prev" href="../../../../feed_rss_created.xml">
+        <link rel="prev" href="../../../03/25/inside-spy-part-2-language-semantics/">
       
-      
-        <link rel="next" href="../../../talk/">
       
       
         <link rel="alternate" type="application/rss+xml" title="RSS feed" href="../../../../feed_rss_created.xml">
@@ -24,7 +22,7 @@
     
     
       
-        <title>Post - Antonio Cuni's blog</title>
+        <title>Why Python Is Slow: Talking about SPy on the Behind the Commit Podcast - Antonio Cuni's blog</title>
       
     
     
@@ -64,9 +62,14 @@
     
     
     
-  <meta property="og:title" content="Post">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Post">
+  <meta property="og:description" content="">
+<meta property="og:image" content="https://antocuni.eu/2026/05-why-python-is-slow-podcast/og.jpg">
+<meta name="author" content="Antonio Cuni">
+<meta property="og:title" content="Why Python Is Slow: Talking about SPy on the Behind the Commit Podcast">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why Python Is Slow: Talking about SPy on the Behind the Commit Podcast">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="https://antocuni.eu/2026/05-why-python-is-slow-podcast/og.jpg">
 <link href="../../../../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../../../../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
             html.glightbox-open { overflow: initial; height: 100%; }
             .gslide-title { margin-top: 0px; user-select: text; }
@@ -96,7 +99,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#post" class="md-skip">
+        <a href="#why-python-is-slow-talking-about-spy-on-the-behind-the-commit-podcast" class="md-skip">
           Skip to content
         </a>
       
@@ -131,7 +134,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Post
+              Why Python Is Slow: Talking about SPy on the Behind the Commit Podcast
             
           </span>
         </div>
@@ -225,7 +228,9 @@
           
             
               
-              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden="">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     
@@ -248,11 +253,13 @@
       
   
   
+    
+  
   
     
   
   
-    <li class="md-nav__item">
+    <li class="md-nav__item md-nav__item--active">
       <a href="../../../.." class="md-nav__link">
         
   
@@ -670,10 +677,8 @@
       
   
   
-    
   
   
-  
     
     
       
@@ -689,11 +694,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked="">
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
         
           
           <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
@@ -708,7 +713,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             Categories
@@ -721,19 +726,10 @@
   
   
     
-      
-    
   
   
     <li class="md-nav__item">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="../../" class="md-nav__link md-nav__link--active">
+      <a href="../../../../category/post/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -743,7 +739,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -758,7 +753,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../talk/" class="md-nav__link">
+      <a href="../../../../category/talk/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -788,6 +783,8 @@
             
             
               
+                
+              
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
@@ -800,6 +797,23 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+      
+        <li class="md-nav__item">
+  <a href="#one-year-of-progress-in-spy" class="md-nav__link">
+    <span class="md-ellipsis">
+      One year of progress in SPy
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -807,501 +821,196 @@
             
           
           
-  <div class="md-content" data-md-component="content">
-    <div class="md-content__inner">
-      <header class="md-typeset">
-        <h1 id="post">Post<a class="headerlink" href="#post" title="Permanent link">¶</a></h1>
-      </header>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2021-03-29 00:00:00+00:00">Mar 29, 2021</time></li>
-        
-          <li class="md-meta__item">
-            in
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
             
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"></path></svg>
+                        <time datetime="2026-05-01 00:00:00+00:00" class="md-ellipsis">May 1, 2026</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"></path></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/post/">Post</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"></path></svg>
+                          <span class="md-ellipsis">
+                            
+                              2 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
           
-          <li class="md-meta__item">
-            
-              7 min read
-            
-          </li>
-        
-      </ul>
-      
+        </div>
+      </div>
     </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="hello-hpy"><a class="toclink" href="../../../../2021/03/29/hello-hpy/">Hello, HPy</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://hpyproject.org/blog/posts/2021/03/hello-hpy/">HPy blog</a>.</p>
-</div>
-<p>HPy has been around for a while now. The initial discussion started during
-EuroPython 2019, in the good old times when we could still go to conferences
-and have real-life meetings. Since then, HPy progressed <strong>a lot</strong> from the
-point of view of the actual code, but we have been a bit too silent
-w.r.t. communicating what we are doing to the external world and to the broader
-Python community. Hopefully, now that this blog is online we will do a better
-job at periodically communicating the status of HPy, so make sure to
-subscribe to the RSS feed.</p>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
 
-    
-      <nav class="md-post__action">
-        <a href="../../../../2021/03/29/hello-hpy/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2019-12-18 13:38:00+00:00">Dec 18, 2019</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              7 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="hpy-kick-off-sprint-report"><a class="toclink" href="../../../../2019/12/18/hpy-kick-off-sprint-report/">HPy kick-off sprint report</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2019/12/hpy-kick-off-sprint-report-1840829336092490938.html">PyPy blog</a>.</p>
-</div>
-<p>Recently Antonio, Armin and Ronan had a small internal sprint in the beautiful
-city of Gdańsk to kick-off the development of HPy. Here is a brief report of
-what was accomplished during the sprint.
-</p>
 
+  <nav class="md-tags">
     
-      <nav class="md-post__action">
-        <a href="../../../../2019/12/18/hpy-kick-off-sprint-report/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2019-02-11 10:55:00+00:00">Feb 11, 2019</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="pypy-v700-triple-release-of-27-35-and-36-alpha"><a class="toclink" href="../../../../2019/02/11/pypy-v700-triple-release-of-27-35-and-36-alpha/">PyPy v7.0.0: triple release of 2.7, 3.5 and 3.6-alpha</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2019/02/pypy-v700-triple-release-of-27-35-and-606875333356156076.html">PyPy blog</a>.</p>
-</div>
-
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2019/02/11/pypy-v700-triple-release-of-27-35-and-36-alpha/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2019-01-03 14:21:00+00:00">Jan 3, 2019</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              5 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="pypy-for-low-latency-systems"><a class="toclink" href="../../../../2019/01/03/pypy-for-low-latency-systems/">PyPy for low-latency systems</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2019/01/pypy-for-low-latency-systems-613165393301401965.html">PyPy blog</a>.</p>
-</div>
-<h1 class="title">
-PyPy for low-latency systems</h1>
-Recently I have merged the gc-disable branch, introducing a couple of features
-which are useful when you need to respond to certain events with the lowest
-possible latency.  This work has been kindly sponsored by <a class="reference external" href="https://www.gambitresearch.com/">Gambit Research</a>
-(which, by the way, is a very cool and geeky place where to <a class="reference external" href="https://www.gambitresearch.com/jobs.html">work</a>, in case you
-are interested).  Note also that this is a very specialized use case, so these
-features might not be useful for the average PyPy user, unless you have the
-same problems as described here.
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2019/01/03/pypy-for-low-latency-systems/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2018-09-21 16:32:00+00:00">Sep 21, 2018</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              18 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="inside-cpyext-why-emulating-cpython-c-api-is-so-hard"><a class="toclink" href="../../../../2018/09/21/inside-cpyext-why-emulating-cpython-c-api-is-so-hard/">Inside cpyext: Why emulating CPython C API is so Hard</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2018/09/inside-cpyext-why-emulating-cpython-c-8083064623681286567.html">PyPy blog</a>.</p>
-</div>
-
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2018/09/21/inside-cpyext-why-emulating-cpython-c-api-is-so-hard/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2018-04-27 14:10:00+00:00">Apr 27, 2018</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              2 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="how-to-ignore-the-annoying-cython-warnings-in-pypy-60"><a class="toclink" href="../../../../2018/04/27/how-to-ignore-the-annoying-cython-warnings-in-pypy-60/">How to ignore the annoying Cython warnings in PyPy 6.0</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2018/04/how-to-ignore-annoying-cython-warnings-1007636731207810779.html">PyPy blog</a>.</p>
-</div>
-<div>
-</div>
-<div>
-<br class="Apple-interchange-newline">
-If you install any Cython-based module in PyPy 6.0.0, it is very likely that you get a warning like this:</div>
-<pre><code>&gt;&gt;&gt;&gt; import numpy
-/data/extra/pypy/6.0.0/site-packages/numpy/random/__init__.py:99: UserWarning: __builtin__.type size changed, may indicate binary incompatibility. Expected 888, got 408
-  from .mtrand import *
-</code></pre>
-<div>
-The TL;DR version is: the warning is a false alarm, and you can hide it by doing:</div>
-<pre><code>$ pypy -m pip install pypy-fix-cython-warning
-</code></pre>
-<div>
-The package does not contain any module, only a&nbsp;<code>.pth</code>&nbsp;file which installs a warning filter at startup.</div>
-<h2>
-Technical details</h2>
-<div>
-This happens because whenever Cython compiles a pyx file, it generates C code which does a sanity check on the C size of&nbsp;<code>PyType_Type</code>. PyPy versions up to 5.10 are buggy and report the incorrect size, so Cython includes a workaround to compare it with the incorrect value, when on PyPy.</div>
-<div>
-PyPy 6 fixed the bug and now&nbsp;<code>PyType_Type</code>&nbsp;reports the correct size; however, Cython still tries to compare it with the old, buggy value, so it (wrongly) emits the warning.</div>
-<div>
-Cython 0.28.2 includes a fix for it, so that C files generated by it no longer emit the warning. However, most packages are distributed with pre-cythonized C files. For example,&nbsp;<code>numpy-1.14.2.zip</code>&nbsp;include C files which were generated by Cython 0.26.1: if you compile it you still get the warning, even if you locally installed a newer version of Cython.
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2018/04/27/how-to-ignore-the-annoying-cython-warnings-in-pypy-60/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</div></article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2017-10-30 10:15:00+00:00">Oct 30, 2017</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              8 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="how-to-make-your-code-80-times-faster"><a class="toclink" href="../../../../2017/10/30/how-to-make-your-code-80-times-faster/">How to make your code 80 times faster</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2017/10/how-to-make-your-code-80-times-faster-1424098117108093942.html">PyPy blog</a>.</p>
-</div>
-<div class="document" id="how-to-make-your-code-80-times-faster">
-I often hear people who are happy because PyPy makes their code 2 times faster
-or so. Here is a short personal story which shows PyPy can go well beyond
-that.
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2017/10/30/how-to-make-your-code-80-times-faster/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</div></article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2017-10-18 13:31:00+00:00">Oct 18, 2017</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              4 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="cape-of-good-hope-for-pypy"><a class="toclink" href="../../../../2017/10/18/cape-of-good-hope-for-pypy/">(Cape of) Good Hope for PyPy</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2017/10/cape-of-good-hope-for-pypy-hello-from-3656631725712879033.html">PyPy blog</a>.</p>
-</div>
-
-<div>
-
-<br>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2017/10/18/cape-of-good-hope-for-pypy/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</div></article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2017-07-26 16:53:00+00:00">Jul 26, 2017</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              1 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="binary-wheels-for-pypy"><a class="toclink" href="../../../../2017/07/26/binary-wheels-for-pypy/">Binary wheels for PyPy</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2017/07/binary-wheels-for-pypy-8718353804433344916.html">PyPy blog</a>.</p>
-</div>
-<p>Hi,<br>
-<br>
-this is a short blog post, just to announce the existence of this <a href="https://github.com/antocuni/pypy-wheels" target="_blank">Github repository</a>, which contains binary PyPy wheels for some selected packages. The availability of binary wheels means that you can install the packages much more quickly, without having to wait for compilation.<br>
-
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2017/07/26/binary-wheels-for-pypy/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
-      
-        <article class="md-post md-post--excerpt">
-  <header class="md-post__header">
-    
-    <div class="md-post__meta md-meta">
-      <ul class="md-meta__list">
-        <li class="md-meta__item">
-          <time datetime="2012-09-26 09:50:00+00:00">Sep 26, 2012</time></li>
-        
-          <li class="md-meta__item">
-            in
-            
-              <a href="../../" class="md-meta__link">Post</a></li>
-        
-        
-          
-          <li class="md-meta__item">
-            
-              3 min read
-            
-          </li>
-        
-      </ul>
-      
-    </div>
-  </header>
-  <div class="md-post__content md-typeset">
-    <h2 id="py3k-status-update-6"><a class="toclink" href="../../../../2012/09/26/py3k-status-update-6/">Py3k status update #6</a></h2>
-<div class="admonition note">
-<p>Originally published on the <a href="https://pypy.org/posts/2012/09/py3k-status-update-6-4049281716377789914.html">PyPy blog</a>.</p>
-</div>
-<p>This is the sixth status update about our work on the <a class="reference external" href="https://foss.heptapod.net/pypy/pypy/-/tree/branch/py3k">py3k branch</a>, which we<br>
-can work on thanks to all of the people who <a class="reference external" href="/posts/2012/01/py3k-and-numpy-first-stage-thanks-to-3008917396290059758.html">donated</a> to the <a class="reference external" href="https://pypy.org/py3donate.html">py3k proposal</a>.
-</p>
-
-    
-      <nav class="md-post__action">
-        <a href="../../../../2012/09/26/py3k-status-update-6/">
-          Continue reading
-        </a>
-      </nav>
-    
-  </div>
-</article>
       
       
-        
-          
+      
+        <a href="../../../../tags/#tag:spy" class="md-tag">spy</a>
+      
+    
+  </nav>
 
 
 
-<nav class="md-pagination">
-  <a class="md-pagination__link" href="../../">1</a> <span class="md-pagination__current">2</span> <a class="md-pagination__link" href="../3/">3</a> <a class="md-pagination__link" href="../4/">4</a> <a class="md-pagination__link" href="../5/">5</a>
-</nav>
-        
+<h1 id="why-python-is-slow-talking-about-spy-on-the-behind-the-commit-podcast">Why Python Is Slow: Talking about SPy on the Behind the Commit Podcast<a class="headerlink" href="#why-python-is-slow-talking-about-spy-on-the-behind-the-commit-podcast" title="Permanent link">¶</a></h1>
+<p>During EuroPython 2025 I had the pleasure to talk to <a href="https://miabajic.dev/">Mia Bajić</a> for her podcast <a href="https://www.youtube.com/@BehindtheCommit">Behind The Commit</a>.</p>
+<p>In the chat we mainly talk about Python performance and how SPy tries to improve them.</p>
+<p>Now the full episode is live: you can <a href="https://www.youtube.com/watch?v=CV2tYMPmMWc&amp;t=708s">watch it on Youtube</a> or <a href="https://open.spotify.com/episode/52oMn2JxF9JlwwE0tx1vjF?si=xGGoEcvUQBK2SH2XLV2EOw">listen on Spotify</a></p>
+<!-- more -->
+
+<h2 id="one-year-of-progress-in-spy">One year of progress in SPy<a class="headerlink" href="#one-year-of-progress-in-spy" title="Permanent link">¶</a></h2>
+<p>Almost one year passed since then and it was fun to watch it knowing what happened since
+then.  In particular, during the interview I often reply things like "this is not done
+yet", "this will be implemented", etc., but many of the things we talked about <strong>were
+implemented</strong> in the meantime, so this becomes a very good summary of what happened in
+the last year of SPy.</p>
+<p>Here is a list of quotes, with the relevant links.</p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=HXJAT6NXbOLf6ncR&amp;t=52"><code>00:52</code></a></p>
+<blockquote>
+<p><em>Mia</em>: Why is Python so slow?</p>
+<p><em>Anto</em>: Oh, that's exactly the talk which I just gave</p>
+</blockquote>
+<p>Here we are talking about my EuroPython talk <em>Myths and fairy tales around Python performance</em>: <a href="https://www.youtube.com/watch?v=X3QbMaEIpt0">video</a> and <a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/">slides</a>.</p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=7fGc2Wgc2tXI9DV_&amp;t=532"><code>08:52</code></a></p>
+<blockquote>
+<p><em>Mia</em>: Can you use decorators in SPy?</p>
+<p><em>Anto</em>: Not yet</p>
+</blockquote>
+<p>Now decorators are supported! <a href="https://github.com/spylang/spy/pull/225">PR 225</a> was
+merged on Sep 10, a just a few weeks after the interview.</p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=lPM7FjWV7RZJuA8Q&amp;t=632"><code>10:32</code></a></p>
+<blockquote>
+<p>What is the current roadmap of SPy?</p>
+</blockquote>
+<p>We we have a (very rough) roadmap which is visible <a href="https://github.com/spylang/spy/blob/main/ROADMAP.md">here</a></p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=lPM7FjWV7RZJuA8Q&amp;t=685"><code>11:25</code></a></p>
+<blockquote>
+<p>So what I have so far is that this low-level core is mostly done or very in a very
+good shape and now I can start building my own abstractions, which means for example
+that I don't have list type in SPy.</p>
+</blockquote>
+<p>This has been a long-running joke about the state of SPy, because I used to say "I don't
+even have lists and dicts!".  The point is that I wanted to have enough low-level
+features to be able to implement
+<a href="https://github.com/spylang/spy/blob/main/stdlib/_list.spy"><code>list</code></a> and
+<a href="https://github.com/spylang/spy/blob/main/stdlib/_dict.spy"><code>dict</code></a> directly in SPy. Now
+we have both!</p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=lPM7FjWV7RZJuA8Q&amp;t=1298"><code>21:38</code></a></p>
+<blockquote>
+<p>Currently SPy is a garbage-uncollected language</p>
+</blockquote>
+<p>That's no longer the case! We have a proper GC since <a href="https://github.com/spylang/spy/pull/390">PR
+390</a>. This is still suboptimal and I plan to
+integrate better GCs in the future. but for now it's good enouogh.</p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=lPM7FjWV7RZJuA8Q&amp;t=1494"><code>24:54</code></a></p>
+<blockquote>
+<p>Documentation is inexistent</p>
+</blockquote>
+<p><a href="https://spylang.github.io/docs/dev/">Here it is</a>! We went from "inexistent" to
+"scarce", I call it progress! :)</p>
+<p>This is entirely merit of members of the SPy community who did all the hard work, in
+particular (Jeff Glass)[https://github.com/JeffersGlass] and <a href="https://github.com/kanin-kearpimy">Kanin
+Kearpimy</a>.</p>
+<hr>
+<p><a href="https://youtu.be/CV2tYMPmMWc?si=lPM7FjWV7RZJuA8Q&amp;t=1501"><code>25:01</code></a></p>
+<blockquote>
+<p>I plan to write a series of blog post to explain the motivation and
+technicalities of SPy</p>
+</blockquote>
+<p>Readers of this blog already know about these:</p>
+<ul>
+<li>
+<p><a href="https://antocuni.eu/2025/10/29/inside-spy-part-1-motivations-and-goals/">Inside SPy, part 1: Motivations and Goals</a></p>
+</li>
+<li>
+<p><a href="https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/">Inside SPy, part 2: Language Semantics</a></p>
+</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js" data-repo="antocuni/antocuni.github.io" data-repo-id="R_kgDON3STLg" data-category="Announcements" data-category-id="DIC_kwDON3STLs4Cm2EZ" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="light" data-lang="en" data-loading="lazy" crossorigin="anonymous" async="">
+</script>
+
       
-    </div>
+    </article>
   </div>
 
           
