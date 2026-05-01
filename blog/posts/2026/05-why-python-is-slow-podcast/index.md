@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 date: 2026-05-01
 title: "Why Python Is Slow: Talking about SPy on the Behind the Commit Podcast"
 categories:
