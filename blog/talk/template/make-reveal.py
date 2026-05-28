@@ -175,15 +175,15 @@ def render_autorun_block(body, autorun_dir):
 
     raw = ''.join(pieces).rstrip('\n')
     inner = conv.convert(raw, full=False)
+    # Width and font-size come from the .reveal pre rule (same as code blocks).
     style = (
         "background:#2E3436;color:#d4d4d4;"
         "border-radius:6px;padding:1em 1.2em;"
         "font-family:'Fira Mono','Cascadia Code','Consolas',monospace;"
         "line-height:1.4;margin:0.5em auto;"
         "white-space:pre;text-align:left;"
-        "width:var(--code-max-width,75%);max-width:100%;"
-        "font-size:var(--code-font-size,1.2em);"
-        "overflow:auto;box-sizing:border-box;"
+        "overflow:auto;max-height:var(--code-max-height,450px);"
+        "box-sizing:border-box;"
     )
     return f'<pre style="{style}">{inner}</pre>'
 
