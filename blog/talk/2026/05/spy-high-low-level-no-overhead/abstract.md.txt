@@ -1,0 +1,21 @@
+# SPy: high-level Python, low-level performance, no overhead
+
+
+SPy is a Python variant designed for compilation: well-specified, debuggable, and
+expressive. It consists of a low-level core which gives control and speed comparable to
+C, Rust and Go, and powerful metaprogramming features which make possible to build
+high-level zero-cost abstractions.  The result is something which is statically typed
+and as fast as C, but with the feeling and ease of Python.
+
+---
+
+SPy is a Python variant designed for compilation: well-specified, debuggable, and
+expressive. It consists of a low-level core which gives control and speed comparable to
+C, Rust and Go, and powerful metaprogramming features which make possible to build
+high-level zero-cost abstractions.  The result is something which is statically typed
+and as fast as C, but with the feeling and ease of Python.
+
+This talk is a deep dive into the SPy core ideas: in particular, we will explore the
+internals of the language, show how many builtins are implemented in SPy itself, what
+"zero cost abstraction" means in practice and some end-to-end example of how high-level
+Python code is compiled into a low-level fast executable.

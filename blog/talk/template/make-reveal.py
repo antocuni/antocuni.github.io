@@ -1,4 +1,4 @@
-#!/usr/bin/env -S uv run
+#!/usr/bin/env -S uv run --offline
 """
 Offline reveal.js presentation generator.
 Reads slides.md.txt and generates index.html ready to be opened in the browser.
@@ -8,6 +8,7 @@ Reads slides.md.txt and generates index.html ready to be opened in the browser.
 # ///
 
 import argparse
+import re
 import sys
 import time
 from pathlib import Path
@@ -106,10 +107,32 @@ def extract_title(content):
     return "Presentation"
 
 
+QR_COMMENT_RE = re.compile(r'<!--\s*antocuni-qr:\s*(\S+?)\s*-->')
+
+
+def expand_qr_comment(match):
+    url = match.group(1)
+    # Strip protocol for display label
+    label = re.sub(r'^https?://', '', url)
+    return (
+        '<p class="small">\n'
+        f'<a href="{url}">\n'
+        f'<qr-code data="{url}" format="svg" modulesize="8" margin="4"></qr-code>\n'
+        '<br>\n'
+        f'{label}\n'
+        '</a>\n'
+        '<br>\n'
+        '</p>'
+    )
+
+
 def read_slides(filename):
     """Read and process the slides content."""
     with open(filename, 'r', encoding='utf-8') as f:
         content = f.read()
+
+    # Expand <!-- antocuni-qr: URL --> comments into a QR-code link block
+    content = QR_COMMENT_RE.sub(expand_qr_comment, content)
 
     # Apply the same indentation fix as in pyreveal.py
     content = content.replace('    ', '\t')

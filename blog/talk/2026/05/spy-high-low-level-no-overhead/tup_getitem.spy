@@ -1,0 +1,7 @@
+def main() -> None:
+    tup = (1, 2, "hello")
+    a = tup[0]
+    b = tup[2]
+    print(STATIC_TYPE(tup))
+    print(STATIC_TYPE(a))
+    print(STATIC_TYPE(b))
