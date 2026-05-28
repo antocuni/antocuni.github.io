@@ -15,16 +15,21 @@
   }
 
   /*
-   * Code blocks default to 75% width and a larger font.
-   * To override on a single slide, add a directive right after the slide title:
+   * Code blocks default to 75% width, larger font, 600px max-height
+   * (scrolls beyond that). Override per-slide with a directive right
+   * after the slide title:
    *
    *   ## My slide
    *
-   *   <!-- .slide: style="--code-max-width: 700px; --code-font-size: 1.2em;" -->
+   *   <!-- .slide: style="--code-max-width: 700px;
+   *                       --code-font-size: 1.2em;
+   *                       --code-max-height: 950px;" -->
    *
    *   ```python
    *   ...
    *   ```
+   *
+   * The same variables also affect ```autorun``` terminal blocks.
    */
   .reveal pre {
     width: var(--code-max-width, 75%);
@@ -35,7 +40,7 @@
   .reveal pre code {
     padding: 5px;
     overflow: auto;
-    max-height: 600px;
+    max-height: var(--code-max-height, 600px);
     word-wrap: normal;
   }
 
@@ -73,3 +78,16 @@ XXX update link!
 ---
 
 ## Slide 2
+
+---
+
+## Big code block
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 950px;" -->
+
+```python
+# Use --code-max-height to let a code block grow to fill the slide.
+# Use --code-font-size to shrink the font so more lines fit.
+def main() -> None:
+    print("hello")
+```
