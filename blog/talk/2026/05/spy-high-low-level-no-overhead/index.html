@@ -44,10 +44,16 @@
 	text-transform: none;
   }
 
+  .reveal pre {
+	width: var(--code-max-width, 100%);
+	max-width: 100%;
+	font-size: var(--code-font-size, 1em);
+  }
+
   .reveal pre code {
 	padding: 5px;
 	overflow: auto;
-	max-height: 600px;
+	max-height: var(--code-max-height, 600px);
 	word-wrap: normal;
   }
 
@@ -132,35 +138,32 @@ antocuni.eu/2025/10/29/inside-spy-part-1-motivations-and-goals/
 
 - Multiple stages of execution: `{import, compile, run} time`
 
-- Partial evaluation
+- Partial evaluation: red & blue
 
-  - Don't do later what you can do now
-
-  - Red, blue and redshifting
-
-- Language rules *designed* to make it possible:
+- Language *designed* for partial eval:
 
   - Globals and types are frozen after init
 
   - Static types are enforced
 
-- **Two levels**
+- Low level fast core, High level "Pythonic" APIs
 
-  - Low level fast core
+- **Blog**: Inside SPy part 2:
 
-  - High level "Pythonic" APIs
-
-  - **Zero cost abstractions** <-- today's topic
-
-<qr-code data="" format="svg" modulesize="8" margin="4"></qr-code>
-
-- Inside SPy part 2:
+<p class="small">
+<a href="https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/">
+<qr-code data="https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/" format="svg" modulesize="8" margin="4"></qr-code>
+<br>
+antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/
+</a>
+<br>
+</p>
 
 ---
 
 ## Recap: redshifting
 
-```python
+```python title="add.spy" autowrite
 def add(x: int, y: int) -> int:
 	return x + y
 
@@ -170,15 +173,33 @@ def main() -> None:
 	print(40 + 2)
 ```
 
-```
-$ spy colorize hello.spy
-```
+---
+
+## Recap: redshifting
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy colorize add.spy
+def add(x: int, y: int) -&gt; int:
+	return <span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">x + y</span>
+
+def main() -&gt; None:
+	<span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">print</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">"Hello PyCon IT 🇮🇹!")
+</span>	<span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">print</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">add</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">40</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">, </span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">2</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">))</span>
+	<span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">print</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">40 + 2</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">)</span></pre>
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy redshift add.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> add(x: <span style="font-weight: bold; color: #FF79C6">i32</span>, y: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+	<span style="font-weight: bold; color: #BD93F9">return</span> x + y
+
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[str]`</span>(<span style="font-weight: bold; color: #50FA7B">'Hello PyCon IT 🇮🇹!'</span>)
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[i32]`</span>(<span style="font-weight: bold; color: #FF79C6">`add::add`</span>(<span style="font-weight: bold; color: #F1FA8C">40</span>, <span style="font-weight: bold; color: #F1FA8C">2</span>))
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[str]`</span>(<span style="font-weight: bold; color: #50FA7B">'42'</span>)</pre>
 
 ---
 
 ## Recap: more redshifting
 
-```python
+```python title="add2.spy" autowrite
 @blue.generic
 def add(T):
 	def impl(x: T, y: T) -> T:
@@ -191,9 +212,46 @@ def main() -> None:
 	print(add[int](1, 2))
 ```
 
-```
-$ spy redshift add2.spy
-```
+---
+
+## Recap: more redshifting
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy colorize add2.spy
+@blue.generic
+def add(T):
+	def impl(x: T, y: T) -&gt; T:
+		return <span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">x + y</span>
+
+	return impl
+
+def main() -&gt; None:
+	<span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">print</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">add[str]</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">"Hello "</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">, </span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">"PyCon"</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">))</span>
+	<span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">print</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">add[int]</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">(</span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">1</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">, </span><span style="background: #87afd7"></span><span style="color: #2E3436; background: #87afd7">2</span><span style="background: #d78787"></span><span style="color: #2E3436; background: #d78787">))</span></pre>
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy redshift add2.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[str]`</span>(<span style="font-weight: bold; color: #FF79C6">`add2::add[str]`</span>(<span style="font-weight: bold; color: #50FA7B">'Hello '</span>, <span style="font-weight: bold; color: #50FA7B">'PyCon'</span>))
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[i32]`</span>(<span style="font-weight: bold; color: #FF79C6">`add2::add[i32]`</span>(<span style="font-weight: bold; color: #F1FA8C">1</span>, <span style="font-weight: bold; color: #F1FA8C">2</span>))
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`add2::add[str]`</span>(x: <span style="font-weight: bold; color: #FF79C6">str</span>, y: <span style="font-weight: bold; color: #FF79C6">str</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">str</span>:
+	<span style="font-weight: bold; color: #BD93F9">return</span> <span style="font-weight: bold; color: #FF79C6">`operator::str_add`</span>(x, y)
+
+<span style="font-weight: bold; color: #BD93F9">def</span> <span style="font-weight: bold; color: #FF79C6">`add2::add[i32]`</span>(x: <span style="font-weight: bold; color: #FF79C6">i32</span>, y: <span style="font-weight: bold; color: #FF79C6">i32</span>) -&gt; <span style="font-weight: bold; color: #FF79C6">i32</span>:
+	<span style="font-weight: bold; color: #BD93F9">return</span> x + y</pre>
+
+---
+
+## Today's talk
+
+- Builtins implemented in SPy
+
+  - Northern star ⭐
+
+  - `list`, `dict`, `str`, `tuple`, ...
+
+- Plain user code, no special compiler support
+
+- If you can write a fast `dict`, you can also write a fast `ndarray` or `DataFrame`
 
 ---
 
@@ -205,16 +263,18 @@ $ spy redshift add2.spy
 
   - High-level Python: high-level, nice, easy, slow.
 
-
 - SPy:
 
   - Low-level SPy: (almost) nice, (almost) easy, fast.
 
   - High-level SPy: nice, easy, **fast**.
 
+
 ---
 
 ## Low-level SPy
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
 
 ```python
 # stdlib/_list.spy (simplified)
@@ -276,6 +336,104 @@ def list(T):
 
 ---
 
+## Let's break it!
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python title="broken_list.spy" autowrite
+from unsafe import gc_alloc, gc_ptr
+
+def main() -> None:
+	l = MyList[int]()
+	l.append(42)
+	l.append(43)
+	l.append(44)
+	print(l[0], l[1], l[2])
+
+@blue.generic
+def MyList(T):
+
+	@struct
+	class ListData:
+		length: i32
+		capacity: i32
+		items: gc_ptr[T]
+
+	@struct
+	class _ListImpl:
+		__ll__: gc_ptr[ListData]
+
+		def __new__() -> _ListImpl:
+			data = gc_alloc[ListData](1)
+			data.length = 0
+			data.capacity = 4
+			data.items = gc_alloc[T](2)  # <==== BUG!
+			return _ListImpl.__make__(data)
+
+		def append(self, item: T) -> None:
+			ll = self.__ll__
+			if ll.length >= ll.capacity:
+				old_capacity = ll.capacity
+				new_capacity = old_capacity * 2
+				new_items = gc_alloc[T](new_capacity)
+
+				i = 0
+				while i < ll.length:
+					new_items[i] = ll.items[i]
+					i = i + 1
+
+				ll.items = new_items
+				ll.capacity = new_capacity
+
+			ll.items[ll.length] = item
+			ll.length = ll.length + 1
+
+		def __len__(self) -> i32:
+			return self.__ll__.length
+
+		def __getitem__(self, i: int) -> T:
+			ll = self.__ll__
+			if i < 0:
+				i = i + ll.length
+			if i < 0:
+				raise IndexError
+			if i >= ll.length:
+				raise IndexError
+			return ll.items[i]
+
+	return _ListImpl
+
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.7em; --code-max-height: 850px;" -->
+
+## Let's break it
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy broken_list.spy --spdb
+Traceback (most recent call last):
+  * <span style="color: #FF79C6">broken_list::main</span> at /.../autorun/broken_list.spy:7
+  |	 l.append(44)
+  | <span style="font-weight: bold; color: #FF5555">	|__________|</span>
+  * <span style="color: #FF79C6">broken_list::MyList[i32]::_ListImpl::append</span> at /.../autorun/broken_list.spy:45
+  |			 ll.items[ll.length] = item
+  | <span style="font-weight: bold; color: #FF5555">			|________________________|</span>
+
+<span style="font-weight: bold; color: #FF5555">PanicError</span>: ptr_store out of bounds: 0x10013f8[2] (upper bound: 2)
+  | /.../autorun/broken_list.spy:45
+  |			 ll.items[ll.length] = item
+  | <span style="font-weight: bold; color: #FF5555">			|______|</span>
+
+
+--- entering applevel debugger (post-mortem) ---
+   [1] <span style="color: #FF79C6">broken_list::MyList[i32]::_ListImpl::append</span> at /.../autorun/broken_list.spy:45
+	|			 ll.items[ll.length] = item
+	| <span style="font-weight: bold; color: #FF5555">			|________________________|</span>
+(spdb🥸) </pre>
+
+---
+
 ## Climbing the abstraction ladder
 
 - Low-level fast core + zero cost abstractions
@@ -315,6 +473,8 @@ def list(T):
 ## Static dispatch (1)
 
 ```python
+# ./getitem_slide.spy
+
 def main() -> None:
 	l = [1, 2, 3, 4, 5]
 	print(l[0])
