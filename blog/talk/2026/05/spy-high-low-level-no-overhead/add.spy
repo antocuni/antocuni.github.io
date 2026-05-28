@@ -1,7 +1,0 @@
-def add(x: int, y: int) -> int:
-    return x + y
-
-def main() -> None:
-    print("Hello PyCon IT 🇮🇹!")
-    print(add(40, 2))
-    print(40 + 2)

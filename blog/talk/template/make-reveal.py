@@ -150,7 +150,7 @@ def render_autorun_block(body, autorun_dir):
     except ImportError:
         return None
 
-    conv = Ansi2HTMLConverter(inline=True, scheme='xterm')
+    conv = Ansi2HTMLConverter(inline=True, scheme='dracula')
 
     lines = body.split('\n')
     pieces = []
@@ -176,7 +176,7 @@ def render_autorun_block(body, autorun_dir):
     raw = ''.join(pieces).rstrip('\n')
     inner = conv.convert(raw, full=False)
     style = (
-        "background:#000;color:#d4d4d4;"
+        "background:#2E3436;color:#d4d4d4;"
         "border-radius:6px;padding:1em 1.2em;"
         "font-family:'Fira Mono','Cascadia Code','Consolas',monospace;"
         "line-height:1.4;margin:0.5em auto;"

@@ -1,8 +1,0 @@
-def foo() -> tuple[int, int, str]:
-    return 1, 2, "hello"
-
-def main() -> None:
-    a, b, c = foo()
-    print(a)
-    print(b)
-    print(c)
