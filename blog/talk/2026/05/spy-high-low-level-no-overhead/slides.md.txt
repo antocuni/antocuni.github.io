@@ -390,7 +390,7 @@ PanicError: ptr_store out of bounds: 0x10013f8[2] (upper bound: 2)
 
 - Low-level fast core + zero cost abstractions
 
-- --> High-level fast APIs
+- ➡️ High-level fast APIs
 
 - Advanced users
 
@@ -424,14 +424,7 @@ PanicError: ptr_store out of bounds: 0x10013f8[2] (upper bound: 2)
 
 ## Static dispatch (1)
 
-```python
-# ./getitem_slide.spy
-
-def main() -> None:
-    l = [1, 2, 3, 4, 5]
-    print(l[0])
-    print(l[:-1])
-```
+<!-- .slide: style="--code-max-width: 50%" -->
 
 - `getitem(int)` vs `getitem(slice)`
 
@@ -439,9 +432,18 @@ def main() -> None:
 
 - SPy: compile time dispatch
 
+```python
+def main() -> None:
+    l = [1, 2, 3, 4, 5]
+    print(l[0])
+    print(l[:-1])
+```
+
 ---
 
 ## Static dispatch (2)
+
+<!-- .slide: style="--code-max-height: 850px; --code-font-size: 0.8em" -->
 
 ```python
 # stdlib/_list.spy
@@ -482,13 +484,26 @@ def list(T):
 
 ## Static dispatch (3)
 
+```python title="getitem_slice.spy" autowrite
+def main() -> None:
+    l = [1, 2, 3, 4, 5]
+    print(l[0])
+    print(l[:-1])
 ```
+
+```autorun
 $ spy redshift getitem_slice.spy
+def main() -> None:
+    l: `list[i32]` = `list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::new`(), 1), 2), 3), 4), 5)
+    `_print::println[i32]`(`list[i32]::_getitem_int`(l, 0))
+    `_print::println[list[i32]]`(`list[i32]::_getitem_slice`(l, `slice::__new__::impl6`(-1)))
 ```
 
 ---
 
 ## Small structs (1)
+
+<!-- .slide: style="--code-max-width: 70%" -->
 
 ```python
 def main() -> None:
@@ -508,9 +523,12 @@ def main() -> None:
 
 - SPy: no need for special cases
 
+
 ---
 
 ## Small structs (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
 
 ```python
 # stdlib/_range.spy
@@ -554,6 +572,8 @@ class range_iterator:
 
 ## Small structs (3)
 
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
 ```python
 # stdlib/_slice.spy
 
@@ -592,13 +612,15 @@ class Slice:
 
 ## Metaprogramming (1)
 
-- Small tuples: structs passed by value
+<!-- .slide: style="--code-max-width: 50%" -->
 
 ```python
 tuple[int, int, str]
+```
 
-# ===>
+⬇️
 
+```python
 @struct
 class tuple_int_int_str:
     _item0: int
@@ -609,6 +631,8 @@ class tuple_int_int_str:
 ---
 
 ## Metaprogramming (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
 
 ```python
 # stdlib/_tuple.spy
@@ -643,29 +667,28 @@ def tuple(*items_T):
 
 ---
 
-## Metaprogramming (3)
-
-```
-```
-
-
-
-
-
-
----
-
 ## Blue specialization (1)
 
-```python
+```python title="tup_types.spy" autowrite
 def main() -> None:
     tup = (1, 2, "hello")
     a = tup[0]
     b = tup[2]
+    print("hello")
     print(STATIC_TYPE(tup))
     print(STATIC_TYPE(a))
     print(STATIC_TYPE(b))
 ```
+
+```autorun
+$ spy tup_types.spy
+hello
+<spy type '_tuple::tuple[i32, i32, str]::_tup' (struct)>
+<spy type 'i32'>
+<spy type 'str'>
+```
+
+---
 
 ==>
 

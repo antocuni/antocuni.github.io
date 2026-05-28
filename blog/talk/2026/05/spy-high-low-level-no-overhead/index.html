@@ -438,7 +438,7 @@ Traceback (most recent call last):
 
 - Low-level fast core + zero cost abstractions
 
-- --> High-level fast APIs
+- ➡️ High-level fast APIs
 
 - Advanced users
 
@@ -472,14 +472,7 @@ Traceback (most recent call last):
 
 ## Static dispatch (1)
 
-```python
-# ./getitem_slide.spy
-
-def main() -> None:
-	l = [1, 2, 3, 4, 5]
-	print(l[0])
-	print(l[:-1])
-```
+<!-- .slide: style="--code-max-width: 50%" -->
 
 - `getitem(int)` vs `getitem(slice)`
 
@@ -487,9 +480,18 @@ def main() -> None:
 
 - SPy: compile time dispatch
 
+```python
+def main() -> None:
+	l = [1, 2, 3, 4, 5]
+	print(l[0])
+	print(l[:-1])
+```
+
 ---
 
 ## Static dispatch (2)
+
+<!-- .slide: style="--code-max-height: 850px; --code-font-size: 0.8em" -->
 
 ```python
 # stdlib/_list.spy
@@ -530,13 +532,24 @@ def list(T):
 
 ## Static dispatch (3)
 
+```python title="getitem_slice.spy" autowrite
+def main() -> None:
+	l = [1, 2, 3, 4, 5]
+	print(l[0])
+	print(l[:-1])
 ```
-$ spy redshift getitem_slice.spy
-```
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy redshift getitem_slice.spy
+<span style="font-weight: bold; color: #BD93F9">def</span> main() -&gt; <span style="font-weight: bold; color: #BD93F9">None</span>:
+	l: <span style="font-weight: bold; color: #FF79C6">`list[i32]`</span> = <span style="font-weight: bold; color: #FF79C6">`list[i32]::_push`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::_push`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::_push`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::_push`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::_push`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::new`</span>(), <span style="font-weight: bold; color: #F1FA8C">1</span>), <span style="font-weight: bold; color: #F1FA8C">2</span>), <span style="font-weight: bold; color: #F1FA8C">3</span>), <span style="font-weight: bold; color: #F1FA8C">4</span>), <span style="font-weight: bold; color: #F1FA8C">5</span>)
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[i32]`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::_getitem_int`</span>(l, <span style="font-weight: bold; color: #F1FA8C">0</span>))
+	<span style="font-weight: bold; color: #FF79C6">`_print::println[list[i32]]`</span>(<span style="font-weight: bold; color: #FF79C6">`list[i32]::_getitem_slice`</span>(l, <span style="font-weight: bold; color: #FF79C6">`slice::__new__::impl6`</span>(-<span style="font-weight: bold; color: #F1FA8C">1</span>)))</pre>
 
 ---
 
 ## Small structs (1)
+
+<!-- .slide: style="--code-max-width: 70%" -->
 
 ```python
 def main() -> None:
@@ -556,9 +569,12 @@ def main() -> None:
 
 - SPy: no need for special cases
 
+
 ---
 
 ## Small structs (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
 
 ```python
 # stdlib/_range.spy
@@ -602,6 +618,8 @@ class range_iterator:
 
 ## Small structs (3)
 
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
 ```python
 # stdlib/_slice.spy
 
@@ -640,13 +658,15 @@ class Slice:
 
 ## Metaprogramming (1)
 
-- Small tuples: structs passed by value
+<!-- .slide: style="--code-max-width: 50%" -->
 
 ```python
 tuple[int, int, str]
+```
 
-# ===>
+⬇️
 
+```python
 @struct
 class tuple_int_int_str:
 	_item0: int
@@ -657,6 +677,8 @@ class tuple_int_int_str:
 ---
 
 ## Metaprogramming (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
 
 ```python
 # stdlib/_tuple.spy
@@ -691,29 +713,26 @@ def tuple(*items_T):
 
 ---
 
-## Metaprogramming (3)
-
-```
-```
-
-
-
-
-
-
----
-
 ## Blue specialization (1)
 
-```python
+```python title="tup_types.spy" autowrite
 def main() -> None:
 	tup = (1, 2, "hello")
 	a = tup[0]
 	b = tup[2]
+	print("hello")
 	print(STATIC_TYPE(tup))
 	print(STATIC_TYPE(a))
 	print(STATIC_TYPE(b))
 ```
+
+<pre style="background:#2E3436;color:#d4d4d4;border-radius:6px;padding:1em 1.2em;font-family:'Fira Mono','Cascadia Code','Consolas',monospace;line-height:1.4;margin:0.5em auto;white-space:pre;text-align:left;overflow:auto;max-height:var(--code-max-height,450px);box-sizing:border-box;">$ spy tup_types.spy
+hello
+&lt;spy type '_tuple::tuple[i32, i32, str]::_tup' (struct)&gt;
+&lt;spy type 'i32'&gt;
+&lt;spy type 'str'&gt;</pre>
+
+---
 
 ==>
 
