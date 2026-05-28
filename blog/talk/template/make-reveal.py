@@ -256,6 +256,11 @@ class SlidesHandler(FileSystemEventHandler):
             build_presentation(self.input_file, self.output_file)
 
 
+class _ReusableTCPServer(socketserver.ThreadingTCPServer):
+    # Avoid TIME_WAIT preventing immediate restart on the same port.
+    allow_reuse_address = True
+
+
 def start_server(directory, port=8000):
     """Start a local HTTP server serving `directory` in a background thread."""
     handler = lambda *a, **kw: http.server.SimpleHTTPRequestHandler(
@@ -266,7 +271,7 @@ def start_server(directory, port=8000):
     httpd = None
     for p in range(port, port + 20):
         try:
-            httpd = socketserver.ThreadingTCPServer(("", p), handler)
+            httpd = _ReusableTCPServer(("", p), handler)
             port = p
             break
         except OSError:
