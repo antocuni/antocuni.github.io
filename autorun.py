@@ -155,10 +155,13 @@ def apply_output_opts(text, output_range=None, lineno=False):
 def run_in_pty(cmd: str, cwd, env) -> tuple[str, int]:
     """Run *cmd* inside a pseudo-TTY so programs emit ANSI colour codes."""
     master_fd, slave_fd = pty.openpty()
+    devnull = open(os.devnull, 'rb')
     proc = subprocess.Popen(
         cmd, shell=True, cwd=cwd, env=env,
-        stdin=slave_fd, stdout=slave_fd, stderr=slave_fd,
+        stdin=devnull, stdout=slave_fd, stderr=slave_fd,
+        start_new_session=True,
     )
+    devnull.close()
     os.close(slave_fd)
     chunks: list[bytes] = []
     while True:
