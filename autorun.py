@@ -497,7 +497,10 @@ class MarkdownHandler(FileSystemEventHandler):
 
     def _handle(self, src_path: str) -> None:
         p = Path(src_path)
-        if not src_path.endswith('.md') or p.name.startswith('.#'):
+        # Accept blog posts (*.md) and reveal.js slides (*.md.txt).
+        if not (src_path.endswith('.md') or src_path.endswith('.md.txt')):
+            return
+        if p.name.startswith('.#'):
             return
         if src_path in self._own_writes:
             self._own_writes.discard(src_path)
