@@ -14,6 +14,24 @@
     text-transform: none;
   }
 
+  /*
+   * Code blocks default to 75% width and a larger font.
+   * To override on a single slide, add a directive right after the slide title:
+   *
+   *   ## My slide
+   *
+   *   <!-- .slide: style="--code-max-width: 700px; --code-font-size: 1.2em;" -->
+   *
+   *   ```python
+   *   ...
+   *   ```
+   */
+  .reveal pre {
+    width: var(--code-max-width, 75%);
+    max-width: 100%;
+    font-size: var(--code-font-size, 1.3em);
+  }
+
   .reveal pre code {
     padding: 5px;
     overflow: auto;
