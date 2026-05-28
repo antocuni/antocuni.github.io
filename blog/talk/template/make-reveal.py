@@ -8,8 +8,11 @@ Reads slides.md.txt and generates index.html ready to be opened in the browser.
 # ///
 
 import argparse
+import http.server
 import re
+import socketserver
 import sys
+import threading
 import time
 from pathlib import Path
 from watchdog.observers import Observer
@@ -175,15 +178,46 @@ class SlidesHandler(FileSystemEventHandler):
             build_presentation(self.input_file, self.output_file)
 
 
+def start_server(directory, port=8000):
+    """Start a local HTTP server serving `directory` in a background thread."""
+    handler = lambda *a, **kw: http.server.SimpleHTTPRequestHandler(
+        *a, directory=str(directory), **kw
+    )
+
+    # Try a few ports if the default is busy
+    httpd = None
+    for p in range(port, port + 20):
+        try:
+            httpd = socketserver.ThreadingTCPServer(("", p), handler)
+            port = p
+            break
+        except OSError:
+            continue
+
+    if httpd is None:
+        print("Error: could not bind any port for the HTTP server", file=sys.stderr)
+        return None
+
+    httpd.daemon_threads = True
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    print(f"Serving '{directory}' at http://localhost:{port}/")
+    return httpd
+
+
 def watch_file(input_file, output_file):
     """Watch the input file for changes and rebuild automatically."""
     input_path = Path(input_file)
-
-    print(f"Watching '{input_file}' for changes... (Press Ctrl+C to stop)")
+    output_path = Path(output_file)
 
     # Initial build
-    if not build_presentation(input_path, Path(output_file)):
+    if not build_presentation(input_path, output_path):
         return
+
+    serve_dir = input_path.parent.resolve()
+    httpd = start_server(serve_dir)
+
+    print(f"Watching '{input_file}' for changes... (Press Ctrl+C to stop)")
 
     event_handler = SlidesHandler(input_path, output_file)
     observer = Observer()
@@ -197,6 +231,8 @@ def watch_file(input_file, output_file):
         observer.stop()
         print("\nStopped watching.")
     observer.join()
+    if httpd is not None:
+        httpd.shutdown()
 
 
 def main():
