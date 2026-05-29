@@ -45,7 +45,9 @@
 <!-- you can also use this comment to set a custom html title (remove the xxx) -->
 <!-- title: SPy: high-level Python, low-level performance, no overhead -->
 
-# SPy: high-level Python, low-level performance, no overhead
+# SPy 🥸
+
+## High-level Python, low-level performance, no overhead
 
 <!-- antocuni-qr: https://antocuni.eu/talk/2026/05/spy-pycon-italy -->
 
