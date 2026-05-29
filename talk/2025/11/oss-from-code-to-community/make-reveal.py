@@ -1,14 +1,19 @@
-#!/usr/bin/env -S uv run
+#!/usr/bin/env -S uv run --offline
 """
 Offline reveal.js presentation generator.
 Reads slides.md.txt and generates index.html ready to be opened in the browser.
 """
 # /// script
-# dependencies = ["watchdog"]
+# dependencies = ["watchdog", "ansi2html"]
 # ///
 
 import argparse
+import hashlib
+import http.server
+import re
+import socketserver
 import sys
+import threading
 import time
 from pathlib import Path
 from watchdog.observers import Observer
@@ -106,10 +111,109 @@ def extract_title(content):
     return "Presentation"
 
 
+QR_COMMENT_RE = re.compile(r'<!--\s*antocuni-qr:\s*(\S+?)\s*-->')
+
+
+def expand_qr_comment(match):
+    url = match.group(1)
+    # Strip protocol for display label
+    label = re.sub(r'^https?://', '', url)
+    return (
+        '<p class="small">\n'
+        f'<a href="{url}">\n'
+        f'<qr-code data="{url}" format="svg" modulesize="8" margin="4"></qr-code>\n'
+        '<br>\n'
+        f'{label}\n'
+        '</a>\n'
+        '<br>\n'
+        '</p>'
+    )
+
+
+# Match an ```autorun ...``` (or ```autorun x ...```) fenced block.
+# The body is captured: we'll re-render it with colors from the autorun cache.
+AUTORUN_BLOCK_RE = re.compile(
+    r'^(```+)autorun(?:[ \t]+[^\n]*)?\n(.*?)\n\1[ \t]*$',
+    re.MULTILINE | re.DOTALL,
+)
+
+
+def render_autorun_block(body, autorun_dir):
+    """Convert an autorun block body into colorized HTML.
+
+    For each '$ cmd' line we look up the cached raw output in
+    autorun_dir/<md5(cmd)>; on a miss we keep the plain text already in the
+    body. The result is a styled <pre> mimicking a terminal.
+    """
+    try:
+        from ansi2html import Ansi2HTMLConverter
+    except ImportError:
+        return None
+
+    conv = Ansi2HTMLConverter(inline=True, scheme='dracula')
+
+    lines = body.split('\n')
+    pieces = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+        if stripped.startswith('$ '):
+            cmd = stripped[2:]
+            cache = autorun_dir / hashlib.md5(cmd.encode()).hexdigest()
+            pieces.append(f'$ {cmd}\n')
+            if cache.exists():
+                pieces.append(cache.read_text())
+                # Skip subsequent non-'$ ' lines: cached output replaces them.
+                i += 1
+                while i < len(lines) and not lines[i].strip().startswith('$ '):
+                    i += 1
+                continue
+        else:
+            pieces.append(line + '\n')
+        i += 1
+
+    raw = ''.join(pieces).rstrip('\n')
+    inner = conv.convert(raw, full=False)
+    # Width and font-size come from the .reveal pre rule (same as code blocks).
+    style = (
+        "background:#2E3436;color:#d4d4d4;"
+        "border-radius:6px;padding:1em 1.2em;"
+        "font-family:'Fira Mono','Cascadia Code','Consolas',monospace;"
+        "line-height:1.4;margin:0.5em auto;"
+        "white-space:pre;text-align:left;"
+        "overflow:auto;max-height:var(--code-max-height,450px);"
+        "box-sizing:border-box;"
+    )
+    return f'<pre style="{style}">{inner}</pre>'
+
+
+def expand_autorun_blocks(content, autorun_dir):
+    """Replace each ```autorun``` fenced block with colorized HTML."""
+    def repl(m):
+        body = m.group(2)
+        html = render_autorun_block(body, autorun_dir)
+        if html is None:
+            return m.group(0)
+        return html
+
+    return AUTORUN_BLOCK_RE.sub(repl, content)
+
+
 def read_slides(filename):
     """Read and process the slides content."""
+    filename = Path(filename)
     with open(filename, 'r', encoding='utf-8') as f:
         content = f.read()
+
+    # Expand <!-- antocuni-qr: URL --> comments into a QR-code link block
+    content = QR_COMMENT_RE.sub(expand_qr_comment, content)
+
+    # Replace ```autorun``` fenced blocks with colorized HTML, using the
+    # raw output cached by autorun.py in the sibling 'autorun/' directory.
+    autorun_dir = filename.parent / 'autorun'
+    if autorun_dir.is_dir():
+        content = expand_autorun_blocks(content, autorun_dir)
 
     # Apply the same indentation fix as in pyreveal.py
     content = content.replace('    ', '\t')
@@ -152,15 +256,51 @@ class SlidesHandler(FileSystemEventHandler):
             build_presentation(self.input_file, self.output_file)
 
 
+class _ReusableTCPServer(socketserver.ThreadingTCPServer):
+    # Avoid TIME_WAIT preventing immediate restart on the same port.
+    allow_reuse_address = True
+
+
+def start_server(directory, port=8000):
+    """Start a local HTTP server serving `directory` in a background thread."""
+    handler = lambda *a, **kw: http.server.SimpleHTTPRequestHandler(
+        *a, directory=str(directory), **kw
+    )
+
+    # Try a few ports if the default is busy
+    httpd = None
+    for p in range(port, port + 20):
+        try:
+            httpd = _ReusableTCPServer(("", p), handler)
+            port = p
+            break
+        except OSError:
+            continue
+
+    if httpd is None:
+        print("Error: could not bind any port for the HTTP server", file=sys.stderr)
+        return None
+
+    httpd.daemon_threads = True
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    print(f"Serving '{directory}' at http://localhost:{port}/")
+    return httpd
+
+
 def watch_file(input_file, output_file):
     """Watch the input file for changes and rebuild automatically."""
     input_path = Path(input_file)
-
-    print(f"Watching '{input_file}' for changes... (Press Ctrl+C to stop)")
+    output_path = Path(output_file)
 
     # Initial build
-    if not build_presentation(input_path, Path(output_file)):
+    if not build_presentation(input_path, output_path):
         return
+
+    serve_dir = input_path.parent.resolve()
+    httpd = start_server(serve_dir)
+
+    print(f"Watching '{input_file}' for changes... (Press Ctrl+C to stop)")
 
     event_handler = SlidesHandler(input_path, output_file)
     observer = Observer()
@@ -174,6 +314,8 @@ def watch_file(input_file, output_file):
         observer.stop()
         print("\nStopped watching.")
     observer.join()
+    if httpd is not None:
+        httpd.shutdown()
 
 
 def main():

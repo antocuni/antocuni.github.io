@@ -36,12 +36,15 @@
 
 ### Myths and fairy tales around Python performance
 
+<a href="https://www.youtube.com/watch?v=X3QbMaEIpt0">Video</a>
+
 <p class="small">
 <a href="https://antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/">
 <img src="qrcode-slides.png">
 <br>
 antocuni.eu/talk/2025/07/europython-myths-and-fairy-tales/
 </a>
+<br>
 </p>
 
 ---

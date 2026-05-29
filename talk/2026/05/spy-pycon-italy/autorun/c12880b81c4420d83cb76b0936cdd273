@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  * [35mbroken_list::main[00m at /.../autorun/broken_list.spy:7
+  |     l.append(44)
+  | [31;01m    |__________|[00m
+  * [35mbroken_list::MyList[i32]::_ListImpl::append[00m at /.../autorun/broken_list.spy:45
+  |             ll.items[ll.length] = item
+  | [31;01m            |________________________|[00m
+
+[31;01mPanicError[00m: ptr_store out of bounds: 0x10013f8[2] (upper bound: 2)
+  | /.../autorun/broken_list.spy:45
+  |             ll.items[ll.length] = item
+  | [31;01m            |______|[00m
+
+
+--- entering applevel debugger (post-mortem) ---
+   [1] [35mbroken_list::MyList[i32]::_ListImpl::append[00m at /.../autorun/broken_list.spy:45
+    |             ll.items[ll.length] = item
+    | [31;01m            |________________________|[00m
+(spdb🥸) 

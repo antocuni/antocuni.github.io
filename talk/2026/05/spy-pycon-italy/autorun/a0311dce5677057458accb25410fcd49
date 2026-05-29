@@ -1,0 +1,4 @@
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    l: [35;01m`list[i32]`[00m = [35;01m`list[i32]::_push`[00m([35;01m`list[i32]::_push`[00m([35;01m`list[i32]::_push`[00m([35;01m`list[i32]::_push`[00m([35;01m`list[i32]::_push`[00m([35;01m`list[i32]::new`[00m(), [33;01m1[00m), [33;01m2[00m), [33;01m3[00m), [33;01m4[00m), [33;01m5[00m)
+    [35;01m`_print::println[i32]`[00m([35;01m`list[i32]::_getitem_int`[00m(l, [33;01m0[00m))
+    [35;01m`_print::println[list[i32]]`[00m([35;01m`list[i32]::_getitem_slice`[00m(l, [35;01m`slice::__new__::impl6`[00m(-[33;01m1[00m)))
