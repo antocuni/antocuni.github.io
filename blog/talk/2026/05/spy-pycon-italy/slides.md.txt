@@ -47,7 +47,7 @@
 
 # SPy: high-level Python, low-level performance, no overhead
 
-<!-- antocuni-qr: https://antocuni.eu/talk/2026/05/spy-high-low-level-no-overhead -->
+<!-- antocuni-qr: https://antocuni.eu/talk/2026/05/spy-pycon-italy -->
 
 ---
 
