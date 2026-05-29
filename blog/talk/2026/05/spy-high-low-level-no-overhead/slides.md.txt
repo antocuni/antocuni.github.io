@@ -49,7 +49,6 @@
 
 <!-- antocuni-qr: https://antocuni.eu/talk/2026/05/spy-high-low-level-no-overhead -->
 
-
 ---
 
 ## Recap: What is SPy?
@@ -110,14 +109,16 @@ def add(x: int, y: int) -> int:
     return x + y
 
 def main() -> None:
+    a = add(40, 2)
+    b = 40 + 2
     print("Hello PyCon IT 🇮🇹!")
-    print(add(40, 2))
-    print(40 + 2)
 ```
 
 ---
 
 ## Recap: redshifting
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
 
 ```autorun
 $ spy colorize add.spy
@@ -125,9 +126,9 @@ def add(x: int, y: int) -> int:
     return x + y
 
 def main() -> None:
+    a = add(40, 2)
+    b = 40 + 2
     print("Hello PyCon IT 🇮🇹!")
-    print(add(40, 2))
-    print(40 + 2)
 ```
 
 ```autorun
@@ -136,34 +137,17 @@ def add(x: i32, y: i32) -> i32:
     return x + y
 
 def main() -> None:
+    a: i32 = `add::add`(40, 2)
     `_print::println[str]`('Hello PyCon IT 🇮🇹!')
-    `_print::println[i32]`(`add::add`(40, 2))
-    `_print::println[str]`('42')
 ```
 
 ---
 
 ## Recap: more redshifting
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
 
 ```python title="add2.spy" autowrite
-@blue.generic
-def add(T):
-    def impl(x: T, y: T) -> T:
-        return x + y
-
-    return impl
-
-def main() -> None:
-    print(add[str]("Hello ", "PyCon"))
-    print(add[int](1, 2))
-```
-
----
-
-## Recap: more redshifting
-
-```autorun
-$ spy colorize add2.spy
 @blue.generic
 def add(T):
     def impl(x: T, y: T) -> T:
@@ -501,6 +485,295 @@ def main() -> None:
 
 ---
 
+---
+
+## Metaprogramming (1)
+
+<!-- .slide: style="--code-max-width: 50%" -->
+
+```python
+tuple[int, int, str]
+```
+
+⬇️
+
+```python
+@struct
+class tuple_int_int_str:
+    _item0: int
+    _item1: int
+    _item2: str
+```
+
+---
+
+## Metaprogramming (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+# stdlib/_tuple.spy
+
+@blue.generic
+def tuple(*items_T):
+
+    @blue
+    def get_fields():
+        """
+        Return a dict like {
+            "_item0": int,
+            "_item1": int,
+        }
+        """
+        fields: dict[str, type] = {}
+        for i in range(len(items_T)):
+            fname = "_item" + str(i)
+            T = items_T[i]
+            fields[fname] = T
+        return fields
+
+    N = len(items_T)
+
+    @struct
+    class _tup:
+        __extra_fields__ = get_fields()
+
+        def __len__(self) -> i32:
+            return N
+```
+
+---
+
+## Blue specialization (1)
+
+<!-- .slide: style="--code-max-width: 80%" -->
+
+```python title="tup_types.spy" autowrite
+def main() -> None:
+    tup = (1, 2, "hello")
+    a = tup[0]
+    b = tup[2]
+    print("tup: ", STATIC_TYPE(tup))
+    print("a:   ", STATIC_TYPE(a))
+    print("b:   ", STATIC_TYPE(b))
+```
+
+```console
+$ spy tup_types.spy
+tup:  <spy type '_tuple::tuple[i32, i32, str]::_tup' (struct)>
+a:      <spy type 'i32'>
+b:      <spy type 'str'>
+```
+
+---
+
+## Blue specialization (2)
+
+<!-- .slide: style="--code-max-width: 40%" -->
+
+```python
+a = tup[0]
+b = tup[2]
+```
+
+⬇️
+
+```python
+a = tup.__getitem__(0)
+b = tup.__getitem__(2)
+```
+
+- What is the signature of `__getitem__`?
+
+---
+
+## Blue specialization (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+# stdlib/_tuple.spy
+
+@blue.generic
+def tuple(*items_T):
+    @struct
+    class _tup:
+        @blue.metafunc
+        def __getitem__(m_self, m_i):
+            if m_i.color != "blue":
+                raise TypeError("tuple index must be blue")
+
+            # idx is blue so all the following lines are pre-evaluated at compile time
+            i = m_i.blueval
+            attr = "_item" + str(i)
+            T = items_T[i]
+
+            def get(self: _tup) -> T:
+                # attr is blue, so this is equivalent to e.g. `self.item0`
+                return getattr(self, attr)
+
+            return OpSpec(get, [m_self])
+
+```
+
+---
+
+## Demo time!
+
+- AWS lambda running on SPy
+
+- Demoware, from ~2 months ago
+
+- Requires a SPy branch with vibecoded experimental features.
+
+- This is **NOT** SPy running FastAPI
+
+  - it's `SPyAPI` :)
+
+<div style="display: flex; justify-content: space-around; gap: 2em;">
+<!-- antocuni-qr: https://github.com/spylang/demos/tree/main/aws-lambda -->
+<!-- antocuni-qr: https://x5rdyhwfridmtics2v7hup2sp40ydwhk.lambda-url.us-east-1.on.aws/ -->
+</div>
+
+---
+
+## CPython version
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+from fastapi import FastAPI, Query
+from fastapi.responses import HTMLResponse
+from mangum import Mangum
+
+CDN = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">'
+
+app = FastAPI()
+
+
+@app.get("/", response_class=HTMLResponse)
+def index() -> str:
+    return f"""<!doctype html>
+<html>
+  <head>{CDN}<title>FastAPI Demo</title></head>
+  <body class="container mt-5">
+    <h1>FastAPI on AWS Lambda</h1>
+    <form method="get" action="/greet">
+      <label class="form-label">What's your name?</label>
+      <input class="form-control mb-2" type="text" name="name" autofocus>
+      <button class="btn btn-primary" type="submit">Say hello</button>
+    </form>
+  </body>
+</html>"""
+
+@app.get("/greet", response_class=HTMLResponse)
+def greet(name: str = Query(default="World")) -> str:
+    return f"""<!doctype html>
+<html>
+  <head>{CDN}<title>Hello, {name}!</title></head>
+  <body class="container mt-5">
+    <h1>Hello, {name}!</h1>
+    <p>Greetings from a FastAPI Lambda.</p>
+    <a href="/">← back home</a>
+  </body>
+</html>"""
+
+
+# Mangum wraps the FastAPI ASGI app for Lambda's event/context interface.
+handler = Mangum(app)
+```
+
+---
+
+## SPy version
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+from spyapi import SPyAPI
+
+CDN: str = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">'
+
+app = SPyAPI()
+
+
+@app.get("/")
+def index() -> None:
+    html = f"""
+<!doctype html>
+<html>
+  <head>{CDN}<title>SPy Demo</title></head>
+  <body class="container mt-5">
+    <h1>SPy 🥸 on AWS Lambda</h1>
+    <form method="get" action="/greet">
+      <label class="form-label">What's your name?</label>
+      <input class="form-control mb-2" type="text" name="name" autofocus>
+      <button class="btn btn-primary" type="submit">Say hello</button>
+    </form>
+  </body>
+</html>"""
+    app.response(200, html, "text/html; charset=utf-8")
+
+
+@app.get("/greet")
+def greet() -> None:
+    name = app.get_query_param("name")
+    html = f"""<!doctype html>
+<html>
+  <head>{CDN}<title>Hello, {name}!</title></head>
+  <body class="container mt-5">
+    <h1>Hello, {name}!</h1>
+    <p>Greetings from a compiled SPy Lambda.</p>
+    <a href="/">home</a>
+  </body>
+</html>"""
+    app.response(200, html, "text/html; charset=utf-8")
+
+
+def main() -> None:
+    app.serve_forever()
+```
+
+---
+
+# SPy vs CPython
+
+![SPy cs CPython](spy_fastapi.png)
+
+---
+
+# SPy vs Go vs Rust
+
+![SPy vs Go vs Rust](spy_go_rust.png)
+
+---
+
+# Thanks!
+
+![Anaconda](anaconda.png)
+
+SPy Contributors:
+
+![SPy contributors](contributors.png)
+
+---
+
+![External SPy PRs](prs_per_quarter.png)
+
+---
+
+# Give SPy a star ⭐
+
+<!-- antocuni-qr: https://github.com/spylang/spy/ -->
+
+@antocuni
+
+---
+
+# Backup slides
+
+---
+
 ## Small structs (1)
 
 <!-- .slide: style="--code-max-width: 70%" -->
@@ -606,103 +879,4 @@ class Slice:
 
         elif TYPES == interp_tuple(NoneType, i32, i32):
             ...
-```
-
----
-
-## Metaprogramming (1)
-
-<!-- .slide: style="--code-max-width: 50%" -->
-
-```python
-tuple[int, int, str]
-```
-
-⬇️
-
-```python
-@struct
-class tuple_int_int_str:
-    _item0: int
-    _item1: int
-    _item2: str
-```
-
----
-
-## Metaprogramming (2)
-
-<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
-
-```python
-# stdlib/_tuple.spy
-
-@blue.generic
-def tuple(*items_T):
-
-    @blue
-    def get_fields():
-        """
-        Return a dict like {
-            "_item0": int,
-            "_item1": int,
-        }
-        """
-        fields: dict[str, type] = {}
-        for i in range(len(items_T)):
-            fname = "_item" + str(i)
-            T = items_T[i]
-            fields[fname] = T
-        return fields
-
-    N = len(items_T)
-
-    @struct
-    class _tup:
-        __extra_fields__ = get_fields()
-
-        def __len__(self) -> i32:
-            return N
-```
-
----
-
-## Blue specialization (1)
-
-```python title="tup_types.spy" autowrite
-def main() -> None:
-    tup = (1, 2, "hello")
-    a = tup[0]
-    b = tup[2]
-    print("hello")
-    print(STATIC_TYPE(tup))
-    print(STATIC_TYPE(a))
-    print(STATIC_TYPE(b))
-```
-
-```autorun
-$ spy tup_types.spy
-hello
-<spy type '_tuple::tuple[i32, i32, str]::_tup' (struct)>
-<spy type 'i32'>
-<spy type 'str'>
-```
-
----
-
-==>
-
-```python
-a = tup.__getitem__(0)
-b = tup.__getitem__(2)
-```
-
-- What is the signature of `__getitem__`?
-
----
-
-## Blue specialization (2)
-
-```python
-# stdlib/_tuple.spy
 ```
