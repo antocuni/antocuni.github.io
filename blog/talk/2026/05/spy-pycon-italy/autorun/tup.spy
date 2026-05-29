@@ -1,0 +1,7 @@
+def get_point() -> tuple[int, int]:
+    return 10, 20
+
+def main() -> None:
+    x, y = get_point()
+    print(x)
+    print(y)

@@ -78,10 +78,10 @@
 # SPy: high-level Python, low-level performance, no overhead
 
 <p class="small">
-<a href="https://antocuni.eu/talk/2026/05/spy-high-low-level-no-overhead">
-<qr-code data="https://antocuni.eu/talk/2026/05/spy-high-low-level-no-overhead" format="svg" modulesize="8" margin="4"></qr-code>
+<a href="https://antocuni.eu/talk/2026/05/spy-pycon-italy">
+<qr-code data="https://antocuni.eu/talk/2026/05/spy-pycon-italy" format="svg" modulesize="8" margin="4"></qr-code>
 <br>
-antocuni.eu/talk/2026/05/spy-high-low-level-no-overhead
+antocuni.eu/talk/2026/05/spy-pycon-italy
 </a>
 <br>
 </p>
@@ -137,9 +137,7 @@ antocuni.eu/2025/10/29/inside-spy-part-1-motivations-and-goals/
 
 - Multiple stages of execution: `{import, compile, run} time`
 
-- Partial evaluation: red & blue
-
-- Language *designed* for partial eval:
+- Language designed for **partial evaluation**:
 
   - Globals and types are frozen after init
 
@@ -147,8 +145,19 @@ antocuni.eu/2025/10/29/inside-spy-part-1-motivations-and-goals/
 
 - Low level fast core, High level "Pythonic" APIs
 
-- **Blog**: Inside SPy part 2:
+- **Talk**: SPy @ PyCon IT 2025
 
+- **Blog**: Inside SPy part 2: Language semantics
+
+<div style="display: flex; justify-content: space-around; gap: 2em;">
+<p class="small">
+<a href="https://antocuni.eu/talk/2025/05/spy-pycon-italy/">
+<qr-code data="https://antocuni.eu/talk/2025/05/spy-pycon-italy/" format="svg" modulesize="8" margin="4"></qr-code>
+<br>
+antocuni.eu/talk/2025/05/spy-pycon-italy/
+</a>
+<br>
+</p>
 <p class="small">
 <a href="https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/">
 <qr-code data="https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/" format="svg" modulesize="8" margin="4"></qr-code>
@@ -157,6 +166,7 @@ antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/
 </a>
 <br>
 </p>
+</div>
 
 ---
 
@@ -230,9 +240,9 @@ def main() -> None:
 
 ## Today's talk
 
-- Builtins implemented in SPy
+- Northern star ⭐
 
-  - Northern star ⭐
+- Builtins implemented in `*.spy`
 
   - `list`, `dict`, `str`, `tuple`, ...
 
@@ -534,8 +544,6 @@ def main() -> None:
 
 ---
 
----
-
 ## Metaprogramming (1)
 
 <!-- .slide: style="--code-max-width: 50%" -->
@@ -590,6 +598,44 @@ def tuple(*items_T):
 		def __len__(self) -> i32:
 			return N
 ```
+
+---
+
+## Metaprogramming (3)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python title="tup.spy" autowrite
+def get_point() -> tuple[int, int]:
+	return 10, 20
+
+def main() -> None:
+	x, y = get_point()
+	print(x)
+	print(y)
+```
+
+```c
+struct spy__tuple$tuple__builtins$i32_builtins$i32$_tup {
+	int32_t _item0;
+	int32_t _item1;
+};
+
+/* ... */
+
+void spy_tup$main(void) {
+	int32_t x;
+	int32_t y;
+	{
+		spy__tuple$tuple__builtins$i32_builtins$i32$_tup tmp = spy_tup$get_point();
+		x = tmp._item0;
+		y = tmp._item1;
+	}
+	spy__print$println__builtins$i32$p(x);
+	spy__print$println__builtins$i32$p(y);
+}
+```
+
 
 ---
 
