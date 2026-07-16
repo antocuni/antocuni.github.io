@@ -1,0 +1,60 @@
+from unsafe import gc_alloc
+
+@blue.generic
+def list(T):
+
+    @struct
+    class ListData:
+        length: i32
+        capacity: i32
+        items: gc_ptr[T]
+
+    @struct
+    class _ListImpl:
+        __ll__: gc_ptr[ListData]
+
+        def __new__() -> _ListImpl:
+            data = gc_alloc[ListData](1)
+            data.length = 0
+            data.capacity = 4
+            data.items = gc_alloc[T](4)
+            return _ListImpl.__make__(data)
+
+        def append(self, item: T) -> None:
+            ll = self.__ll__
+            if ll.length >= ll.capacity:
+                old_capacity = ll.capacity
+                new_capacity = old_capacity * 2
+                new_items = gc_alloc[T](new_capacity)
+
+                i = 0
+                while i < ll.length:
+                    new_items[i] = ll.items[i]
+                    i = i + 1
+
+                ll.items = new_items
+                ll.capacity = new_capacity
+
+            ll.items[ll.length] = item
+            ll.length = ll.length + 1
+
+        def __len__(self) -> i32:
+            return self.__ll__.length
+
+        def __getitem__(self, i: int) -> T:
+            ll = self.__ll__
+            if i < 0:
+                i = i + ll.length
+            if i < 0:
+                raise IndexError
+            if i >= ll.length:
+                raise IndexError
+            return ll.items[i]
+
+    return _ListImpl
+
+
+def main() -> None:
+    l = List[int]()
+    l.append(42)
+    print(l[0])

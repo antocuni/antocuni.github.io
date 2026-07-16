@@ -1,0 +1,13 @@
+@blue.generic
+def add(T):
+    def impl(x: T, y: T) -> T:
+        return x + y
+    return impl
+
+def sub[T](x: T, y: T) -> T:
+    return x - y
+
+def main() -> None:
+    print(add[str]("Hello ", "EuroPython"))
+    print(add[int](1, 2))
+    print(sub[int](3, 2))

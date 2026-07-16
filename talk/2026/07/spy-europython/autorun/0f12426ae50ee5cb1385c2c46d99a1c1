@@ -1,0 +1,12 @@
+add5 = [35;01m`make_adder::make_adder::impl`[00m
+add7 = [35;01m`make_adder::make_adder::impl#1`[00m
+
+[34;01mdef[00m [35;01m`make_adder::make_adder::impl`[00m(x: [35;01mi32[00m) -> [35;01mi32[00m:
+    [34;01mreturn[00m x + [33;01m5[00m
+
+[34;01mdef[00m [35;01m`make_adder::make_adder::impl#1`[00m(x: [35;01mi32[00m) -> [35;01mi32[00m:
+    [34;01mreturn[00m x + [33;01m7[00m
+
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    [35;01m`_print::println[i32]`[00m([35;01m`make_adder::make_adder::impl`[00m([33;01m10[00m))
+    [35;01m`_print::println[i32]`[00m([35;01m`make_adder::make_adder::impl#1`[00m([33;01m20[00m))

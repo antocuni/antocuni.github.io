@@ -1,0 +1,12 @@
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    l: [35;01m`list[i32]`[00m = [35;01m`list[i32]::_push`[00m([35;01m`list[i32]::_push`[00m([35;01m`list[i32]::_push`[00m([35;01m`list[i32]::new`[00m(), [33;01m1[00m), [33;01m2[00m), [33;01m3[00m)
+    [35;01m`_print::println[i32]`[00m([35;01m`metafunc::_max_list[i32]`[00m(l))
+    [35;01m`_print::println[i32]`[00m([35;01m`metafunc::_max2[i32]`[00m([33;01m10[00m, [33;01m20[00m))
+
+[34;01mdef[00m [35;01m`metafunc::_max_list[i32]`[00m(l: [35;01m`list[i32]`[00m) -> [35;01mi32[00m:
+    [34;01mreturn[00m [35;01m`list[i32]::_getitem_int`[00m(l, -[33;01m1[00m)
+
+[34;01mdef[00m [35;01m`metafunc::_max2[i32]`[00m(a: [35;01mi32[00m, b: [35;01mi32[00m) -> [35;01mi32[00m:
+    [34;01mif[00m a > b:
+        [34;01mreturn[00m a
+    [34;01mreturn[00m b

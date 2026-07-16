@@ -1,0 +1,33 @@
+from operator import OpSpec
+
+def main() -> None:
+    l = [1, 2, 3]
+    print(max(l))
+    print(max(10, 20))
+
+@blue.metafunc
+def max(m_x, *args_m):
+    T = m_x.static_type
+    if len(args_m) == 0:
+        itemT = get_item_type(T)
+        return OpSpec(_max_list[itemT])
+    elif len(args_m) == 1:
+        return OpSpec(_max2[T])
+    else:
+        raise TypeError("Invalid overload for max")
+
+def _max_list[T](l: list[T]) -> T:
+    return l[-1] # TODO: implement me :)
+
+def _max2[T](a: T, b: T) -> T:
+    if a > b:
+        return a
+    return b
+
+
+@blue
+def get_item_type(T):
+    # workaround for missing functionality, sorry :)
+    if T == list[int]:
+        return int
+    raise StaticError("SPy sucks")
