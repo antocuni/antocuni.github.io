@@ -1,0 +1,13 @@
+[34;01mdef[00m [00mmain[00m() -> [34;01mNone[00m:
+    [35;01m`_print::println[str]`[00m([35;01m`add2::add[str]`[00m([32;01m'Hello '[00m, [32;01m'EuroPython'[00m))
+    [35;01m`_print::println[i32]`[00m([35;01m`add2::add[i32]`[00m([33;01m1[00m, [33;01m2[00m))
+    [35;01m`_print::println[i32]`[00m([35;01m`add2::sub[i32]`[00m([33;01m3[00m, [33;01m2[00m))
+
+[34;01mdef[00m [35;01m`add2::add[str]`[00m(x: [35;01mstr[00m, y: [35;01mstr[00m) -> [35;01mstr[00m:
+    [34;01mreturn[00m [35;01m`_str::methods::__add__`[00m(x, y)
+
+[34;01mdef[00m [35;01m`add2::add[i32]`[00m(x: [35;01mi32[00m, y: [35;01mi32[00m) -> [35;01mi32[00m:
+    [34;01mreturn[00m x + y
+
+[34;01mdef[00m [35;01m`add2::sub[i32]`[00m(x: [35;01mi32[00m, y: [35;01mi32[00m) -> [35;01mi32[00m:
+    [34;01mreturn[00m x - y

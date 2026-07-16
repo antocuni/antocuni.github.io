@@ -1,0 +1,5 @@
+def add(x: object, y: object) -> object:
+    return x + y
+
+def main() -> None:
+    print(add(1, 2))

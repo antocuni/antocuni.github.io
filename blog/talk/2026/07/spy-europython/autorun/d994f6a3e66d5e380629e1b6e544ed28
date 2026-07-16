@@ -1,0 +1,7 @@
+@blue
+def calc(x: int, y: int) -> int:
+    return x + y + 2 * 3
+
+def main() -> None:
+    [48;5;110m[30ma = calc(40, 2)[0m
+    [48;5;110m[30mprint[0m[48;5;174m[30m([0m[48;5;110m[30ma[0m[48;5;174m[30m)[0m

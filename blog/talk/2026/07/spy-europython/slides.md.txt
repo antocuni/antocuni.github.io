@@ -1,0 +1,1179 @@
+<!-- -*- mode: markdown -*- -->
+
+<style>
+
+  :root {
+    --r-main-font-size: 40px;  /* the default is 40px */
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 {
+    text-transform: none;
+  }
+
+  .reveal pre {
+    width: var(--code-max-width, 100%);
+    max-width: 100%;
+    font-size: var(--code-font-size, 1em);
+  }
+
+  .reveal pre code {
+    padding: 5px;
+    overflow: auto;
+    max-height: var(--code-max-height, 600px);
+    word-wrap: normal;
+  }
+
+  .big {
+    font-size: 2.5em;
+  }
+
+  .small {
+    font-size: 0.8em;
+  }
+
+  .main-size {
+    font-size: var(--r-main-font-size);
+  }
+</style>
+
+
+
+<!-- you can also use this comment to set a custom html title (remove the xxx) -->
+<!-- title: SPy: high-level Python, low-level performance, no overhead -->
+
+# SPy 🥸
+
+## High-level Python, low-level performance, no overhead
+
+<!-- antocuni-qr: https://antocuni.eu/talk/2026/07/spy-europython/ -->
+
+---
+
+## One year ago...
+
+<div style="display: flex; justify-content: space-around; gap: 2em;">
+<a href="https://youtu.be/X3QbMaEIpt0?si=f9HHhF7GNRWv60yf"><img src="myths-and-fairy-tales.png"></a>
+
+<!-- antocuni-qr: https://youtu.be/X3QbMaEIpt0?si=f9HHhF7GNRWv60yf -->
+</div>
+
+---
+
+## Python is slow, TL;DR
+
+* Everything is dynamic
+
+  - The world can change at any time
+
+* Compilers have a hard time
+
+  - performance cliffs
+
+  - unpredictable performance
+
+  - optimization chasing
+
+* ... but we like dynamicity
+
+---
+
+## Part 1: What is SPy?
+
+<div class="fragment">
+
+- Statically typed
+
+- Safe, Fast
+
+- Interpreted **and** compiled
+
+- Low level **and** high level
+
+- Variant
+
+- Of Python
+
+</div>
+
+---
+
+## Variant?
+
+- TL;DR: you cannot be fast without breaking _some_ backward compatibility
+
+- Source: I have tried for 20 years (and I'm not the only one)
+
+- Stop rewriting in Rust/go/whatever, let's rewrite in SPy
+
+---
+
+## Statically typed, safe, fast
+
+- Python typing it's an afterthought
+
+- Not really safe
+
+- Doesn't help with performance
+
+- SPy type system designed from scratch for safety and performance
+
+---
+
+## Interpreted and compiled
+
+- Python compilers usually (always?) diverges from CPython interp semantics
+
+- SPy interp for development and debugging
+
+  - `spdb`
+
+- SPy compiler for speed
+
+- Designed to give the exact same results
+
+---
+
+## Low level and high level
+
+- **The two language problem**
+
+- High level, easy, nice, slow
+
+  - Python
+
+- Low level, harder, fast
+
+  - C / C++ / rust / cython / ...
+
+- SPy: low level core, zero cost abstractions
+
+---
+
+## ... of Python
+
+- SPy supports (with some twists):
+
+  - Metaclasses
+
+  - Decorators
+
+  - Descriptor protocol
+
+  - `__getattribute__`
+
+  - dynamic dispatch (opt-in)
+
+  - ...
+
+- It _feels_ like Python
+
+---
+
+## Goals
+
+- Easy to understand, easy to implement
+
+- Predictable performance
+
+- One language, two levels
+
+- End users: no big difference
+
+- Power users / library writers: you are at the right talk
+
+### Non-goals
+
+- 100% compatibility with CPython.
+
+---
+
+## Goals
+
+**Blog**: Inside SPy part 1: motivation and goals
+
+<!-- antocuni-qr: https://antocuni.eu/2025/10/29/inside-spy-part-1-motivations-and-goals/ -->
+
+---
+
+## Demo
+
+<div style="display: flex; justify-content: space-around; gap: 2em;">
+<div>
+ PyCon Italy 2027 <br>
+<img src="texture-mapping-talk.png">
+</div>
+
+<!-- antocuni-qr: https://github.com/spylang/demos/tree/main/texture-mapping -->
+</div>
+
+
+---
+
+<img src="texture-mapping-chart.png">
+
+---
+
+## Part 2: A taste of SPy
+
+- Just some key ideas
+
+- Not the full story
+
+- Intuition of how it works
+
+- **Blog**: Inside SPy part 2: Language semantics
+
+<!-- antocuni-qr: https://antocuni.eu/2026/03/25/inside-spy-part-2-language-semantics/ -->
+
+---
+
+## General architecture
+
+* Interpreter: AST-based
+
+* <!-- .element: class="fragment fade-out" data-fragment-index="0" --> Magic 🧙
+
+* <!-- .element: class="fragment" data-fragment-index="0" --> <b>Redshift</b>
+
+  - AST -> partial evaluation -> lowered AST
+
+  - <span style="color: blue">blue</span> / <span style="color: red">red</span> ➜ <span style="color: red">red</span>
+
+* Compiler
+
+  - <span class="fragment" data-fragment-index="0">lowered</span> AST ➜ C ➜ `cc`
+
+---
+
+## Execution phases
+
+* Import time
+
+  - Statically resolve modules and imports
+
+  - Everything is mutable "as usual"
+
+  - Metaclasses, decorators, monkey-patching, ...
+
+* --- FREEZE ---
+
+* <!-- .element: class="fragment" --> (Redshift)
+
+* Runtime
+
+---
+
+## SPy playground
+
+<!-- antocuni-qr: https://spylang.github.io/spy/ -->
+
+---
+
+## Redshifting
+
+```python title="add.spy" autowrite
+def calc(x: int, y: int) -> int:
+    return x + y + 2 * 3
+
+def main() -> None:
+    a = calc(40, 2)
+    b = 40 + 2
+    print("Hello EuroPython 🇪🇺!")
+```
+
+---
+
+## Redshifting
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
+
+```autorun
+$ spy colorize add.spy
+def calc(x: int, y: int) -> int:
+    return x + y + 2 * 3
+
+def main() -> None:
+    a = calc(40, 2)
+    b = 40 + 2
+    print("Hello EuroPython 🇪🇺!")
+```
+
+```autorun
+$ spy redshift add.spy
+def calc(x: i32, y: i32) -> i32:
+    return x + y + 6
+
+def main() -> None:
+    a: i32 = `add::calc`(40, 2)
+    `_print::println[str]`('Hello EuroPython 🇪🇺!')
+```
+
+---
+
+## `@blue` functions
+
+```python title="bluefunc.spy" autowrite
+@blue
+def calc(x: int, y: int) -> int:
+    return x + y + 2 * 3
+
+def main() -> None:
+    a = calc(40, 2)
+    print(a)
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
+
+```autorun
+$ spy colorize bluefunc.spy
+@blue
+def calc(x: int, y: int) -> int:
+    return x + y + 2 * 3
+
+def main() -> None:
+    a = calc(40, 2)
+    print(a)
+```
+
+```autorun
+$ spy redshift bluefunc.spy
+def main() -> None:
+    `_print::println[str]`('48')
+```
+
+---
+
+## Code specialization
+
+```python title="make_adder.spy" autowrite
+@blue
+def make_adder(n):
+    def impl(x: int) -> int:
+        return x + n
+    return impl
+
+add5 = make_adder(5)
+add7 = make_adder(7)
+
+def main() -> None:
+    print(add5(10))
+    print(add7(20))
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```autorun
+$ spy redshift make_adder.spy
+add5 = `make_adder::make_adder::impl`
+add7 = `make_adder::make_adder::impl#1`
+
+def `make_adder::make_adder::impl`(x: i32) -> i32:
+    return x + 5
+
+def `make_adder::make_adder::impl#1`(x: i32) -> i32:
+    return x + 7
+
+def main() -> None:
+    `_print::println[i32]`(`make_adder::make_adder::impl`(10))
+    `_print::println[i32]`(`make_adder::make_adder::impl#1`(20))
+```
+
+---
+
+## Generics
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
+
+```python title="add2.spy" autowrite
+@blue.generic
+def add(T):
+    def impl(x: T, y: T) -> T:
+        return x + y
+    return impl
+
+def sub[T](x: T, y: T) -> T:
+    return x - y
+
+def main() -> None:
+    print(add[str]("Hello ", "EuroPython"))
+    print(add[int](1, 2))
+    print(sub[int](3, 2))
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```autorun
+$ spy redshift add2.spy
+def main() -> None:
+    `_print::println[str]`(`add2::add[str]`('Hello ', 'EuroPython'))
+    `_print::println[i32]`(`add2::add[i32]`(1, 2))
+    `_print::println[i32]`(`add2::sub[i32]`(3, 2))
+
+def `add2::add[str]`(x: str, y: str) -> str:
+    return `_str::methods::__add__`(x, y)
+
+def `add2::add[i32]`(x: i32, y: i32) -> i32:
+    return x + y
+
+def `add2::sub[i32]`(x: i32, y: i32) -> i32:
+    return x - y
+```
+
+---
+
+## Opt-in dynamic dispatch (1)
+
+```python title="dyn1.spy" autowrite
+def add(x: object, y: object) -> object:
+    return x + y
+
+def main() -> None:
+    print(add(1, 2))
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.6em; --code-max-height: 850px;" -->
+
+```autorun
+$ spy dyn1.spy
+Traceback (most recent call last):
+  * dyn1::main at /.../autorun/dyn1.spy:5
+  |     print(add(1, 2))
+  |           |_______|
+  * dyn1::add at /.../autorun/dyn1.spy:2
+  |     return x + y
+  |            |___|
+
+TypeError: cannot do `object` + `object`
+  | /.../autorun/dyn1.spy:2
+  |     return x + y
+  |            ^ this is `object`
+
+  | /.../autorun/dyn1.spy:2
+  |     return x + y
+  |                ^ this is `object`
+
+  | /.../autorun/dyn1.spy:2
+  |     return x + y
+  |            |___| operator::ADD called here
+
+
+```
+
+---
+
+## Opt-in dynamic dispatch (1)
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
+
+```python title="dyn2.spy" autowrite
+def add(x: dynamic, y: dynamic) -> dynamic:
+    return x + y
+
+def main() -> None:
+    print(add(1, 2))
+```
+
+```autorun
+$ spy dyn2.spy
+3
+```
+
+---
+
+## Low-level core
+
+- Northern star ⭐: implement builtins in `*.spy`:
+
+  - `list`, `dict`, `str`, `tuple`, ...
+
+- Plain user code, no special compiler support
+
+- If you can write a fast `dict`, you can also write a fast `ndarray` or `DataFrame`
+
+---
+
+## Low-level SPy
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+# stdlib/_list.spy (simplified)
+from unsafe import gc_alloc, gc_ptr
+
+@blue.generic
+def list(T):
+
+    @struct
+    class ListData:
+        length: i32
+        capacity: i32
+        items: gc_ptr[T]
+
+    @struct
+    class _ListImpl:
+        __ll__: gc_ptr[ListData]
+
+        def __new__() -> _ListImpl:
+            data = gc_alloc[ListData](1)
+            data.length = 0
+            data.capacity = 4
+            data.items = gc_alloc[T](4)
+            return _ListImpl.__make__(data)
+
+        def append(self, item: T) -> None:
+            ll = self.__ll__
+            if ll.length >= ll.capacity:
+                old_capacity = ll.capacity
+                new_capacity = old_capacity * 2
+                new_items = gc_alloc[T](new_capacity)
+
+                i = 0
+                while i < ll.length:
+                    new_items[i] = ll.items[i]
+                    i = i + 1
+
+                ll.items = new_items
+                ll.capacity = new_capacity
+
+            ll.items[ll.length] = item
+            ll.length = ll.length + 1
+
+        def __len__(self) -> i32:
+            return self.__ll__.length
+
+        def __getitem__(self, i: int) -> T:
+            ll = self.__ll__
+            if i < 0:
+                i = i + ll.length
+            if i < 0:
+                raise IndexError
+            if i >= ll.length:
+                raise IndexError
+            return ll.items[i]
+
+    return _ListImpl
+```
+
+---
+
+## Let's break it!
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python title="broken_list.spy" autowrite
+from unsafe import gc_alloc, gc_ptr
+
+def main() -> None:
+    l = MyList[int]()
+    l.append(42)
+    l.append(43)
+    l.append(44)
+    print(l[0], l[1], l[2])
+
+@blue.generic
+def MyList(T):
+
+    @struct
+    class ListData:
+        length: i32
+        capacity: i32
+        items: gc_ptr[T]
+
+    @struct
+    class _ListImpl:
+        __ll__: gc_ptr[ListData]
+
+        def __new__() -> _ListImpl:
+            data = gc_alloc[ListData](1)
+            data.length = 0
+            data.capacity = 4
+            data.items = gc_alloc[T](2)  # <==== BUG!
+            return _ListImpl.__make__(data)
+
+        def append(self, item: T) -> None:
+            ll = self.__ll__
+            if ll.length >= ll.capacity:
+                old_capacity = ll.capacity
+                new_capacity = old_capacity * 2
+                new_items = gc_alloc[T](new_capacity)
+
+                i = 0
+                while i < ll.length:
+                    new_items[i] = ll.items[i]
+                    i = i + 1
+
+                ll.items = new_items
+                ll.capacity = new_capacity
+
+            ll.items[ll.length] = item
+            ll.length = ll.length + 1
+
+        def __len__(self) -> i32:
+            return self.__ll__.length
+
+        def __getitem__(self, i: int) -> T:
+            ll = self.__ll__
+            if i < 0:
+                i = i + ll.length
+            if i < 0:
+                raise IndexError
+            if i >= ll.length:
+                raise IndexError
+            return ll.items[i]
+
+    return _ListImpl
+
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.7em; --code-max-height: 850px;" -->
+
+## Let's break it
+
+```autorun
+$ spy broken_list.spy --spdb
+Traceback (most recent call last):
+  * broken_list::main at /.../autorun/broken_list.spy:7
+  |     l.append(44)
+  |     |__________|
+  * broken_list::MyList[i32]::_ListImpl::append at /.../autorun/broken_list.spy:45
+  |             ll.items[ll.length] = item
+  |             |________________________|
+
+PanicError: ptr_store out of bounds: 0x10013f8[2] (upper bound: 2)
+  | /.../autorun/broken_list.spy:45
+  |             ll.items[ll.length] = item
+  |             |______|
+
+
+--- entering applevel debugger (post-mortem) ---
+   [1] broken_list::MyList[i32]::_ListImpl::append at /.../autorun/broken_list.spy:45
+    |             ll.items[ll.length] = item
+    |             |________________________|
+(spdb🥸)
+```
+
+---
+
+## Metafunctions
+
+<!-- .slide: style="--code-max-width: 50%" -->
+
+- `getitem(int)` vs `getitem(slice)`
+
+- Python: runtime dispatch
+
+- SPy: compile time dispatch
+
+```python
+def main() -> None:
+    l = [1, 2, 3, 4, 5]
+    print(l[0])
+    print(l[:-1])
+```
+
+---
+
+<!-- .slide: style="--code-max-height: 850px; --code-font-size: 0.8em" -->
+
+```python
+# stdlib/_list.spy
+
+@blue.generic
+def list(T):
+
+    @struct
+    class _ListImpl:
+        __ll__: gc_ptr[ListData]
+
+        @blue.metafunc
+        def __getitem__(m_self, m_x: MetaArg):
+            if m_x.static_type == i32:
+                return OpSpec(_ListImpl._getitem_int)
+            elif m_x.static_type == Slice:
+                return OpSpec(_ListImpl._getitem_slice)
+            else:
+                raise TypeError(
+                    "Subscript to list must be i32 or Slice, got " + str(m_x)
+                )
+
+        def _getitem_int(self, i: int) -> T:
+            ll = self.__ll__
+            if i < 0:
+                i = i + ll.length
+            if i < 0:
+                raise IndexError
+            if i >= ll.length:
+                raise IndexError
+            return ll.items[i]
+
+        def _getitem_slice(self, s: Slice) -> _ListImpl:
+            ...
+```
+
+---
+
+```python title="getitem_slice.spy" autowrite
+def main() -> None:
+    l = [1, 2, 3, 4, 5]
+    print(l[0])
+    print(l[:-1])
+```
+
+```autorun
+$ spy redshift getitem_slice.spy
+def main() -> None:
+    l: `list[i32]` = `list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::new`(), 1), 2), 3), 4), 5)
+    `_print::println[i32]`(`list[i32]::_getitem_int`(l, 0))
+    `_print::println[list[i32]]`(`list[i32]::_getitem_slice`(l, `slice::__new__::impl6`(-1)))
+```
+
+---
+
+## Climbing the abstraction ladder
+
+- Low-level fast core + zero cost abstractions
+
+- ➡️ High-level fast APIs
+
+- Advanced users
+
+  - use SPy to write powerful and fast libraries
+
+  - Enjoy a nicer language
+
+- End users
+
+  - mostly "the same python as ever"
+
+  - no need to know about the advanced topics
+
+  - you don't need to know C to use `numpy`
+
+---
+
+## Climbing the abstraction ladder
+
+- Some examples:
+
+  - static dispatch of operations
+
+  - don't allocate small structs
+
+  - metaprogramming
+
+  - blue values to "specialize" when possible
+
+---
+
+## Back to the demo
+
+<!-- antocuni-qr: https://www.diffchecker.com/yhNaRrck/ -->
+
+- `_array.spy`, `_list.spy`, `_tuple.spy`: pure applevel
+
+---
+
+# Thanks!
+
+![Anaconda](anaconda.png)
+
+SPy Contributors:
+
+![SPy contributors](contributors.png)
+
+---
+
+![External SPy PRs](prs_per_quarter.png)
+
+---
+
+# Give SPy a star ⭐
+
+<!-- antocuni-qr: https://github.com/spylang/spy/ -->
+
+@antocuni
+
+- Join me at EuroPython sprints!
+
+---
+
+# Backup slides
+
+---
+
+## Another Demo!
+
+- AWS lambda running on SPy
+
+- Demoware, from ~2 months ago
+
+- Requires a SPy branch with vibecoded experimental features.
+
+- This is **NOT** SPy running FastAPI
+
+  - it's `SPyAPI` :)
+
+<div style="display: flex; justify-content: space-around; gap: 2em;">
+<!-- antocuni-qr: https://github.com/spylang/demos/tree/main/aws-lambda -->
+<!-- antocuni-qr: https://x5rdyhwfridmtics2v7hup2sp40ydwhk.lambda-url.us-east-1.on.aws/ -->
+</div>
+
+---
+
+## CPython version
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+from fastapi import FastAPI, Query
+from fastapi.responses import HTMLResponse
+from mangum import Mangum
+
+CDN = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">'
+
+app = FastAPI()
+
+
+@app.get("/", response_class=HTMLResponse)
+def index() -> str:
+    return f"""<!doctype html>
+<html>
+  <head>{CDN}<title>FastAPI Demo</title></head>
+  <body class="container mt-5">
+    <h1>FastAPI on AWS Lambda</h1>
+    <form method="get" action="/greet">
+      <label class="form-label">What's your name?</label>
+      <input class="form-control mb-2" type="text" name="name" autofocus>
+      <button class="btn btn-primary" type="submit">Say hello</button>
+    </form>
+  </body>
+</html>"""
+
+@app.get("/greet", response_class=HTMLResponse)
+def greet(name: str = Query(default="World")) -> str:
+    return f"""<!doctype html>
+<html>
+  <head>{CDN}<title>Hello, {name}!</title></head>
+  <body class="container mt-5">
+    <h1>Hello, {name}!</h1>
+    <p>Greetings from a FastAPI Lambda.</p>
+    <a href="/">← back home</a>
+  </body>
+</html>"""
+
+
+# Mangum wraps the FastAPI ASGI app for Lambda's event/context interface.
+handler = Mangum(app)
+```
+
+---
+
+## SPy version
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+from spyapi import SPyAPI
+
+CDN: str = '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">'
+
+app = SPyAPI()
+
+
+@app.get("/")
+def index() -> None:
+    html = f"""
+<!doctype html>
+<html>
+  <head>{CDN}<title>SPy Demo</title></head>
+  <body class="container mt-5">
+    <h1>SPy 🥸 on AWS Lambda</h1>
+    <form method="get" action="/greet">
+      <label class="form-label">What's your name?</label>
+      <input class="form-control mb-2" type="text" name="name" autofocus>
+      <button class="btn btn-primary" type="submit">Say hello</button>
+    </form>
+  </body>
+</html>"""
+    app.response(200, html, "text/html; charset=utf-8")
+
+
+@app.get("/greet")
+def greet() -> None:
+    name = app.get_query_param("name")
+    html = f"""<!doctype html>
+<html>
+  <head>{CDN}<title>Hello, {name}!</title></head>
+  <body class="container mt-5">
+    <h1>Hello, {name}!</h1>
+    <p>Greetings from a compiled SPy Lambda.</p>
+    <a href="/">home</a>
+  </body>
+</html>"""
+    app.response(200, html, "text/html; charset=utf-8")
+
+
+def main() -> None:
+    app.serve_forever()
+```
+
+---
+
+# SPy vs CPython
+
+![SPy cs CPython](spy_fastapi.png)
+
+---
+
+# SPy vs Go vs Rust
+
+![SPy vs Go vs Rust](spy_go_rust.png)
+
+---
+
+# More examples
+
+---
+
+## More metafunctions
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
+
+```python title="metafunc.spy" autowrite
+from operator import OpSpec
+
+def main() -> None:
+    l = [1, 2, 3]
+    print(max(l))
+    print(max(10, 20))
+
+@blue.metafunc
+def max(m_x, *args_m):
+    T = m_x.static_type
+    if len(args_m) == 0:
+        itemT = get_item_type(T)
+        return OpSpec(_max_list[itemT])
+    elif len(args_m) == 1:
+        return OpSpec(_max2[T])
+    else:
+        raise TypeError("Invalid overload for max")
+
+def _max_list[T](l: list[T]) -> T:
+    return l[-1] # TODO: implement me :)
+
+def _max2[T](a: T, b: T) -> T:
+    if a > b:
+        return a
+    return b
+
+
+@blue
+def get_item_type(T):
+    # workaround for missing functionality, sorry :)
+    if T == list[int]:
+        return int
+    raise StaticError("SPy sucks")
+```
+
+---
+
+<!-- .slide: style="--code-font-size: 0.8em" -->
+
+```autorun
+$ spy redshift metafunc.spy
+def main() -> None:
+    l: `list[i32]` = `list[i32]::_push`(`list[i32]::_push`(`list[i32]::_push`(`list[i32]::new`(), 1), 2), 3)
+    `_print::println[i32]`(`metafunc::_max_list[i32]`(l))
+    `_print::println[i32]`(`metafunc::_max2[i32]`(10, 20))
+
+def `metafunc::_max_list[i32]`(l: `list[i32]`) -> i32:
+    return `list[i32]::_getitem_int`(l, -1)
+
+def `metafunc::_max2[i32]`(a: i32, b: i32) -> i32:
+    if a > b:
+        return a
+    return b
+```
+
+---
+
+## Metaprogramming (1)
+
+<!-- .slide: style="--code-max-width: 50%" -->
+
+```python
+tuple[int, int, str]
+```
+
+⬇️
+
+```python
+@struct
+class tuple_int_int_str:
+    _item0: int
+    _item1: int
+    _item2: str
+```
+
+---
+
+## Metaprogramming (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+# stdlib/_tuple.spy
+
+@blue.generic
+def tuple(*items_T):
+
+    @blue
+    def get_fields():
+        """
+        Return a dict like {
+            "_item0": int,
+            "_item1": int,
+        }
+        """
+        fields: dict[str, type] = {}
+        for i in range(len(items_T)):
+            fname = "_item" + str(i)
+            T = items_T[i]
+            fields[fname] = T
+        return fields
+
+    N = len(items_T)
+
+    @struct
+    class _tup:
+        __extra_fields__ = get_fields()
+
+        def __len__(self) -> i32:
+            return N
+```
+
+---
+
+## Metaprogramming (3)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python title="tup.spy" autowrite
+def get_point() -> tuple[int, int]:
+    return 10, 20
+
+def main() -> None:
+    x, y = get_point()
+    print(x)
+    print(y)
+```
+
+```c
+struct spy__tuple$tuple__builtins$i32_builtins$i32$_tup {
+    int32_t _item0;
+    int32_t _item1;
+};
+
+/* ... */
+
+void spy_tup$main(void) {
+    int32_t x;
+    int32_t y;
+    {
+        spy__tuple$tuple__builtins$i32_builtins$i32$_tup tmp = spy_tup$get_point();
+        x = tmp._item0;
+        y = tmp._item1;
+    }
+    spy__print$println__builtins$i32$p(x);
+    spy__print$println__builtins$i32$p(y);
+}
+```
+
+
+---
+
+## Blue specialization (1)
+
+<!-- .slide: style="--code-max-width: 80%" -->
+
+```python title="tup_types.spy" autowrite
+def main() -> None:
+    tup = (1, 2, "hello")
+    a = tup[0]
+    b = tup[2]
+    print("tup: ", STATIC_TYPE(tup))
+    print("a:   ", STATIC_TYPE(a))
+    print("b:   ", STATIC_TYPE(b))
+```
+
+```console
+$ spy tup_types.spy
+tup:  <spy type '_tuple::tuple[i32, i32, str]::_tup' (struct)>
+a:      <spy type 'i32'>
+b:      <spy type 'str'>
+```
+
+---
+
+## Blue specialization (2)
+
+<!-- .slide: style="--code-max-width: 40%" -->
+
+```python
+a = tup[0]
+b = tup[2]
+```
+
+⬇️
+
+```python
+a = tup.__getitem__(0)
+b = tup.__getitem__(2)
+```
+
+- What is the signature of `__getitem__`?
+
+---
+
+## Blue specialization (2)
+
+<!-- .slide: style="--code-font-size: 0.8em; --code-max-height: 850px;" -->
+
+```python
+# stdlib/_tuple.spy
+
+@blue.generic
+def tuple(*items_T):
+    @struct
+    class _tup:
+        @blue.metafunc
+        def __getitem__(m_self, m_i):
+            if m_i.color != "blue":
+                raise TypeError("tuple index must be blue")
+
+            # idx is blue so all the following lines are pre-evaluated at compile time
+            i = m_i.blueval
+            attr = "_item" + str(i)
+            T = items_T[i]
+
+            def get(self: _tup) -> T:
+                # attr is blue, so this is equivalent to e.g. `self.item0`
+                return getattr(self, attr)
+
+            return OpSpec(get, [m_self])
+
+```
